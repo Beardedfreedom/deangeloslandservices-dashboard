@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DeAngelos Land Services — GHL Triage Dashboard</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #232733;
+    --border: #2e3345;
+    --text: #e4e6ed;
+    --text-dim: #8b90a0;
+    --urgent: #ff4d4f;
+    --hot: #ff7a00;
+    --warm: #faad14;
+    --new-lead: #1890ff;
+    --follow-up: #722ed1;
+    --cold: #8b90a0;
+    --monitor: #3d4255;
+    --green: #52c41a;
+    --accent: #4f9cf7;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  .header {
+    background: linear-gradient(135deg, #1a3a2a 0%, #0f1117 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 24px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+  .header h1 span { color: var(--green); }
+  .header-meta {
+    text-align: right;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+  .header-meta .live {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--green);
+    font-weight: 600;
+  }
+  .live-dot {
+    width: 8px; height: 8px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+  .tabs {
+    display: flex;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+  }
+  .tab {
+    padding: 14px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dim);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+  .tab .badge {
+    display: inline-block;
+    background: var(--urgent);
+    color: white;
+    font-size: 11px;
+    padding: 1px 7px;
+    border-radius: 10px;
+    margin-left: 6px;
+    font-weight: 700;
+  }
+  .content { padding: 24px 32px; }
+
+  /* Stats Row */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .stat-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  .stat-card .count {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -1px;
+  }
+  .stat-card .label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 4px;
+    color: var(--text-dim);
+  }
+  .stat-card.urgent .count { color: var(--urgent); }
+  .stat-card.hot .count { color: var(--hot); }
+  .stat-card.warm .count { color: var(--warm); }
+  .stat-card.new-lead .count { color: var(--new-lead); }
+  .stat-card.follow-up .count { color: var(--follow-up); }
+  .stat-card.cold .count { color: var(--cold); }
+  .stat-card.monitor .count { color: var(--monitor); }
+
+  /* Revenue banner */
+  .revenue-banner {
+    background: linear-gradient(135deg, #1a2d1a, #0f1117);
+    border: 1px solid #2d4a2d;
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .revenue-banner h3 { font-size: 14px; color: var(--text-dim); font-weight: 500; }
+  .revenue-banner .amount {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--green);
+    letter-spacing: -1px;
+  }
+  .revenue-banner .sub { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+  .revenue-cols {
+    display: flex;
+    gap: 40px;
+  }
+  .revenue-col { text-align: center; }
+
+  /* Tables */
+  .section { margin-bottom: 28px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .section-header h2 {
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .priority-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .priority-dot.urgent { background: var(--urgent); }
+  .priority-dot.hot { background: var(--hot); }
+  .priority-dot.warm { background: var(--warm); }
+  .priority-dot.new-lead { background: var(--new-lead); }
+  .priority-dot.follow-up { background: var(--follow-up); }
+  .priority-dot.cold { background: var(--cold); }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--surface);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  th {
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-dim);
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 12px 14px;
+    font-size: 13px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover { background: rgba(79, 156, 247, 0.04); }
+  .name { font-weight: 600; color: var(--text); }
+  .phone { color: var(--text-dim); font-size: 12px; font-family: monospace; }
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    margin: 1px 2px;
+  }
+  .tag-urgent { background: rgba(255,77,79,0.15); color: var(--urgent); }
+  .tag-hot { background: rgba(255,122,0,0.15); color: var(--hot); }
+  .tag-warm { background: rgba(250,173,20,0.15); color: var(--warm); }
+  .tag-new { background: rgba(24,144,255,0.15); color: var(--new-lead); }
+  .tag-follow { background: rgba(114,46,209,0.15); color: var(--follow-up); }
+  .tag-cold { background: rgba(139,144,160,0.15); color: var(--cold); }
+  .tag-won { background: rgba(82,196,26,0.15); color: var(--green); }
+  .tag-est { background: rgba(250,173,20,0.1); color: var(--warm); }
+  .unread-badge {
+    background: var(--urgent);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 8px;
+    margin-left: 4px;
+  }
+  .msg-preview {
+    color: var(--text-dim);
+    font-size: 12px;
+    max-width: 350px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .value { font-weight: 700; color: var(--green); }
+  .action-text {
+    font-size: 12px;
+    color: var(--accent);
+    max-width: 250px;
+  }
+  .suggested-reply {
+    background: var(--surface2);
+    border-left: 3px solid var(--accent);
+    padding: 10px 14px;
+    font-size: 12px;
+    color: var(--text);
+    margin-top: 6px;
+    border-radius: 0 6px 6px 0;
+    line-height: 1.5;
+  }
+  .stage-pill {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .stage-accepted { background: rgba(82,196,26,0.15); color: var(--green); }
+  .stage-scheduled { background: rgba(24,144,255,0.15); color: var(--new-lead); }
+  .stage-given { background: rgba(250,173,20,0.15); color: var(--warm); }
+  .stage-declined { background: rgba(255,77,79,0.1); color: var(--urgent); }
+  .stage-paid { background: rgba(82,196,26,0.25); color: var(--green); }
+  .stage-lost { background: rgba(139,144,160,0.15); color: var(--cold); }
+  .stage-work { background: rgba(114,46,209,0.15); color: var(--follow-up); }
+  .owner-a { color: #4fc3f7; }
+  .owner-b { color: #ff8a65; }
+  .unassigned { color: var(--urgent); font-weight: 600; }
+
+  /* Panel views */
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* Calendar view */
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .cal-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .cal-card h4 { font-size: 13px; margin-bottom: 8px; }
+  .cal-card .cal-date { font-size: 12px; color: var(--text-dim); margin-bottom: 4px; }
+  .cal-card .cal-status {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .cal-cancelled { background: rgba(255,77,79,0.15); color: var(--urgent); }
+  .cal-confirmed { background: rgba(82,196,26,0.15); color: var(--green); }
+  .cal-reschedule { background: rgba(250,173,20,0.15); color: var(--warm); }
+
+  /* Footer */
+  .footer {
+    padding: 20px 32px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--text-dim);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  @media (max-width: 1200px) {
+    .stats { grid-template-columns: repeat(4, 1fr); }
+    .cal-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .cal-grid { grid-template-columns: 1fr; }
+    .header { flex-direction: column; gap: 12px; }
+    .revenue-banner { flex-direction: column; gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1><span>DeAngelos</span> Land Services — GHL Triage</h1>
+  <div class="header-meta">
+    <div class="live"><span class="live-dot"></span> Live Dashboard</div>
+    <div>Location: Fqv0HfBV4jdcZsHDMg0n</div>
+    <div>Generated: Mar 8, 2026 | Refresh: Every 6h</div>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showPanel('triage')">Conversation Triage <span class="badge">66</span></div>
+  <div class="tab" onclick="showPanel('action')">Action Plan</div>
+  <div class="tab" onclick="showPanel('calendar')">Cancelled Appts</div>
+  <div class="tab" onclick="showPanel('upcoming')">Upcoming Schedule</div>
+  <div class="tab" onclick="showPanel('pipeline')">Pipeline Updates</div>
+  <div class="tab" onclick="showPanel('owners')">Owners</div>
+</div>
+
+<!-- PANEL 1: TRIAGE -->
+<div id="panel-triage" class="panel active">
+<div class="content">
+  <div class="stats">
+    <div class="stat-card urgent"><div class="count">17</div><div class="label">Urgent</div></div>
+    <div class="stat-card hot"><div class="count">3</div><div class="label">Hot</div></div>
+    <div class="stat-card warm"><div class="count">29</div><div class="label">Warm</div></div>
+    <div class="stat-card new-lead"><div class="count">23</div><div class="label">New Lead</div></div>
+    <div class="stat-card follow-up"><div class="count">25</div><div class="label">Follow-Up</div></div>
+    <div class="stat-card cold"><div class="count">27</div><div class="label">Cold</div></div>
+    <div class="stat-card monitor"><div class="count">559</div><div class="label">Monitor</div></div>
+  </div>
+
+  <div class="revenue-banner">
+    <div>
+      <h3>Total Unread Pipeline Value at Risk</h3>
+      <div class="amount">$157,205</div>
+      <div class="sub">66 unread conversations across 683 total</div>
+    </div>
+    <div class="revenue-cols">
+      <div class="revenue-col">
+        <div style="font-size:20px;font-weight:800;color:var(--urgent)">$54,675</div>
+        <div class="sub">Tier 1 — Now</div>
+      </div>
+      <div class="revenue-col">
+        <div style="font-size:20px;font-weight:800;color:var(--warm)">$32,390</div>
+        <div class="sub">Tier 2 — Today</div>
+      </div>
+      <div class="revenue-col">
+        <div style="font-size:20px;font-weight:800;color:var(--follow-up)">$32,231</div>
+        <div class="sub">Tier 3 — Week</div>
+      </div>
+      <div class="revenue-col">
+        <div style="font-size:20px;font-weight:800;color:var(--cold)">$37,909</div>
+        <div class="sub">Tier 4 — Update</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIER 1 TABLE -->
+  <div class="section">
+    <div class="section-header">
+      <span class="priority-dot urgent"></span>
+      <h2>TIER 1 — Respond Now</h2>
+    </div>
+    <table>
+      <tr><th>Contact</th><th>Phone</th><th>Value</th><th>Stage</th><th>Owner</th><th>Last Message</th><th>Action</th></tr>
+      <tr>
+        <td><span class="name">Anthony Eugene</span> <span class="unread-badge">1</span></td>
+        <td class="phone">+14079230783</td>
+        <td class="value">$6,000</td>
+        <td><span class="stage-pill stage-work">Work Scheduled</span></td>
+        <td class="owner-b">Anthony</td>
+        <td class="msg-preview">Are they done cutting. Those trunk are quite high. And the neighbor...</td>
+        <td class="action-text">Call now. Crew cleanup needed at neighbor's yard (Bryan & Lauren).</td>
+      </tr>
+      <tr>
+        <td><span class="name">Cristen Brown</span> <span class="unread-badge">2</span></td>
+        <td class="phone">+13213776303</td>
+        <td class="value">$7,925</td>
+        <td><span class="stage-pill stage-accepted">Estimate Accepted</span></td>
+        <td class="unassigned">UNASSIGNED</td>
+        <td class="msg-preview">Sounds good. Thank you.</td>
+        <td class="action-text">THIS IS A CLOSE. Assign owner. Send scheduling options.</td>
+      </tr>
+      <tr>
+        <td><span class="name">Eddie Muse</span> <span class="unread-badge">1</span></td>
+        <td class="phone">+14074620115</td>
+        <td class="value">$39,500</td>
+        <td><span class="stage-pill stage-accepted">Estimate Accepted</span></td>
+        <td class="owner-a">Lex</td>
+        <td class="msg-preview">Just keep me posted with your schedule. Thanks,</td>
+        <td class="action-text">High-value repeat customer. Send scheduling update.</td>
+      </tr>
+      <tr>
+        <td><span class="name">Richard Swormar</span> <span class="unread-badge">1</span></td>
+        <td class="phone">+18147770688</td>
+        <td class="value">$750</td>
+        <td><span class="stage-pill stage-accepted">Estimate Accepted</span></td>
+        <td class="unassigned">UNASSIGNED</td>
+        <td class="msg-preview">Any day but the 11th i have a Dr's appointment</td>
+        <td class="action-text">Ready to book. Avoid March 11th. Schedule now.</td>
+      </tr>
+      <tr>
+        <td><span class="name">Marie Breen</span> <span class="unread-badge">4</span></td>
+        <td class="phone">+14077653698</td>
+        <td class="value">$500</td>
+        <td><span class="stage-pill stage-accepted">Estimate Accepted</span></td>
+        <td class="unassigned">UNASSIGNED</td>
+        <td class="msg-preview">Missed call — trying to reach you</td>
+        <td class="action-text">Call back ASAP. 4 unread = repeated attempts.</td>
+      </tr>
+      <tr>
+        <td><span class="name">Cindy Fiacco</span> <span class="unread-badge">2</span></td>
+        <td class="phone">+18434756224</td>
+        <td class="value">$500</td>
+        <td><span class="stage-pill stage-paid">Payment Collected</span></td>
+        <td class="owner-b">Anthony</td>
+        <td class="msg-preview">When are you coming?</td>
+        <td class="action-text">PAID customer waiting for service. Send schedule.</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- TIER 2 TABLE -->
+  <div class="section">
+    <div class="section-header">
+      <span class="priority-dot warm"></span>
+      <h2>TIER 2 — Respond Today</h2>
+    </div>
+    <table>
+      <tr><th>Contact</th><th>Phone</th><th>Value</th><th>Stage</th><th>Owner</th><th>Last Message</th><th>Action</th></tr>
+      <tr>
+        <td><span class="name">Judy Caruthers</span> <span class="unread-badge">2</span></td>
+        <td class="phone">+13862821523</td>
+        <td class="value">$8,445</td>
+        <td><span class="stage-pill stage-given">Estimate Given</span></td>
+        <td class="owner-a">Lex</td>
+        <td class="msg-preview">I like the mock ups, nephews reviewing costs...</td>
+        <td class="action-text">Offer locked pricing for 30 days. Don't push.</td>
+      </tr>
+      <tr>
+        <td><span class="name">Tammy Ammerman</span> <span class="unread-badge">1</span></td>
+        <td class="phone">+18593913750</td>
+        <td class="value">$5,244</td>
+        <td><span class="stage-pill stage-given">Estimate Given</span></td>
+        <td class="owner-a">Lex</td>
+        <td class="msg-preview">Husband is looking over, will let you know next week</td>
+        <td class="action-text">Set reminder for next week follow-up.</td>
+      </tr>
+      <tr>
+        <td><span class="name">Lay Hodge</span> <span class="unread-badge">2</span></td>
+        <td class="phone">+16083546265</td>
+        <td class="value">$16,721</td>
+        <td><span class="stage-pill stage-paid">Payment Collected</span></td>
+        <td class="unassigned">UNASSIGNED</td>
+        <td class="msg-preview">Picking contractors, should know by next week</td>
+        <td class="action-text">Major account. Assign owner. Stay top of mind.</td>
+      </tr>
+      <tr>
+        <td><span class="name">Mireya Booher</span> <span class="unread-badge">1</span></td>
+        <td class="phone">+14079246653</td>
+        <td class="value">$900</td>
+        <td><span class="stage-pill stage-given">Estimate Given</span></td>
+        <td class="owner-b">Anthony</td>
+        <td class="msg-preview">Need to submit HOA application</td>
+        <td class="action-text">Offer HOA documentation support.</td>
+      </tr>
+      <tr>
+        <td><span class="name">Howard Hartman</span> <span class="unread-badge">1</span></td>
+        <td class="phone">+18602188831</td>
+        <td class="value">$1,080</td>
+        <td><span class="stage-pill stage-given">Follow Up Needed</span></td>
+        <td class="owner-b">Anthony</td>
+        <td class="msg-preview">We are flexible. There was just a hiccup on our side.</td>
+        <td class="action-text">Ready to reschedule. Offer dates.</td>
+      </tr>
+      <tr>
+        <td><span class="name">Roberta &amp; Claude Cromer</span> <span class="unread-badge">1</span></td>
+        <td class="phone">+15707725512</td>
+        <td class="value">$0</td>
+        <td><span class="stage-pill stage-scheduled">Estimate Scheduled</span></td>
+        <td class="owner-a">Lex</td>
+        <td class="msg-preview">Must leave by 11:15 on March 10 for a tour</td>
+        <td class="action-text">Appt Tue 3/10 @ 10AM. Finish by 11:15.</td>
+      </tr>
+      <tr>
+        <td><span class="name">Elise Johnson</span> <span class="unread-badge">1</span></td>
+        <td class="phone">+14079859280</td>
+        <td class="value">$0</td>
+        <td><span class="stage-pill stage-scheduled">Estimate Scheduled</span></td>
+        <td class="owner-a">Lex</td>
+        <td class="msg-preview">Ok that's fine</td>
+        <td class="action-text">Confirmed. Appt Mon 3/9 @ 3:30PM.</td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- PANEL 2: ACTION PLAN -->
+<div id="panel-action" class="panel">
+<div class="content">
+  <div class="section">
+    <div class="section-header"><h2>Suggested Replies — Ready for Review</h2></div>
+
+    <div style="margin-bottom:20px">
+      <table>
+        <tr><th style="width:160px">Contact</th><th>Suggested Reply</th><th style="width:140px">Before Sending</th></tr>
+        <tr>
+          <td><span class="name">Anthony Eugene</span><br><span class="tag tag-urgent">URGENT</span></td>
+          <td><div class="suggested-reply">Hi Anthony, I'm checking with the crew right now. We sincerely apologize about the debris — we'll get Bryan and Lauren's yard cleaned up today. I'll call you with an update within the hour.</div></td>
+          <td class="action-text">Verify crew status and cleanup timeline first.</td>
+        </tr>
+        <tr>
+          <td><span class="name">Cristen Brown</span><br><span class="tag tag-urgent">CLOSE</span></td>
+          <td><div class="suggested-reply">Awesome, Cristen! We're excited to get started. What days work best for you? I'll get you locked in right away.</div></td>
+          <td class="action-text">Check crew availability before offering dates.</td>
+        </tr>
+        <tr>
+          <td><span class="name">Eddie Muse</span><br><span class="tag tag-hot">$39.5K</span></td>
+          <td><div class="suggested-reply">Hi Eddie, absolutely! We're looking at [dates] for your project. I'll confirm the exact date by end of day tomorrow. Thanks for your patience!</div></td>
+          <td class="action-text">Check schedule and fill in dates.</td>
+        </tr>
+        <tr>
+          <td><span class="name">Richard Swormar</span><br><span class="tag tag-warm">BOOK IT</span></td>
+          <td><div class="suggested-reply">Perfect, Richard! We'll avoid the 11th. How about [date]? I'll get you on the calendar right away.</div></td>
+          <td class="action-text">Pick a date that's not the 11th.</td>
+        </tr>
+        <tr>
+          <td><span class="name">Marie Breen</span><br><span class="tag tag-urgent">CALL BACK</span></td>
+          <td><div class="suggested-reply">Hi Marie, so sorry we missed you! I'm available now — give me a call back or let me know a good time.</div></td>
+          <td class="action-text">Call first, then text.</td>
+        </tr>
+        <tr>
+          <td><span class="name">Cindy Fiacco</span><br><span class="tag tag-urgent">PAID</span></td>
+          <td><div class="suggested-reply">Hi Cindy! We have you scheduled for [date]. The crew will arrive between [time window]. I'll confirm the day before as well.</div></td>
+          <td class="action-text">Check work schedule calendar.</td>
+        </tr>
+        <tr>
+          <td><span class="name">Judy Caruthers</span><br><span class="tag tag-warm">$8.4K</span></td>
+          <td><div class="suggested-reply">Hi Judy, so glad you like the mockups! Just so you know, we can lock in this pricing for 30 days. Whenever your family is ready, we're here. No rush at all.</div></td>
+          <td class="action-text">No blockers. Don't push.</td>
+        </tr>
+        <tr>
+          <td><span class="name">Mireya Booher</span><br><span class="tag tag-warm">HOA</span></td>
+          <td><div class="suggested-reply">Hi Mireya, absolutely! If you need any documentation for your HOA — like a scope of work letter or our insurance certificate — just let me know and I'll send it right over.</div></td>
+          <td class="action-text">Have HOA docs ready to send.</td>
+        </tr>
+        <tr>
+          <td><span class="name">Brian Russell</span><br><span class="tag tag-follow">HEALTH</span></td>
+          <td><div class="suggested-reply">Brian, no apologies needed at all. Your health comes first. We'll be right here whenever you're ready — wishing you a speedy recovery.</div></td>
+          <td class="action-text">Set June reminder. Do NOT follow up aggressively.</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><h2>Unassigned High-Value — Needs Owner NOW</h2></div>
+    <table>
+      <tr><th>Contact</th><th>Value</th><th>Stage</th><th>Action</th></tr>
+      <tr><td class="name">Cristen Brown</td><td class="value">$7,925</td><td><span class="stage-pill stage-accepted">Estimate Accepted</span></td><td class="unassigned">Assign immediately</td></tr>
+      <tr><td class="name">Lay Hodge</td><td class="value">$16,721</td><td><span class="stage-pill stage-paid">Payment Collected</span></td><td class="unassigned">Assign immediately</td></tr>
+      <tr><td class="name">Henry Ellis</td><td class="value">$20,081</td><td><span class="stage-pill stage-declined">Estimate Declined</span></td><td class="unassigned">Review — positive reply on declined?</td></tr>
+      <tr><td class="name">Nancy Tallent</td><td class="value">$1,206</td><td><span class="stage-pill stage-given">Follow Up Needed</span></td><td class="unassigned">Assign</td></tr>
+      <tr><td class="name">Richard Swormar</td><td class="value">$750</td><td><span class="stage-pill stage-accepted">Estimate Accepted</span></td><td class="unassigned">Assign + book</td></tr>
+      <tr><td class="name">Marie Breen</td><td class="value">$500</td><td><span class="stage-pill stage-accepted">Estimate Accepted</span></td><td class="unassigned">Assign + call back</td></tr>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- PANEL 3: CANCELLED APPOINTMENTS -->
+<div id="panel-calendar" class="panel">
+<div class="content">
+  <div class="stats" style="grid-template-columns: repeat(3,1fr); max-width:500px;">
+    <div class="stat-card"><div class="count" style="color:var(--green)">63</div><div class="label">Confirmed</div></div>
+    <div class="stat-card"><div class="count" style="color:var(--urgent)">8</div><div class="label">Cancelled</div></div>
+    <div class="stat-card"><div class="count" style="color:var(--warm)">4</div><div class="label">Reschedule</div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <span class="priority-dot urgent"></span>
+      <h2>Cancelled — Reschedule Priority</h2>
+    </div>
+    <table>
+      <tr><th>Contact</th><th>Original Date</th><th>Calendar</th><th>Owner</th><th>Opportunity</th><th>Conversation</th><th>Action</th></tr>
+      <tr style="background:rgba(250,173,20,0.05)">
+        <td><span class="name">Krystal Baumann</span><br><span class="tag tag-warm">RESCHEDULE</span></td>
+        <td>Mar 4 @ 11:00 AM</td>
+        <td>Lex Internal</td>
+        <td class="owner-a">Lex</td>
+        <td>$250 <span class="stage-pill stage-lost">Lost</span></td>
+        <td class="msg-preview">"See you tomorrow. Have a wonderful day." <span class="unread-badge">1</span></td>
+        <td class="action-text">Customer warm. Reschedule NOW. Move opp back to Estimate Scheduled.</td>
+      </tr>
+      <tr style="background:rgba(250,173,20,0.05)">
+        <td><span class="name">Kelisha Hart</span><br><span class="tag tag-warm">RESCHEDULE</span></td>
+        <td>Mar 4 @ 12:00 PM</td>
+        <td>Lex Internal</td>
+        <td class="owner-a">Lex</td>
+        <td>$0 <span class="stage-pill stage-lost">Lost</span></td>
+        <td class="msg-preview">Reschedule text sent, no reply <span class="unread-badge">2</span></td>
+        <td class="action-text">Follow up on reschedule. No response to first ask.</td>
+      </tr>
+      <tr style="background:rgba(250,173,20,0.05)">
+        <td><span class="name">Colby Smith</span><br><span class="tag tag-follow">FINAL TRY</span></td>
+        <td>Feb 23 @ 11:30 AM</td>
+        <td>Lex Internal</td>
+        <td class="owner-a">Lex</td>
+        <td>$0 <span class="stage-pill stage-lost">Lost</span></td>
+        <td class="msg-preview">Reschedule text sent, no reply <span class="unread-badge">3</span></td>
+        <td class="action-text">13 days since cancel. One final attempt.</td>
+      </tr>
+      <tr style="background:rgba(250,173,20,0.05)">
+        <td><span class="name">Katty Polo</span><br><span class="tag tag-new">OUTREACH</span></td>
+        <td>Mar 2 @ 1:00 PM</td>
+        <td>Anthony Internal</td>
+        <td class="owner-b">Anthony</td>
+        <td>$0 <span class="stage-pill stage-lost">Lost</span></td>
+        <td class="msg-preview">No conversation found</td>
+        <td class="action-text">First outreach to reschedule. Anthony's lead.</td>
+      </tr>
+      <tr>
+        <td><span class="name">Phat Gagne</span><br><span class="tag tag-hot">VERIFY</span></td>
+        <td>Feb 11 @ 11:00 AM</td>
+        <td>Lex Internal</td>
+        <td class="owner-a">Lex</td>
+        <td>$0 <span class="stage-pill stage-lost">Lost</span></td>
+        <td class="msg-preview">"See you soon!" but appt cancelled <span class="unread-badge">2</span></td>
+        <td class="action-text">Contradictory data. Check if customer was actually seen.</td>
+      </tr>
+      <tr>
+        <td><span class="name">Jackie Galdi</span><br><span class="tag tag-cold">LOW</span></td>
+        <td>Feb 27 @ 1:30 PM</td>
+        <td>Lex Internal</td>
+        <td class="owner-a">Lex</td>
+        <td>$0 <span class="stage-pill stage-lost">Lost</span></td>
+        <td class="msg-preview">No conversation found</td>
+        <td class="action-text">One last outreach attempt.</td>
+      </tr>
+      <tr style="opacity:0.5">
+        <td><span class="name">Claud Bowers</span><br><span class="tag tag-cold">CLOSED</span></td>
+        <td>Feb 7 @ 1:00 PM</td>
+        <td>Lex Internal</td>
+        <td class="owner-a">Lex</td>
+        <td>$0 <span class="stage-pill stage-lost">Lost</span></td>
+        <td class="msg-preview">"No Tks." — Declined</td>
+        <td class="action-text">No reschedule. Closed.</td>
+      </tr>
+      <tr style="opacity:0.5">
+        <td><span class="name">Zach Adams</span><br><span class="tag tag-cold">CLOSED</span></td>
+        <td>Feb 16 @ 11:00 AM</td>
+        <td>Book an Estimate</td>
+        <td class="owner-a">Lex</td>
+        <td>$0 <span class="stage-pill stage-lost">Lost</span></td>
+        <td class="msg-preview">No conversation. 20 days since cancel.</td>
+        <td class="action-text">No reschedule. Closed.</td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- PANEL 4: UPCOMING -->
+<div id="panel-upcoming" class="panel">
+<div class="content">
+  <div class="section">
+    <div class="section-header"><h2>Upcoming Confirmed — Next 7 Days</h2></div>
+    <table>
+      <tr><th>Date / Time</th><th>Contact</th><th>Calendar</th><th>Owner</th><th>Conversation Flag</th></tr>
+      <tr>
+        <td style="font-weight:700">Mon 3/9<br>9:00 AM</td>
+        <td><span class="name">David Fraser</span><br>Altamonte Springs</td>
+        <td>Anthony Internal</td>
+        <td class="owner-b">Anthony</td>
+        <td><span class="tag tag-new">Clear</span></td>
+      </tr>
+      <tr style="background:rgba(255,77,79,0.04)">
+        <td style="font-weight:700">Mon 3/9<br>3:30 PM</td>
+        <td><span class="name">Elise Johnson</span><br>New Smyrna Beach</td>
+        <td>Lex Internal</td>
+        <td class="owner-a">Lex</td>
+        <td><span class="unread-badge">1</span> "Ok that's fine" — Acknowledge before visit</td>
+      </tr>
+      <tr style="background:rgba(250,173,20,0.04)">
+        <td style="font-weight:700">Tue 3/10<br>10:00 AM</td>
+        <td><span class="name">Roberta &amp; Claude Cromer</span><br>Orlando</td>
+        <td>Lex Internal</td>
+        <td class="owner-a">Lex</td>
+        <td><span class="unread-badge">1</span> Must leave by 11:15 AM for tour — <strong>time constraint</strong></td>
+      </tr>
+      <tr>
+        <td style="font-weight:700">Wed 3/11<br>10:00 AM</td>
+        <td><span class="name">Tyler Dixon</span><br>DeLand</td>
+        <td>Lex Internal</td>
+        <td class="owner-a">Lex</td>
+        <td><span class="tag tag-new">Clear</span></td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- PANEL 5: PIPELINE UPDATES -->
+<div id="panel-pipeline" class="panel">
+<div class="content">
+  <div class="section">
+    <div class="section-header"><h2>Pipeline Stage Updates Needed</h2></div>
+    <table>
+      <tr><th>Contact</th><th>Message</th><th>Current Stage</th><th>Value</th><th>Update To</th></tr>
+      <tr>
+        <td class="name">David Smith</td>
+        <td class="msg-preview">"I hired another company"</td>
+        <td><span class="stage-pill stage-given">Follow Up Needed</span></td>
+        <td>$1,185</td>
+        <td><span class="stage-pill stage-lost">Lost/Not Interested</span></td>
+      </tr>
+      <tr>
+        <td class="name">Zinnia Maisonet</td>
+        <td class="msg-preview" style="color:var(--urgent)">"Stop"</td>
+        <td><span class="stage-pill stage-declined">Estimate Declined</span></td>
+        <td>$2,150</td>
+        <td><span class="tag tag-urgent">DND + Remove Automations</span></td>
+      </tr>
+      <tr>
+        <td class="name">Tharwat Habib</td>
+        <td class="msg-preview" style="color:var(--urgent)">"Stop"</td>
+        <td><span class="stage-pill stage-declined">Estimate Declined</span></td>
+        <td>$6,000</td>
+        <td><span class="tag tag-urgent">DND + Remove Automations</span></td>
+      </tr>
+      <tr>
+        <td class="name">Aimee Valle</td>
+        <td class="msg-preview">"We went with someone else"</td>
+        <td><span class="stage-pill stage-declined">Estimate Declined</span></td>
+        <td>$850</td>
+        <td>Close out</td>
+      </tr>
+      <tr>
+        <td class="name">Kathy Stroschein</td>
+        <td class="msg-preview">"No, thank you"</td>
+        <td><span class="stage-pill stage-declined">Estimate Declined</span></td>
+        <td>$788</td>
+        <td>Close out</td>
+      </tr>
+      <tr>
+        <td class="name">Cindy Carbonell</td>
+        <td class="msg-preview">"No thanks."</td>
+        <td><span class="stage-pill stage-declined">Estimate Declined</span></td>
+        <td>$3,250</td>
+        <td>Close out</td>
+      </tr>
+      <tr style="background:rgba(250,173,20,0.05)">
+        <td class="name">Robert Allen</td>
+        <td class="msg-preview">"Health issues, put everything on hold"</td>
+        <td><span class="stage-pill stage-declined">Estimate Declined</span></td>
+        <td class="value">$3,000</td>
+        <td><span class="stage-pill stage-given">Follow Up Needed</span> (90-day)</td>
+      </tr>
+      <tr style="background:rgba(250,173,20,0.05)">
+        <td class="name">Henry Ellis</td>
+        <td class="msg-preview">"Great, thanks!"</td>
+        <td><span class="stage-pill stage-declined">Estimate Declined</span></td>
+        <td class="value">$20,081</td>
+        <td><span class="tag tag-hot">REVIEW — positive on declined?</span></td>
+      </tr>
+      <tr style="background:rgba(255,77,79,0.05)">
+        <td class="name">Lief Erickson</td>
+        <td class="msg-preview">"Thanks." (12 unread!)</td>
+        <td><span class="stage-pill stage-lost">Lost/Not Interested</span></td>
+        <td>$605</td>
+        <td><span class="tag tag-urgent">12 UNREAD — Review full history</span></td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- PANEL 6: OWNERS -->
+<div id="panel-owners" class="panel">
+<div class="content">
+  <div class="stats" style="grid-template-columns: repeat(3, 1fr); max-width:900px;">
+    <div class="stat-card">
+      <div class="count owner-a">40</div>
+      <div class="label">Owner A Needs Action</div>
+    </div>
+    <div class="stat-card">
+      <div class="count owner-b">62</div>
+      <div class="label">Owner B Needs Action</div>
+    </div>
+    <div class="stat-card">
+      <div class="count unassigned">42</div>
+      <div class="label">Unassigned Needs Action</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><h2>Owner Tabs — What Each Owner Is Missing</h2></div>
+    <table>
+      <tr><th>Owner</th><th>Total Conversations</th><th>Needs Action</th><th>Open Tab</th></tr>
+      <tr>
+        <td class="owner-a"><strong>Owner A</strong></td>
+        <td>239</td>
+        <td>40</td>
+        <td><a href="../00%20-%20Owner%20Tab%20-%20Owner%20A.md" style="color:var(--accent)">Open Owner A Tab</a></td>
+      </tr>
+      <tr>
+        <td class="owner-b"><strong>Owner B</strong></td>
+        <td>160</td>
+        <td>62</td>
+        <td><a href="../00%20-%20Owner%20Tab%20-%20Owner%20B.md" style="color:var(--accent)">Open Owner B Tab</a></td>
+      </tr>
+      <tr>
+        <td class="unassigned"><strong>Unassigned</strong></td>
+        <td>284</td>
+        <td>42</td>
+        <td><a href="../00%20-%20Owner%20Tab%20-%20Unassigned.md" style="color:var(--accent)">Open Unassigned Tab</a></td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><h2>Owner Focus Right Now</h2></div>
+    <table>
+      <tr><th>Owner</th><th>Immediate Focus</th></tr>
+      <tr><td class="owner-a">Owner A</td><td class="action-text">Clear URGENT unread first, then FOLLOW-UP estimate threads.</td></tr>
+      <tr><td class="owner-b">Owner B</td><td class="action-text">Highest active queue; prioritize URGENT and HOT same-day follow-up.</td></tr>
+      <tr><td class="unassigned">Unassigned</td><td class="action-text">Assign ownership before outreach to prevent dropped leads.</td></tr>
+    </table>
+  </div>
+</div>
+</div>
+
+<div class="footer">
+  <div>DeAngelos Land Services — GHL Triage Dashboard</div>
+  <div>API Keys: Conversations + Contacts + Opportunities + Calendars | Location: Fqv0HfBV4jdcZsHDMg0n</div>
+  <div>Auto-refresh: Every 6 hours</div>
+</div>
+
+<script>
+function showPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  event.target.closest('.tab').classList.add('active');
+}
+</script>
+</body>
+</html>
