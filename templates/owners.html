@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DeAngelos Land Services — Owner Assignments</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #232733;
+    --border: #2e3345;
+    --text: #e4e6ed;
+    --text-dim: #8b90a0;
+    --urgent: #ff4d4f;
+    --hot: #ff7a00;
+    --warm: #faad14;
+    --new-lead: #1890ff;
+    --follow-up: #722ed1;
+    --cold: #8b90a0;
+    --green: #52c41a;
+    --accent: #4f9cf7;
+    --radius: 10px;
+    --lex: #4fc3f7;
+    --anthony: #ff8a65;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  .header {
+    background: linear-gradient(135deg, #1a2a3a 0%, #0f1117 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .header h1 {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+  .header h1 .green { color: var(--green); }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+  .header-right a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .header-right a:hover { text-decoration: underline; }
+  .live {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--green); font-weight: 600;
+  }
+  .live-dot {
+    width: 8px; height: 8px; background: var(--green);
+    border-radius: 50%; animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+  .content { padding: 24px 32px; max-width: 1400px; margin: 0 auto; }
+
+  /* Stats */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+    max-width: 700px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .stat-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .stat-card .count { font-size: 32px; font-weight: 800; letter-spacing: -1px; }
+  .stat-card .label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; color: var(--text-dim); }
+
+  /* Focus cards */
+  .focus-section { margin-bottom: 28px; }
+  .focus-section h2 { font-size: 16px; font-weight: 700; margin-bottom: 14px; }
+  .focus-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .focus-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    border-top: 3px solid transparent;
+  }
+  .focus-card.lex { border-top-color: var(--lex); }
+  .focus-card.anthony { border-top-color: var(--anthony); }
+  .focus-card.unassigned { border-top-color: var(--urgent); }
+  .focus-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+  .focus-card h3.lex-name { color: var(--lex); }
+  .focus-card h3.anthony-name { color: var(--anthony); }
+  .focus-card h3.unassigned-name { color: var(--urgent); }
+  .focus-card p { font-size: 13px; color: var(--text-dim); line-height: 1.6; }
+  .focus-card .focus-action { color: var(--accent); font-weight: 600; font-size: 12px; margin-top: 10px; }
+
+  /* Tabs */
+  .owner-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .owner-tab {
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dim);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    font-family: inherit;
+  }
+  .owner-tab:hover { color: var(--text); }
+  .owner-tab.active { border-bottom-color: var(--accent); color: var(--accent); }
+  .owner-tab .badge {
+    display: inline-block;
+    padding: 1px 7px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 700;
+    margin-left: 6px;
+    color: white;
+  }
+
+  /* Tables */
+  .owner-panel { display: none; }
+  .owner-panel.active { display: block; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--surface);
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    margin-bottom: 20px;
+  }
+  th {
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-dim);
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 12px 14px;
+    font-size: 13px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover { background: rgba(79, 156, 247, 0.04); }
+  .name { font-weight: 600; }
+  .value { font-weight: 700; color: var(--green); }
+  .unread-badge {
+    background: var(--urgent);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 8px;
+    margin-left: 4px;
+  }
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .tag-urgent { background: rgba(255,77,79,0.15); color: var(--urgent); }
+  .tag-hot { background: rgba(255,122,0,0.15); color: var(--hot); }
+  .tag-warm { background: rgba(250,173,20,0.15); color: var(--warm); }
+  .tag-new { background: rgba(24,144,255,0.15); color: var(--new-lead); }
+  .tag-follow { background: rgba(114,46,209,0.15); color: var(--follow-up); }
+  .stage-pill {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .stage-accepted { background: rgba(82,196,26,0.15); color: var(--green); }
+  .stage-scheduled { background: rgba(24,144,255,0.15); color: var(--new-lead); }
+  .stage-given { background: rgba(250,173,20,0.15); color: var(--warm); }
+  .stage-declined { background: rgba(255,77,79,0.1); color: var(--urgent); }
+  .stage-paid { background: rgba(82,196,26,0.25); color: var(--green); }
+  .stage-lost { background: rgba(139,144,160,0.15); color: var(--cold); }
+  .stage-work { background: rgba(114,46,209,0.15); color: var(--follow-up); }
+  .action-text { font-size: 12px; color: var(--accent); max-width: 300px; }
+  .msg-preview { color: var(--text-dim); font-size: 12px; max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .empty-state { text-align: center; padding: 40px; color: var(--text-dim); font-size: 14px; }
+
+  .footer {
+    padding: 20px 32px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--text-dim);
+    text-align: center;
+  }
+
+  @media (max-width: 900px) {
+    .stats { grid-template-columns: 1fr; }
+    .focus-cards { grid-template-columns: 1fr; }
+    .content { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>DeAngelos <span class="green">Land Services</span> — Owner Assignments</h1>
+  <div class="header-right">
+    <a href="/dashboard/">&#8592; Command Center</a>
+    <span class="live"><span class="live-dot"></span> LIVE DATA</span>
+    <span id="update-time"></span>
+  </div>
+</div>
+
+<div class="content">
+  <div class="stats" id="owner-stats"></div>
+
+  <div class="focus-section">
+    <h2>Owner Focus — What To Do Right Now</h2>
+    <div class="focus-cards">
+      <div class="focus-card lex">
+        <h3 class="lex-name">Lex (Owner A)</h3>
+        <p>Clear URGENT unread conversations first, then work through FOLLOW-UP estimate threads. Check upcoming appointments for time constraints.</p>
+        <div class="focus-action">Priority: Urgent unread &rarr; Follow-ups &rarr; Upcoming appts</div>
+      </div>
+      <div class="focus-card anthony">
+        <h3 class="anthony-name">Anthony (Owner B)</h3>
+        <p>Highest active queue. Prioritize URGENT and HOT same-day follow-ups. Check for any crew-related customer complaints first.</p>
+        <div class="focus-action">Priority: Crew issues &rarr; Urgent &rarr; Hot follow-ups</div>
+      </div>
+      <div class="focus-card unassigned">
+        <h3 class="unassigned-name">Unassigned</h3>
+        <p>These leads have NO owner. Assign ownership before any outreach to prevent dropped leads. High-value unassigned leads are losing revenue every hour.</p>
+        <div class="focus-action">Action: Assign owner to every lead ASAP</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="owner-tabs" id="owner-tabs">
+    <button class="owner-tab active" data-owner="all">All Leads</button>
+    <button class="owner-tab" data-owner="lex">Lex <span class="badge" style="background:var(--lex)" id="badge-lex">0</span></button>
+    <button class="owner-tab" data-owner="anthony">Anthony <span class="badge" style="background:var(--anthony)" id="badge-anthony">0</span></button>
+    <button class="owner-tab" data-owner="unassigned">Unassigned <span class="badge" style="background:var(--urgent)" id="badge-unassigned">0</span></button>
+  </div>
+
+  <div id="owner-table-container"></div>
+</div>
+
+<div class="footer">
+  Auto-refresh: every 30s | <span id="last-fetch"></span>
+</div>
+
+<script>
+const DATA_URL = '/dashboard/data/dashboard-data.json';
+const REFRESH_INTERVAL = 30000;
+
+function $(s) { return document.querySelector(s); }
+
+function fmt(n) { return '$' + n.toLocaleString(); }
+
+function getOwnerKey(owner) {
+  if (!owner) return 'unassigned';
+  const o = owner.toLowerCase();
+  if (o.includes('owner a') || o.includes('lex')) return 'lex';
+  if (o.includes('owner b') || o.includes('anthony')) return 'anthony';
+  if (o === 'unassigned') return 'unassigned';
+  return 'unassigned';
+}
+
+function getOwnerName(key) {
+  if (key === 'lex') return 'Lex';
+  if (key === 'anthony') return 'Anthony';
+  return 'Unassigned';
+}
+
+function priorityTag(tier) {
+  const map = {
+    1: '<span class="tag tag-urgent">TIER 1</span>',
+    2: '<span class="tag tag-warm">TIER 2</span>',
+    3: '<span class="tag tag-follow">TIER 3</span>',
+    4: '<span class="tag tag-new">TIER 4</span>'
+  };
+  return map[tier] || '';
+}
+
+function stagePill(stage) {
+  if (!stage) return '';
+  const s = stage.toLowerCase();
+  let cls = 'stage-given';
+  if (s.includes('accepted')) cls = 'stage-accepted';
+  else if (s.includes('scheduled')) cls = 'stage-scheduled';
+  else if (s.includes('declined')) cls = 'stage-declined';
+  else if (s.includes('paid') || s.includes('payment')) cls = 'stage-paid';
+  else if (s.includes('lost')) cls = 'stage-lost';
+  else if (s.includes('work')) cls = 'stage-work';
+  return '<span class="stage-pill ' + cls + '">' + stage + '</span>';
+}
+
+let currentFilter = 'all';
+let cachedData = null;
+
+function renderTable(data) {
+  const allLeads = [];
+  [1,2,3,4].forEach(tier => {
+    const key = 'tier' + tier;
+    if (data[key]) {
+      data[key].forEach(lead => {
+        allLeads.push({ ...lead, tier });
+      });
+    }
+  });
+
+  // Count by owner
+  const counts = { lex: 0, anthony: 0, unassigned: 0 };
+  const values = { lex: 0, anthony: 0, unassigned: 0 };
+  allLeads.forEach(l => {
+    const k = getOwnerKey(l.owner);
+    counts[k]++;
+    values[k] += (l.value || 0);
+  });
+
+  // Stats cards
+  $('#owner-stats').innerHTML = `
+    <div class="stat-card" onclick="filterOwner('lex')">
+      <div class="count" style="color:var(--lex)">${counts.lex}</div>
+      <div class="label">Lex — ${fmt(values.lex)}</div>
+    </div>
+    <div class="stat-card" onclick="filterOwner('anthony')">
+      <div class="count" style="color:var(--anthony)">${counts.anthony}</div>
+      <div class="label">Anthony — ${fmt(values.anthony)}</div>
+    </div>
+    <div class="stat-card" onclick="filterOwner('unassigned')">
+      <div class="count" style="color:var(--urgent)">${counts.unassigned}</div>
+      <div class="label">Unassigned — ${fmt(values.unassigned)}</div>
+    </div>
+  `;
+
+  $('#badge-lex').textContent = counts.lex;
+  $('#badge-anthony').textContent = counts.anthony;
+  $('#badge-unassigned').textContent = counts.unassigned;
+
+  // Filter
+  const filtered = currentFilter === 'all'
+    ? allLeads
+    : allLeads.filter(l => getOwnerKey(l.owner) === currentFilter);
+
+  if (filtered.length === 0) {
+    $('#owner-table-container').innerHTML = '<div class="empty-state">No leads for this owner.</div>';
+    return;
+  }
+
+  let html = `<table>
+    <tr><th>Contact</th><th>Tier</th><th>Value</th><th>Stage</th><th>Owner</th><th>Last Message</th><th>Action</th></tr>`;
+
+  filtered.forEach(l => {
+    const ownerKey = getOwnerKey(l.owner);
+    const ownerColor = ownerKey === 'lex' ? 'var(--lex)' : ownerKey === 'anthony' ? 'var(--anthony)' : 'var(--urgent)';
+    const unreadBadge = l.unread ? '<span class="unread-badge">' + l.unread + '</span>' : '';
+
+    html += `<tr>
+      <td><span class="name">${l.name}</span> ${unreadBadge}</td>
+      <td>${priorityTag(l.tier)}</td>
+      <td class="value">${l.value ? fmt(l.value) : '$0'}</td>
+      <td>${stagePill(l.stage)}</td>
+      <td style="color:${ownerColor};font-weight:600">${getOwnerName(ownerKey)}</td>
+      <td class="msg-preview">${l.last_message || '—'}</td>
+      <td class="action-text">${l.action || '—'}</td>
+    </tr>`;
+  });
+
+  html += '</table>';
+  $('#owner-table-container').innerHTML = html;
+}
+
+function filterOwner(owner) {
+  currentFilter = owner;
+  document.querySelectorAll('.owner-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector('.owner-tab[data-owner="' + owner + '"]').classList.add('active');
+  if (cachedData) renderTable(cachedData);
+}
+
+// Tab click handlers
+document.querySelectorAll('.owner-tab').forEach(tab => {
+  tab.addEventListener('click', function() {
+    filterOwner(this.dataset.owner);
+  });
+});
+
+async function loadData() {
+  try {
+    const res = await fetch(DATA_URL + '?t=' + Date.now());
+    cachedData = await res.json();
+    renderTable(cachedData);
+    const now = new Date();
+    $('#last-fetch').textContent = 'Last fetch: ' + now.toLocaleTimeString();
+    $('#update-time').textContent = 'Updated: ' + new Date(cachedData.meta.generated).toLocaleString();
+  } catch (e) {
+    console.error('Failed to load data:', e);
+  }
+}
+
+loadData();
+setInterval(loadData, REFRESH_INTERVAL);
+</script>
+</body>
+</html>

@@ -113,6 +113,7 @@
   .nav-card.triage::before { background: var(--green); }
   .nav-card.replies::before { background: var(--purple); }
   .nav-card.appointments::before { background: var(--accent); }
+  .nav-card.owners::before { background: #ff8a65; }
 
   .card-icon {
     font-size: 32px;
@@ -124,6 +125,7 @@
   .nav-card.triage .card-icon { color: var(--green); }
   .nav-card.replies .card-icon { color: var(--purple); }
   .nav-card.appointments .card-icon { color: var(--accent); }
+  .nav-card.owners .card-icon { color: #ff8a65; }
 
   .card-title { font-size: 18px; font-weight: 700; }
   .card-desc { font-size: 13px; color: var(--text-dim); line-height: 1.5; }
@@ -154,25 +156,6 @@
     border-top: 1px solid var(--border);
   }
 
-  /* WordPress embed instructions */
-  .wp-instructions {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px 24px;
-    margin-top: 32px;
-  }
-  .wp-instructions h3 { font-size: 15px; margin-bottom: 10px; color: var(--accent); }
-  .wp-instructions p { font-size: 13px; color: var(--text-dim); margin-bottom: 8px; }
-  .wp-instructions code {
-    background: var(--surface2); padding: 2px 6px; border-radius: 4px;
-    font-size: 12px; color: var(--green);
-  }
-  .wp-instructions pre {
-    background: var(--surface2); padding: 14px; border-radius: 8px;
-    font-size: 12px; color: var(--green); overflow-x: auto;
-    margin: 8px 0;
-  }
 
   @media (max-width: 768px) {
     .hero { padding: 32px 16px; }
@@ -216,28 +199,15 @@
       <div class="card-desc">Cancelled appointment recovery, reschedule priority matrix, and upcoming confirmed appointments for the next 7 days.</div>
       <div class="card-stats" id="appt-stats"></div>
     </a>
+
+    <a href="/dashboard/owners/" class="nav-card owners">
+      <div class="card-icon">&#128101;</div>
+      <div class="card-title">Owner Assignments</div>
+      <div class="card-desc">See what each team member needs to do. Lex, Anthony, and unassigned lead breakdowns with action priorities.</div>
+      <div class="card-stats" id="owner-stats"></div>
+    </a>
   </div>
 
-  <div class="wp-instructions">
-    <h3>WordPress Integration Guide</h3>
-    <p>Each page is a standalone HTML file that reads from <code>data/dashboard-data.json</code> and auto-refreshes every 30 seconds.</p>
-
-    <p><strong>Option 1 — WordPress Custom HTML Block (Easiest)</strong></p>
-    <p>Create a new WordPress page, add a "Custom HTML" block, and paste the contents of any HTML file. Update the <code>DATA_URL</code> in the script to point to your hosted JSON file.</p>
-
-    <p><strong>Option 2 — iframe Embed</strong></p>
-    <pre>&lt;iframe src="https://your-domain.com/dashboard/triage-dashboard.html"
-  width="100%" height="900" frameborder="0"
-  style="border-radius:12px;"&gt;&lt;/iframe&gt;</pre>
-
-    <p><strong>Option 3 — WordPress REST API (Advanced)</strong></p>
-    <p>Host <code>dashboard-data.json</code> as a WordPress REST endpoint. Update your GHL cron script to POST updated data to:</p>
-    <pre>POST https://landtree.us/wp-json/deangelos/v1/dashboard-data</pre>
-    <p>Each page will fetch from this endpoint instead of a static JSON file.</p>
-
-    <p><strong>Real-Time Updates</strong></p>
-    <p>Your existing cron (<code>scripts/ghl_triage_report.py</code>) generates fresh data every 6 hours. Simply have it write to <code>dashboard-data.json</code> and all 3 pages update automatically on next refresh cycle (every 30 seconds).</p>
-  </div>
 </div>
 
 <div class="footer">
@@ -283,6 +253,21 @@ async function loadKPIs() {
     document.getElementById('appt-stats').innerHTML = `
       <span class="card-stat">Cancelled: <strong>${cancelledCount}</strong></span>
       <span class="card-stat">Reschedule: <strong>${rescheduleCount}</strong></span>
+    `;
+
+    // Owner stats
+    const allLeads = [...(d.tier1||[]), ...(d.tier2||[]), ...(d.tier3||[]), ...(d.tier4||[])];
+    let lexCount = 0, anthonyCount = 0, unassignedCount = 0;
+    allLeads.forEach(l => {
+      const o = (l.owner || '').toLowerCase();
+      if (o.includes('owner a') || o.includes('lex')) lexCount++;
+      else if (o.includes('owner b') || o.includes('anthony')) anthonyCount++;
+      else unassignedCount++;
+    });
+    document.getElementById('owner-stats').innerHTML = `
+      <span class="card-stat">Lex: <strong>${lexCount}</strong></span>
+      <span class="card-stat">Anthony: <strong>${anthonyCount}</strong></span>
+      <span class="card-stat">Unassigned: <strong style="color:#ff4d4f">${unassignedCount}</strong></span>
     `;
 
   } catch (e) {

@@ -35,6 +35,7 @@ function dals_register_rewrites() {
     add_rewrite_rule( '^dashboard/triage/?$',       'index.php?dals_page=triage',       'top' );
     add_rewrite_rule( '^dashboard/replies/?$',      'index.php?dals_page=replies',      'top' );
     add_rewrite_rule( '^dashboard/appointments/?$', 'index.php?dals_page=appointments', 'top' );
+    add_rewrite_rule( '^dashboard/owners/?$',       'index.php?dals_page=owners',       'top' );
     add_rewrite_rule( '^dashboard/?$',              'index.php?dals_page=home',         'top' );
 }
 
@@ -60,6 +61,7 @@ function dals_serve_page() {
         'triage'       => 'triage-dashboard.html',
         'replies'      => 'agent-reply-hub.html',
         'appointments' => 'cancelled-appointments.html',
+        'owners'       => 'owners.html',
     );
 
     if ( ! isset( $map[ $page ] ) ) {
