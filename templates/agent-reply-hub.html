@@ -6,17 +6,17 @@
 <title>DeAngelos — Agent Reply Hub</title>
 <style>
   :root {
-    --bg: #0f1117;
-    --surface: #1a1d27;
-    --surface2: #232733;
-    --border: #2e3345;
-    --text: #e4e6ed;
-    --text-dim: #8b90a0;
-    --urgent: #ff4d4f;
-    --hot: #ff7a00;
-    --warm: #faad14;
-    --green: #52c41a;
-    --accent: #4f9cf7;
+    --bg: #0a0a08;
+    --surface: #141412;
+    --surface2: #1e1e1a;
+    --border: #2d2d22;
+    --text: #f0efe6;
+    --text-dim: #908f80;
+    --urgent: #e53935;
+    --hot: #ff6d00;
+    --warm: #fbc02d;
+    --green: #43a047;
+    --accent: #f5c518;
     --radius: 10px;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -30,7 +30,7 @@
   }
 
   .header {
-    background: linear-gradient(135deg, #2a1a3a 0%, #0f1117 100%);
+    background: linear-gradient(135deg, #1a1a0a 0%, #0a0a08 100%);
     border-bottom: 1px solid var(--border);
     padding: 24px 32px;
     display: flex;
@@ -40,7 +40,7 @@
     gap: 12px;
   }
   .header h1 { font-size: 20px; font-weight: 700; }
-  .header h1 span { color: #b388ff; }
+  .header h1 span { color: var(--accent); }
   .header-meta { text-align: right; font-size: 13px; color: var(--text-dim); }
   .header-meta .live {
     display: inline-flex; align-items: center; gap: 6px;
@@ -170,7 +170,7 @@
 
   .reply-draft {
     margin: 0 20px 16px;
-    background: #1a2e1a; border: 1px solid #2d4a2d; border-radius: 8px;
+    background: #1a1e0e; border: 1px solid #2d3318; border-radius: 8px;
     padding: 12px 14px;
     position: relative;
   }
@@ -250,7 +250,7 @@
   .loading { text-align: center; padding: 60px; color: var(--text-dim); }
   .loading .spinner {
     width: 32px; height: 32px; border: 3px solid var(--border);
-    border-top-color: #b388ff; border-radius: 50%;
+    border-top-color: var(--accent); border-radius: 50%;
     animation: spin 0.8s linear infinite; margin: 0 auto 12px;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
@@ -264,7 +264,7 @@
 <body>
 
 <div class="header">
-  <h1>Agent <span>Reply Hub</span> — Human Approval Required</h1>
+  <h1 style="display:flex;align-items:center;gap:10px"><svg viewBox="0 0 52 58" width="28" height="32" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="c" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#43a047"/><stop offset="100%" stop-color="#2e7d32"/></linearGradient></defs><path d="M26 2 L38 18 L34 18 L42 30 L36 30 L44 42 L8 42 L16 30 L10 30 L18 18 L14 18 Z" fill="url(#c)"/><rect x="21" y="42" width="10" height="8" rx="2" fill="#5d4037"/><rect x="18" y="50" width="16" height="4" rx="2" fill="#4e342e"/></svg> Agent <span>Reply Hub</span> — Human Approval Required</h1>
   <div class="header-meta">
     <div class="live"><div class="live-dot"></div> LIVE DATA</div>
     <div id="last-updated">Loading...</div>

@@ -6,18 +6,20 @@
 <title>DeAngelos Land Services — Command Center</title>
 <style>
   :root {
-    --bg: #0f1117;
-    --surface: #1a1d27;
-    --surface2: #232733;
-    --border: #2e3345;
-    --text: #e4e6ed;
-    --text-dim: #8b90a0;
-    --urgent: #ff4d4f;
-    --hot: #ff7a00;
-    --warm: #faad14;
-    --green: #52c41a;
-    --accent: #4f9cf7;
-    --purple: #b388ff;
+    --bg: #0a0a08;
+    --surface: #141412;
+    --surface2: #1e1e1a;
+    --border: #2d2d22;
+    --text: #f0efe6;
+    --text-dim: #908f80;
+    --primary: #f5c518;
+    --primary-dim: #b8941a;
+    --urgent: #e53935;
+    --hot: #ff6d00;
+    --warm: #fbc02d;
+    --green: #43a047;
+    --tree: #2e7d32;
+    --accent: #f5c518;
     --radius: 12px;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -31,19 +33,20 @@
   }
 
   .hero {
-    background: linear-gradient(135deg, #1a3a2a 0%, #1a2a3a 50%, #2a1a3a 100%);
+    background: linear-gradient(135deg, #1a1a0a 0%, #0f1408 40%, #141410 100%);
     padding: 48px 32px;
     text-align: center;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 2px solid var(--primary-dim);
   }
+  .logo { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 10px; }
+  .logo svg { flex-shrink: 0; }
   .hero h1 {
     font-size: 32px;
     font-weight: 800;
     letter-spacing: -1px;
-    margin-bottom: 8px;
   }
-  .hero h1 .green { color: var(--green); }
-  .hero p { color: var(--text-dim); font-size: 15px; }
+  .hero h1 .brand { color: var(--primary); }
+  .hero p { color: var(--text-dim); font-size: 15px; margin-top: 4px; }
   .hero .live {
     display: inline-flex; align-items: center; gap: 6px;
     color: var(--green); font-weight: 600; font-size: 13px;
@@ -63,8 +66,8 @@
     margin: 24px auto 0;
   }
   .kpi {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(245,197,24,0.04);
+    border: 1px solid rgba(245,197,24,0.12);
     border-radius: 8px;
     padding: 14px;
     text-align: center;
@@ -100,9 +103,9 @@
     overflow: hidden;
   }
   .nav-card:hover {
-    border-color: var(--accent);
+    border-color: var(--primary);
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    box-shadow: 0 8px 24px rgba(245,197,24,0.08);
   }
   .nav-card::before {
     content: '';
@@ -110,10 +113,10 @@
     top: 0; left: 0; right: 0;
     height: 3px;
   }
-  .nav-card.triage::before { background: var(--green); }
-  .nav-card.replies::before { background: var(--purple); }
-  .nav-card.appointments::before { background: var(--accent); }
-  .nav-card.owners::before { background: #ff8a65; }
+  .nav-card.triage::before { background: var(--urgent); }
+  .nav-card.replies::before { background: var(--primary); }
+  .nav-card.appointments::before { background: var(--green); }
+  .nav-card.owners::before { background: var(--hot); }
 
   .card-icon {
     font-size: 32px;
@@ -122,10 +125,10 @@
     border-radius: 12px;
     background: var(--surface2);
   }
-  .nav-card.triage .card-icon { color: var(--green); }
-  .nav-card.replies .card-icon { color: var(--purple); }
-  .nav-card.appointments .card-icon { color: var(--accent); }
-  .nav-card.owners .card-icon { color: #ff8a65; }
+  .nav-card.triage .card-icon { color: var(--urgent); }
+  .nav-card.replies .card-icon { color: var(--primary); }
+  .nav-card.appointments .card-icon { color: var(--green); }
+  .nav-card.owners .card-icon { color: var(--hot); }
 
   .card-title { font-size: 18px; font-weight: 700; }
   .card-desc { font-size: 13px; color: var(--text-dim); line-height: 1.5; }
@@ -146,7 +149,7 @@
     font-weight: 700;
   }
   .card-badge.urgent { background: var(--urgent); color: #fff; }
-  .card-badge.action { background: var(--warm); color: #111; }
+  .card-badge.action { background: var(--primary); color: #111; }
 
   .footer {
     text-align: center;
@@ -155,7 +158,6 @@
     color: var(--text-dim);
     border-top: 1px solid var(--border);
   }
-
 
   @media (max-width: 768px) {
     .hero { padding: 32px 16px; }
@@ -169,7 +171,23 @@
 <body>
 
 <div class="hero">
-  <h1>DeAngelos <span class="green">Land Services</span></h1>
+  <div class="logo">
+    <svg viewBox="0 0 52 58" width="48" height="54" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="canopy" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#43a047"/>
+          <stop offset="100%" stop-color="#2e7d32"/>
+        </linearGradient>
+      </defs>
+      <path d="M26 2 L38 18 L34 18 L42 30 L36 30 L44 42 L8 42 L16 30 L10 30 L18 18 L14 18 Z" fill="url(#canopy)"/>
+      <rect x="21" y="42" width="10" height="8" rx="2" fill="#5d4037"/>
+      <rect x="18" y="50" width="16" height="4" rx="2" fill="#4e342e"/>
+      <circle cx="26" cy="22" r="3" fill="rgba(255,255,255,0.15)"/>
+      <circle cx="21" cy="32" r="2" fill="rgba(255,255,255,0.1)"/>
+      <circle cx="32" cy="28" r="2.5" fill="rgba(255,255,255,0.1)"/>
+    </svg>
+    <h1>DeAngelos <span class="brand">Land Services</span></h1>
+  </div>
   <p>GHL Command Center — Real-Time Operations Dashboard</p>
   <div class="live"><div class="live-dot"></div> LIVE — Auto-refreshing every 30s</div>
   <div class="kpi-strip" id="kpis"></div>
@@ -207,11 +225,10 @@
       <div class="card-stats" id="owner-stats"></div>
     </a>
   </div>
-
 </div>
 
 <div class="footer">
-  DeAngelos Land Services LLC — GHL Command Center | Data refreshes every 6 hours via cron | Pages auto-refresh every 30s
+  DeAngelos Land Services LLC — GHL Command Center | Pages auto-refresh every 30s
 </div>
 
 <script>
@@ -227,11 +244,11 @@ async function loadKPIs() {
     const r = d.revenue_summary;
 
     document.getElementById('kpis').innerHTML = `
-      <div class="kpi"><div class="kpi-value" style="color:var(--green)">${fmt(r.total.value)}</div><div class="kpi-label">Revenue at Risk</div></div>
+      <div class="kpi"><div class="kpi-value" style="color:var(--primary)">${fmt(r.total.value)}</div><div class="kpi-label">Revenue at Risk</div></div>
       <div class="kpi"><div class="kpi-value" style="color:var(--urgent)">${d.priority_counts.urgent}</div><div class="kpi-label">Urgent</div></div>
       <div class="kpi"><div class="kpi-value" style="color:var(--warm)">${m.unread_conversations}</div><div class="kpi-label">Unread</div></div>
       <div class="kpi"><div class="kpi-value" style="color:var(--text)">${r.total.count}</div><div class="kpi-label">Active Leads</div></div>
-      <div class="kpi"><div class="kpi-value" style="color:var(--accent)">${m.total_opportunities}</div><div class="kpi-label">Total Opps</div></div>
+      <div class="kpi"><div class="kpi-value" style="color:var(--green)">${m.total_opportunities}</div><div class="kpi-label">Total Opps</div></div>
     `;
 
     document.getElementById('urgent-badge').textContent = d.priority_counts.urgent + ' URGENT';
@@ -255,7 +272,6 @@ async function loadKPIs() {
       <span class="card-stat">Reschedule: <strong>${rescheduleCount}</strong></span>
     `;
 
-    // Owner stats
     const allLeads = [...(d.tier1||[]), ...(d.tier2||[]), ...(d.tier3||[]), ...(d.tier4||[])];
     let lexCount = 0, anthonyCount = 0, unassignedCount = 0;
     allLeads.forEach(l => {
@@ -267,7 +283,7 @@ async function loadKPIs() {
     document.getElementById('owner-stats').innerHTML = `
       <span class="card-stat">Lex: <strong>${lexCount}</strong></span>
       <span class="card-stat">Anthony: <strong>${anthonyCount}</strong></span>
-      <span class="card-stat">Unassigned: <strong style="color:#ff4d4f">${unassignedCount}</strong></span>
+      <span class="card-stat">Unassigned: <strong style="color:var(--urgent)">${unassignedCount}</strong></span>
     `;
 
   } catch (e) {
