@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DeAngelos — Cancelled Appointments & Reschedule Plan</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #232733;
+    --border: #2e3345;
+    --text: #e4e6ed;
+    --text-dim: #8b90a0;
+    --urgent: #ff4d4f;
+    --hot: #ff7a00;
+    --warm: #faad14;
+    --green: #52c41a;
+    --accent: #4f9cf7;
+    --verify: #722ed1;
+    --radius: 10px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.5;
+    padding-bottom: 50px;
+  }
+
+  .header {
+    background: linear-gradient(135deg, #1a2a3a 0%, #0f1117 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 24px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .header h1 { font-size: 20px; font-weight: 700; }
+  .header h1 span { color: var(--accent); }
+  .header-meta { text-align: right; font-size: 13px; color: var(--text-dim); }
+  .header-meta .live {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--green); font-weight: 600;
+  }
+  .live-dot {
+    width: 8px; height: 8px; background: var(--green);
+    border-radius: 50%; animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 24px; }
+
+  /* Stats Row */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    text-align: center;
+  }
+  .stat-value { font-size: 28px; font-weight: 800; }
+  .stat-label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+
+  /* Priority Matrix */
+  .matrix {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 28px;
+  }
+  .matrix-header {
+    background: var(--surface2);
+    padding: 12px 20px;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-dim);
+  }
+  .matrix table { width: 100%; border-collapse: collapse; }
+  .matrix th {
+    text-align: left; padding: 10px 14px; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-dim);
+    background: var(--surface2);
+  }
+  .matrix td {
+    padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 13px;
+  }
+  .matrix tr:last-child td { border-bottom: none; }
+  .priority-high { color: var(--urgent); font-weight: 700; }
+  .priority-medium { color: var(--warm); font-weight: 600; }
+  .priority-verify { color: var(--verify); font-weight: 600; }
+  .priority-low { color: var(--text-dim); }
+  .priority-closed { color: var(--text-dim); text-decoration: line-through; }
+
+  /* Appointment Cards */
+  .appt-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 12px;
+    position: relative;
+    transition: border-color 0.2s;
+  }
+  .appt-card:hover { border-color: var(--accent); }
+  .appt-card.reschedule { border-left: 3px solid var(--urgent); }
+  .appt-card.verify { border-left: 3px solid var(--verify); }
+  .appt-card.follow-up { border-left: 3px solid var(--warm); }
+  .appt-card.closed { border-left: 3px solid var(--text-dim); opacity: 0.7; }
+
+  .appt-top {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 8px; flex-wrap: wrap; gap: 8px;
+  }
+  .appt-name { font-size: 16px; font-weight: 700; }
+  .appt-location { font-size: 13px; color: var(--text-dim); }
+  .status-badge {
+    padding: 3px 10px; border-radius: 6px; font-size: 11px;
+    font-weight: 700; text-transform: uppercase;
+  }
+  .status-badge.reschedule { background: var(--urgent); color: #fff; }
+  .status-badge.verify { background: var(--verify); color: #fff; }
+  .status-badge.follow-up { background: var(--warm); color: #111; }
+  .status-badge.closed { background: var(--surface2); color: var(--text-dim); }
+
+  .appt-meta { font-size: 12px; color: var(--text-dim); margin-bottom: 10px; }
+  .appt-meta span { margin-right: 14px; }
+
+  .appt-message {
+    background: var(--surface2); border-radius: 8px;
+    padding: 10px 14px; font-size: 13px; margin-bottom: 10px;
+    border-left: 3px solid var(--accent);
+  }
+  .appt-analysis {
+    font-size: 13px; color: var(--warm); margin-bottom: 8px; font-weight: 600;
+  }
+  .appt-action {
+    font-size: 13px; color: var(--text); margin-bottom: 10px;
+  }
+  .appt-reply {
+    background: #1a2e1a; border: 1px solid #2d4a2d; border-radius: 8px;
+    padding: 10px 14px; font-size: 13px; color: #a8e6a8;
+    position: relative;
+  }
+  .appt-reply::before {
+    content: 'SUGGESTED REPLY'; display: block; font-size: 10px;
+    font-weight: 700; color: var(--green); margin-bottom: 4px;
+  }
+  .appt-pipeline {
+    margin-top: 8px; font-size: 12px;
+    padding: 6px 10px; background: var(--surface2); border-radius: 6px;
+    color: var(--hot);
+  }
+  .copy-btn {
+    position: absolute; top: 8px; right: 8px;
+    background: var(--green); color: #111; border: none;
+    padding: 4px 10px; border-radius: 4px; font-size: 11px;
+    cursor: pointer; font-weight: 600;
+  }
+
+  /* Upcoming Appointments */
+  .upcoming-section { margin-top: 32px; }
+  .day-header {
+    font-size: 15px; font-weight: 700; color: var(--accent);
+    margin: 20px 0 10px; padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  .upcoming-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .upcoming-card.has-note { border-left: 3px solid var(--warm); }
+  .upcoming-time { font-weight: 700; min-width: 80px; }
+  .upcoming-name { font-weight: 600; flex: 1; }
+  .upcoming-note {
+    width: 100%; font-size: 12px; color: var(--warm);
+    margin-top: 4px; padding-left: 80px;
+  }
+
+  .refresh-bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--surface); border-top: 1px solid var(--border);
+    padding: 8px 24px; font-size: 12px; color: var(--text-dim);
+    display: flex; justify-content: space-between; align-items: center;
+    z-index: 100;
+  }
+  .refresh-bar button {
+    background: var(--accent); color: #fff; border: none;
+    padding: 6px 14px; border-radius: 6px; font-size: 12px;
+    cursor: pointer; font-weight: 600;
+  }
+
+  .loading { text-align: center; padding: 60px; color: var(--text-dim); }
+  .loading .spinner {
+    width: 32px; height: 32px; border: 3px solid var(--border);
+    border-top-color: var(--accent); border-radius: 50%;
+    animation: spin 0.8s linear infinite; margin: 0 auto 12px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media (max-width: 768px) {
+    .header { padding: 16px; }
+    .container { padding: 16px; }
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Cancelled Appointments — <span>Reschedule Plan</span></h1>
+  <div class="header-meta">
+    <div class="live"><div class="live-dot"></div> LIVE DATA</div>
+    <div id="last-updated">Loading...</div>
+  </div>
+</div>
+
+<div class="container" id="app">
+  <div class="loading">
+    <div class="spinner"></div>
+    Connecting to data feed...
+  </div>
+</div>
+
+<div class="refresh-bar">
+  <span id="refresh-status">Auto-refresh: every 30s</span>
+  <button onclick="loadData()">Refresh Now</button>
+</div>
+
+<script>
+const DATA_URL = '/dashboard/data/dashboard-data.json';
+const REFRESH_INTERVAL = 30000;
+
+function $(s) { return document.querySelector(s); }
+function fmt(n) { return n ? '$' + n.toLocaleString() : '$0'; }
+
+function statusClass(status) {
+  if (!status) return '';
+  const s = status.toLowerCase();
+  if (s.includes('reschedule')) return 'reschedule';
+  if (s.includes('verify')) return 'verify';
+  if (s.includes('follow')) return 'follow-up';
+  if (s.includes('closed')) return 'closed';
+  return '';
+}
+function priorityClass(p) {
+  if (!p) return '';
+  const s = p.toLowerCase();
+  if (s === 'high') return 'priority-high';
+  if (s === 'medium') return 'priority-medium';
+  if (s === 'verify') return 'priority-verify';
+  if (s === 'low') return 'priority-low';
+  if (s === 'closed') return 'priority-closed';
+  return '';
+}
+
+function renderApp(data) {
+  const appts = data.cancelled_appointments || [];
+  const upcoming = data.upcoming_appointments || [];
+
+  const rescheduleCount = appts.filter(a => a.status && a.status.includes('RESCHEDULE')).length;
+  const verifyCount = appts.filter(a => a.status && a.status.includes('VERIFY')).length;
+  const closedCount = appts.filter(a => a.status && a.status.includes('CLOSED')).length;
+
+  $('#last-updated').textContent = `Updated: ${new Date(data.meta.generated).toLocaleString()}`;
+
+  let html = '';
+
+  // Stats
+  html += `<div class="stats-row">
+    <div class="stat"><div class="stat-value" style="color:var(--text)">${appts.length}</div><div class="stat-label">Cancelled</div></div>
+    <div class="stat"><div class="stat-value" style="color:var(--urgent)">${rescheduleCount}</div><div class="stat-label">Need Reschedule</div></div>
+    <div class="stat"><div class="stat-value" style="color:var(--verify)">${verifyCount}</div><div class="stat-label">Verify Status</div></div>
+    <div class="stat"><div class="stat-value" style="color:var(--text-dim)">${closedCount}</div><div class="stat-label">Closed</div></div>
+  </div>`;
+
+  // Priority Matrix
+  html += `<div class="matrix">
+    <div class="matrix-header">Reschedule Priority Matrix</div>
+    <table>
+      <tr><th>Priority</th><th>Contact</th><th>Days Since</th><th>Sentiment</th><th>Action</th></tr>
+      ${appts.map(a => `<tr>
+        <td class="${priorityClass(a.priority)}">${a.priority || ''}</td>
+        <td style="font-weight:600">${a.name}</td>
+        <td>${a.days_since_cancel || '—'}</td>
+        <td>${a.sentiment || '—'}</td>
+        <td style="font-size:12px">${a.status || ''}</td>
+      </tr>`).join('')}
+    </table>
+  </div>`;
+
+  // Cancelled Appointment Cards
+  html += `<h2 style="font-size:18px;margin-bottom:16px;">Cancelled Appointments — Full Breakdown</h2>`;
+
+  appts.forEach((a, i) => {
+    const sc = statusClass(a.status);
+    const replyHtml = a.suggested_reply ? `
+      <div class="appt-reply">
+        <button class="copy-btn" onclick="copyReply(this, '${a.suggested_reply.replace(/'/g, "\\'")}')">Copy</button>
+        ${a.suggested_reply}
+      </div>` : '';
+    const pipelineHtml = a.pipeline_update ? `<div class="appt-pipeline">Pipeline: ${a.pipeline_update}</div>` : '';
+
+    html += `
+      <div class="appt-card ${sc}">
+        <div class="appt-top">
+          <div>
+            <span class="appt-name">${i + 1}. ${a.name}</span>
+            ${a.location ? `<span class="appt-location"> — ${a.location}</span>` : ''}
+          </div>
+          <span class="status-badge ${sc}">${a.status || ''}</span>
+        </div>
+        <div class="appt-meta">
+          <span>Original: ${new Date(a.original_date).toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'})} @ ${new Date(a.original_date).toLocaleTimeString('en-US', {hour:'numeric', minute:'2-digit'})}</span>
+          <span>${a.owner || ''}</span>
+          ${a.value ? `<span style="color:var(--green)">${fmt(a.value)}</span>` : ''}
+          ${a.days_since_cancel ? `<span>${a.days_since_cancel} days ago</span>` : ''}
+        </div>
+        ${a.last_message ? `<div class="appt-message">"${a.last_message}"</div>` : ''}
+        ${a.action ? `<div class="appt-action">${a.action}</div>` : ''}
+        ${replyHtml}
+        ${pipelineHtml}
+      </div>`;
+  });
+
+  // Upcoming Appointments
+  if (upcoming.length) {
+    html += `<div class="upcoming-section">
+      <h2 style="font-size:18px;margin-bottom:8px;">Upcoming Confirmed Appointments (Next 7 Days)</h2>`;
+
+    upcoming.forEach(day => {
+      html += `<div class="day-header">${day.label}</div>`;
+      day.appointments.forEach(a => {
+        html += `
+          <div class="upcoming-card ${a.note ? 'has-note' : ''}">
+            <span class="upcoming-time">${a.time}</span>
+            <span class="upcoming-name">${a.name} — ${a.location}</span>
+            <span style="font-size:12px;color:var(--text-dim)">${a.owner} | ${a.calendar}</span>
+            ${a.unread ? `<span style="color:var(--urgent);font-size:12px;font-weight:700">${a.unread} UNREAD</span>` : ''}
+            ${a.note ? `<div class="upcoming-note">${a.note}</div>` : ''}
+          </div>`;
+      });
+    });
+
+    html += `</div>`;
+  }
+
+  $('#app').innerHTML = html;
+}
+
+function copyReply(btn, text) {
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 1500);
+  });
+}
+
+async function loadData() {
+  try {
+    const res = await fetch(DATA_URL + '?t=' + Date.now());
+    const data = await res.json();
+    renderApp(data);
+    $('#refresh-status').textContent = `Auto-refresh: every 30s | Last fetch: ${new Date().toLocaleTimeString()}`;
+  } catch (e) {
+    console.error('Data fetch failed:', e);
+    $('#refresh-status').textContent = 'Fetch failed — retrying...';
+  }
+}
+
+loadData();
+setInterval(loadData, REFRESH_INTERVAL);
+</script>
+</body>
+</html>

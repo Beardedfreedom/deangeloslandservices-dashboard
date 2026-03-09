@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DeAngelos Land Services — Command Center</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #232733;
+    --border: #2e3345;
+    --text: #e4e6ed;
+    --text-dim: #8b90a0;
+    --urgent: #ff4d4f;
+    --hot: #ff7a00;
+    --warm: #faad14;
+    --green: #52c41a;
+    --accent: #4f9cf7;
+    --purple: #b388ff;
+    --radius: 12px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .hero {
+    background: linear-gradient(135deg, #1a3a2a 0%, #1a2a3a 50%, #2a1a3a 100%);
+    padding: 48px 32px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero h1 {
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 8px;
+  }
+  .hero h1 .green { color: var(--green); }
+  .hero p { color: var(--text-dim); font-size: 15px; }
+  .hero .live {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--green); font-weight: 600; font-size: 13px;
+    margin-top: 12px;
+  }
+  .live-dot {
+    width: 8px; height: 8px; background: var(--green);
+    border-radius: 50%; animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+  .kpi-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    max-width: 900px;
+    margin: 24px auto 0;
+  }
+  .kpi {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    padding: 14px;
+    text-align: center;
+  }
+  .kpi-value { font-size: 26px; font-weight: 800; }
+  .kpi-label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 32px 24px;
+    flex: 1;
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+
+  .nav-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    text-decoration: none;
+    color: var(--text);
+    transition: all 0.25s;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+  .nav-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+  .nav-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .nav-card.triage::before { background: var(--green); }
+  .nav-card.replies::before { background: var(--purple); }
+  .nav-card.appointments::before { background: var(--accent); }
+
+  .card-icon {
+    font-size: 32px;
+    width: 56px; height: 56px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 12px;
+    background: var(--surface2);
+  }
+  .nav-card.triage .card-icon { color: var(--green); }
+  .nav-card.replies .card-icon { color: var(--purple); }
+  .nav-card.appointments .card-icon { color: var(--accent); }
+
+  .card-title { font-size: 18px; font-weight: 700; }
+  .card-desc { font-size: 13px; color: var(--text-dim); line-height: 1.5; }
+
+  .card-stats {
+    display: flex; gap: 16px; margin-top: 4px;
+    font-size: 12px;
+  }
+  .card-stat { color: var(--text-dim); }
+  .card-stat strong { color: var(--text); }
+
+  .card-badge {
+    position: absolute;
+    top: 16px; right: 16px;
+    padding: 3px 10px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .card-badge.urgent { background: var(--urgent); color: #fff; }
+  .card-badge.action { background: var(--warm); color: #111; }
+
+  .footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 12px;
+    color: var(--text-dim);
+    border-top: 1px solid var(--border);
+  }
+
+  /* WordPress embed instructions */
+  .wp-instructions {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin-top: 32px;
+  }
+  .wp-instructions h3 { font-size: 15px; margin-bottom: 10px; color: var(--accent); }
+  .wp-instructions p { font-size: 13px; color: var(--text-dim); margin-bottom: 8px; }
+  .wp-instructions code {
+    background: var(--surface2); padding: 2px 6px; border-radius: 4px;
+    font-size: 12px; color: var(--green);
+  }
+  .wp-instructions pre {
+    background: var(--surface2); padding: 14px; border-radius: 8px;
+    font-size: 12px; color: var(--green); overflow-x: auto;
+    margin: 8px 0;
+  }
+
+  @media (max-width: 768px) {
+    .hero { padding: 32px 16px; }
+    .hero h1 { font-size: 24px; }
+    .container { padding: 20px 16px; }
+    .cards { grid-template-columns: 1fr; }
+    .kpi-strip { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>DeAngelos <span class="green">Land Services</span></h1>
+  <p>GHL Command Center — Real-Time Operations Dashboard</p>
+  <div class="live"><div class="live-dot"></div> LIVE — Auto-refreshing every 30s</div>
+  <div class="kpi-strip" id="kpis"></div>
+</div>
+
+<div class="container">
+  <div class="cards" id="nav-cards">
+    <a href="/dashboard/triage/" class="nav-card triage">
+      <span class="card-badge urgent" id="urgent-badge">Loading...</span>
+      <div class="card-icon">&#9888;</div>
+      <div class="card-title">Live Triage Dashboard</div>
+      <div class="card-desc">Priority-ranked leads with revenue at risk. KPI overview, tier breakdowns, suggested replies with copy-to-clipboard.</div>
+      <div class="card-stats" id="triage-stats"></div>
+    </a>
+
+    <a href="/dashboard/replies/" class="nav-card replies">
+      <span class="card-badge action" id="reply-badge">Loading...</span>
+      <div class="card-icon">&#9993;</div>
+      <div class="card-title">Agent Reply Hub</div>
+      <div class="card-desc">Human-approval workflow for draft replies. Editable drafts, approve/skip/copy actions, pre-send checklist.</div>
+      <div class="card-stats" id="reply-stats"></div>
+    </a>
+
+    <a href="/dashboard/appointments/" class="nav-card appointments">
+      <div class="card-icon">&#128197;</div>
+      <div class="card-title">Appointments & Reschedule</div>
+      <div class="card-desc">Cancelled appointment recovery, reschedule priority matrix, and upcoming confirmed appointments for the next 7 days.</div>
+      <div class="card-stats" id="appt-stats"></div>
+    </a>
+  </div>
+
+  <div class="wp-instructions">
+    <h3>WordPress Integration Guide</h3>
+    <p>Each page is a standalone HTML file that reads from <code>data/dashboard-data.json</code> and auto-refreshes every 30 seconds.</p>
+
+    <p><strong>Option 1 — WordPress Custom HTML Block (Easiest)</strong></p>
+    <p>Create a new WordPress page, add a "Custom HTML" block, and paste the contents of any HTML file. Update the <code>DATA_URL</code> in the script to point to your hosted JSON file.</p>
+
+    <p><strong>Option 2 — iframe Embed</strong></p>
+    <pre>&lt;iframe src="https://your-domain.com/dashboard/triage-dashboard.html"
+  width="100%" height="900" frameborder="0"
+  style="border-radius:12px;"&gt;&lt;/iframe&gt;</pre>
+
+    <p><strong>Option 3 — WordPress REST API (Advanced)</strong></p>
+    <p>Host <code>dashboard-data.json</code> as a WordPress REST endpoint. Update your GHL cron script to POST updated data to:</p>
+    <pre>POST https://landtree.us/wp-json/deangelos/v1/dashboard-data</pre>
+    <p>Each page will fetch from this endpoint instead of a static JSON file.</p>
+
+    <p><strong>Real-Time Updates</strong></p>
+    <p>Your existing cron (<code>scripts/ghl_triage_report.py</code>) generates fresh data every 6 hours. Simply have it write to <code>dashboard-data.json</code> and all 3 pages update automatically on next refresh cycle (every 30 seconds).</p>
+  </div>
+</div>
+
+<div class="footer">
+  DeAngelos Land Services LLC — GHL Command Center | Data refreshes every 6 hours via cron | Pages auto-refresh every 30s
+</div>
+
+<script>
+const DATA_URL = '/dashboard/data/dashboard-data.json';
+
+function fmt(n) { return '$' + n.toLocaleString(); }
+
+async function loadKPIs() {
+  try {
+    const res = await fetch(DATA_URL + '?t=' + Date.now());
+    const d = await res.json();
+    const m = d.meta;
+    const r = d.revenue_summary;
+
+    document.getElementById('kpis').innerHTML = `
+      <div class="kpi"><div class="kpi-value" style="color:var(--green)">${fmt(r.total.value)}</div><div class="kpi-label">Revenue at Risk</div></div>
+      <div class="kpi"><div class="kpi-value" style="color:var(--urgent)">${d.priority_counts.urgent}</div><div class="kpi-label">Urgent</div></div>
+      <div class="kpi"><div class="kpi-value" style="color:var(--warm)">${m.unread_conversations}</div><div class="kpi-label">Unread</div></div>
+      <div class="kpi"><div class="kpi-value" style="color:var(--text)">${r.total.count}</div><div class="kpi-label">Active Leads</div></div>
+      <div class="kpi"><div class="kpi-value" style="color:var(--accent)">${m.total_opportunities}</div><div class="kpi-label">Total Opps</div></div>
+    `;
+
+    document.getElementById('urgent-badge').textContent = d.priority_counts.urgent + ' URGENT';
+    document.getElementById('reply-badge').textContent = (d.tier1.length + d.tier2.length) + ' DRAFTS';
+
+    document.getElementById('triage-stats').innerHTML = `
+      <span class="card-stat">Tier 1: <strong>${r.tier1.count}</strong></span>
+      <span class="card-stat">Tier 2: <strong>${r.tier2.count}</strong></span>
+      <span class="card-stat">Total: <strong>${fmt(r.total.value)}</strong></span>
+    `;
+
+    document.getElementById('reply-stats').innerHTML = `
+      <span class="card-stat">Ready: <strong>${d.tier1.length + d.tier2.length}</strong></span>
+      <span class="card-stat">Unassigned: <strong>${d.unassigned_high_value.length}</strong></span>
+    `;
+
+    const cancelledCount = d.cancelled_appointments ? d.cancelled_appointments.length : 0;
+    const rescheduleCount = d.cancelled_appointments ? d.cancelled_appointments.filter(a => a.status && a.status.includes('RESCHEDULE')).length : 0;
+    document.getElementById('appt-stats').innerHTML = `
+      <span class="card-stat">Cancelled: <strong>${cancelledCount}</strong></span>
+      <span class="card-stat">Reschedule: <strong>${rescheduleCount}</strong></span>
+    `;
+
+  } catch (e) {
+    console.error('Failed to load KPIs:', e);
+  }
+}
+
+loadKPIs();
+setInterval(loadKPIs, 30000);
+</script>
+</body>
+</html>

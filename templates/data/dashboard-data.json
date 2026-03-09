@@ -1,0 +1,393 @@
+{
+  "meta": {
+    "report_type": "GHL Full Conversation Triage Report",
+    "location_id": "Fqv0HfBV4jdcZsHDMg0n",
+    "total_conversations": 20,
+    "total_opportunities": 191,
+    "generated": "2026-03-08T00:29:00",
+    "refresh_interval": "Every 6 hours",
+    "unread_conversations": 66
+  },
+  "revenue_summary": {
+    "tier1": { "label": "Respond Now", "count": 6, "value": 54675 },
+    "tier2": { "label": "Respond Today", "count": 8, "value": 32390 },
+    "tier3": { "label": "This Week", "count": 10, "value": 32231 },
+    "tier4": { "label": "Pipeline Updates", "count": 11, "value": 37909 },
+    "total": { "count": 35, "value": 157205 }
+  },
+  "priority_counts": {
+    "urgent": 6,
+    "hot": 0,
+    "warm": 0,
+    "new_lead": 6,
+    "follow_up": 8,
+    "cold": 0,
+    "monitor": 0
+  },
+  "tier1": [
+    {
+      "id": "anthony-eugene",
+      "name": "Anthony Eugene",
+      "phone": "+14079230783",
+      "owner": "Owner B",
+      "value": 6000,
+      "stage": "Work Scheduled",
+      "unread": 1,
+      "last_message": "Are they done cutting. Those trunk are quite high. And the neighbor on my right said your guys dropped stuff in her yard which they need cleaned up. Their name: Bryan and Lauren",
+      "last_activity": "2026-03-07T13:28:00",
+      "action": "Call immediately. Verify crew status. Coordinate cleanup of neighbor Bryan & Lauren's yard ASAP.",
+      "suggested_reply": "Hi Anthony, I'm checking with the crew right now. We sincerely apologize about the debris — we'll get Bryan and Lauren's yard cleaned up today. I'll call you with an update within the hour."
+    },
+    {
+      "id": "cristen-brown",
+      "name": "Cristen Brown",
+      "phone": "+13213776303",
+      "owner": "UNASSIGNED",
+      "value": 7925,
+      "stage": "Estimate Accepted",
+      "unread": 2,
+      "last_message": "Sounds good. Thank you.",
+      "last_activity": "2026-03-07T11:27:00",
+      "action": "This is a CLOSE. Assign an owner. Send scheduling options. Move pipeline to Work Scheduled.",
+      "suggested_reply": "Awesome, Cristen! We're excited to get started. What days work best for you? I'll get you locked in."
+    },
+    {
+      "id": "eddie-muse",
+      "name": "Eddie Muse",
+      "phone": "+14074620115",
+      "owner": "Owner A",
+      "value": 39500,
+      "stage": "Estimate Accepted + Payment Collected",
+      "unread": 0,
+      "last_message": "Just keep me posted with your schedule. Thanks,",
+      "last_activity": "2026-03-07T10:00:00",
+      "action": "High-value repeat customer ($39,500 total). Respond with scheduling update immediately.",
+      "suggested_reply": "Hi Eddie, absolutely! We're looking at [dates] for your project. I'll confirm the exact date by end of day tomorrow."
+    },
+    {
+      "id": "richard-swormar",
+      "name": "Richard Swormar",
+      "phone": "+18147770688",
+      "owner": "UNASSIGNED",
+      "value": 750,
+      "stage": "Estimate Accepted",
+      "unread": 0,
+      "last_message": "Any day but the 11th i have a Dr's appointment",
+      "last_activity": "2026-03-07T09:00:00",
+      "action": "Ready to schedule. Avoid March 11th. Book and move to Work Scheduled.",
+      "suggested_reply": "Perfect, Richard! We'll avoid the 11th. How about [date]? I'll get you on the calendar right away."
+    },
+    {
+      "id": "marie-breen",
+      "name": "Marie Breen",
+      "phone": "+14077653698",
+      "owner": "UNASSIGNED",
+      "value": 500,
+      "stage": "Estimate Accepted",
+      "unread": 4,
+      "last_message": "Hi this is DeAngelos Land Services LLC, I saw that we just missed your call how can I help?",
+      "last_activity": "2026-03-07T11:24:00",
+      "action": "Call back ASAP. 4 unread messages = repeated attempts to reach you.",
+      "suggested_reply": "Hi Marie, so sorry we missed you! I'm available now — give me a call back or let me know a good time."
+    },
+    {
+      "id": "cindy-fiacco",
+      "name": "Cindy Fiacco",
+      "phone": "+18434756224",
+      "owner": "Owner B",
+      "value": 500,
+      "stage": "Payment Collected (Won)",
+      "unread": 0,
+      "last_message": "When are you coming?",
+      "last_activity": "2026-03-07T08:00:00",
+      "action": "Customer has PAID and is waiting for service. Respond with crew schedule immediately.",
+      "suggested_reply": "Hi Cindy! We have you scheduled for [date]. The crew will arrive between [time window]. I'll confirm the day before."
+    }
+  ],
+  "tier2": [
+    {
+      "id": "mireya-booher",
+      "name": "Mireya Booher",
+      "owner": "Owner B",
+      "value": 900,
+      "stage": "Estimate Given",
+      "unread": 1,
+      "last_message": "Thank you for the estimate. I just need to submit the application to my hoa",
+      "last_activity": "2026-03-07T13:04:00",
+      "action": "Offer HOA documentation support (scope of work letter, insurance cert).",
+      "suggested_reply": "Hi Mireya, absolutely! If you need any documentation for your HOA, just let me know and I'll send it right over."
+    },
+    {
+      "id": "judy-caruthers",
+      "name": "Judy Caruthers",
+      "owner": "Owner A",
+      "value": 8445,
+      "stage": "Estimate Given",
+      "unread": 0,
+      "last_message": "I like the mock ups, my nephew's are looking at everything including cost since the will be paying. My one nephew is saying to hold off for the markets to recover from Iran.",
+      "action": "High value. Don't push — offer locked pricing for 30 days.",
+      "suggested_reply": "Hi Judy, glad you like the mockups! Just so you know, we can lock in this pricing for 30 days. Whenever your family is ready, we're here."
+    },
+    {
+      "id": "tammy-ammerman",
+      "name": "Tammy Ammerman",
+      "owner": "Owner A",
+      "value": 5244,
+      "stage": "Estimate Given",
+      "unread": 0,
+      "last_message": "I did my husband is looking over will let you know something next week",
+      "action": "Set reminder to follow up next week if no response.",
+      "suggested_reply": "Sounds great, Tammy! Take your time. If either of you have questions, don't hesitate to reach out."
+    },
+    {
+      "id": "howard-hartman",
+      "name": "Howard Hartman",
+      "owner": "Owner B",
+      "value": 1080,
+      "stage": "Follow Up Needed",
+      "unread": 0,
+      "last_message": "We are flexible. There was just a hiccup on our side.",
+      "action": "Ready to reschedule. Offer new dates.",
+      "suggested_reply": "No worries at all, Howard! How about [2-3 date options]? Let me know what works."
+    },
+    {
+      "id": "lay-hodge",
+      "name": "Lay Hodge",
+      "owner": "UNASSIGNED",
+      "value": 16721,
+      "stage": "Payment Collected (Won)",
+      "unread": 0,
+      "last_message": "We are now in the process of picking our contractors and should have an idea when things will begin by next week.",
+      "action": "Major account. Stay top of mind. Assign an owner.",
+      "suggested_reply": "Great to hear, Lay! We're ready whenever you are. Just let us know."
+    },
+    {
+      "id": "roberta-cromer",
+      "name": "Roberta & Claude Cromer",
+      "owner": "Owner A",
+      "value": 0,
+      "stage": "Estimate Scheduled",
+      "unread": 1,
+      "last_message": "We have to leave at 11:15 on March 10 to make the tour.",
+      "action": "Appointment constraint. Plan to finish before 11:15 AM.",
+      "suggested_reply": "Got it! We'll wrap up well before 11:15 on the 10th. See you then!"
+    },
+    {
+      "id": "elise-johnson",
+      "name": "Elise Johnson",
+      "owner": "Owner A",
+      "value": 0,
+      "stage": "Estimate Scheduled",
+      "unread": 1,
+      "last_message": "Ok that's fine",
+      "last_activity": "2026-03-07T11:45:00",
+      "action": "Confirmed. Send appointment details.",
+      "suggested_reply": "Great, Elise! You're all set. We'll see you [date/time]."
+    }
+  ],
+  "tier3": [
+    { "name": "Stephano Nati", "value": 1500, "message": "My neighbor wants other quotes", "action": "Don't push. Stay available." },
+    { "name": "Brian Russell", "value": 0, "message": "Recovering from a stroke. Maybe June.", "action": "Be empathetic. Set June reminder." },
+    { "name": "Mathew Cummings", "value": 1210, "message": "Thank you! Have a good weekend.", "action": "Follow up Monday." },
+    { "name": "Doug Severance", "value": 4700, "message": "Thank you!", "action": "Confirm next steps." },
+    { "name": "Mell Leonard", "value": 2200, "message": "Interested in an estimate", "action": "Past customer. Schedule new estimate." },
+    { "name": "Remy Colins", "value": 6500, "message": "3 other projects first", "action": "Set 60-day reminder." },
+    { "name": "David Sherer", "value": 8550, "message": "Comparing to other quotes", "action": "Follow up tomorrow." },
+    { "name": "Darcy Lee", "value": 1575, "message": "Outbound follow-up sent", "action": "Monitor for response." },
+    { "name": "Chris Lamy", "value": 4790, "message": "Schedule filling up message sent", "action": "Monitor for response." },
+    { "name": "Nancy Tallent", "value": 1206, "message": "Liked comparison message", "action": "Monitor. Assign owner." }
+  ],
+  "tier4_pipeline_updates": [
+    { "name": "David Smith", "message": "I hired another company", "current_stage": "Follow Up Needed", "value": 1185, "update_to": "Lost/Not Interested" },
+    { "name": "Aimee Valle", "message": "We went with someone else", "current_stage": "Estimate Declined", "value": 850, "update_to": "Close out" },
+    { "name": "Zinnia Maisonet", "message": "Stop", "current_stage": "Estimate Declined", "value": 2150, "update_to": "DND list + remove automations" },
+    { "name": "Tharwat Habib", "message": "Stop", "current_stage": "Estimate Declined", "value": 6000, "update_to": "DND list + remove automations" },
+    { "name": "Kathy Stroschein", "message": "No, thank you", "current_stage": "Estimate Declined", "value": 788, "update_to": "Close out" },
+    { "name": "Cindy Carbonell", "message": "No thanks.", "current_stage": "Estimate Declined", "value": 3250, "update_to": "Close out" },
+    { "name": "Claud Bowers", "message": "No Tks.", "current_stage": "Lost/Not Interested", "value": 0, "update_to": "Already correct" },
+    { "name": "Cara Thompson", "message": "I think I'm ok", "current_stage": "Lost/Not Interested", "value": 0, "update_to": "Already correct" },
+    { "name": "Robert Allen", "message": "Health issues, hold everything", "current_stage": "Estimate Declined", "value": 3000, "update_to": "Follow Up Needed (90-day)" },
+    { "name": "Henry Ellis", "message": "Great, thanks!", "current_stage": "Estimate Declined", "value": 20081, "update_to": "Review — positive on declined?" },
+    { "name": "Lief Erickson", "message": "Thanks.", "current_stage": "Lost/Not Interested", "value": 605, "update_to": "Review full history. 12 unread = red flag" }
+  ],
+  "missed_calls": [
+    { "phone": "(407) 679-8238", "action": "Monitor for reply to missed call text" },
+    { "phone": "(339) 218-8108", "action": "Monitor for reply" },
+    { "phone": "(407) 885-8186", "action": "Inbound call, no body. Try calling back." },
+    { "phone": "(407) 300-2119", "action": "Monitor for reply" },
+    { "phone": "(615) 681-5323", "action": "Monitor for reply" },
+    { "phone": "(941) 565-4959", "action": "Monitor for reply" }
+  ],
+  "unassigned_high_value": [
+    { "name": "Cristen Brown", "value": 7925, "stage": "Estimate Accepted" },
+    { "name": "Lay Hodge", "value": 16721, "stage": "Payment Collected" },
+    { "name": "Henry Ellis", "value": 20081, "stage": "Estimate Declined (verify)" },
+    { "name": "Nancy Tallent", "value": 1206, "stage": "Follow Up Needed" },
+    { "name": "Richard Swormar", "value": 750, "stage": "Estimate Accepted" },
+    { "name": "Marie Breen", "value": 500, "stage": "Estimate Accepted" }
+  ],
+  "cancelled_appointments": [
+    {
+      "id": "krystal-baumann",
+      "name": "Krystal Baumann",
+      "location": "Apopka",
+      "original_date": "2026-03-04T11:00:00",
+      "calendar": "Lex Internal Appointment Setting",
+      "owner": "Owner A (Lex)",
+      "opportunity_name": "Matthew Baumann",
+      "value": 250,
+      "opp_stage": "Lost/Not Interested",
+      "last_message": "Happy to hear she's back in action. It's hard to slow a toddler down. Blessing and a curse. See you tomorrow. Have a wonderful day.",
+      "unread": 1,
+      "sentiment": "Warm/Positive",
+      "days_since_cancel": 4,
+      "priority": "HIGH",
+      "status": "RESCHEDULE",
+      "action": "RESCHEDULE IMMEDIATELY. Customer is warm and engaged. Move opportunity back from Lost to Estimate Scheduled.",
+      "suggested_reply": "Hi Krystal! Sorry about the reschedule — everything's back to normal. What day works for you this week? I'd love to come take a look.",
+      "pipeline_update": "Lost/Not Interested → Estimate Scheduled"
+    },
+    {
+      "id": "kelisha-hart",
+      "name": "Kelisha Hart",
+      "location": "Orlando",
+      "original_date": "2026-03-04T12:00:00",
+      "calendar": "Lex Internal Appointment Setting",
+      "owner": "Owner A (Lex)",
+      "value": 0,
+      "opp_stage": "Lost/Not Interested",
+      "last_message": "Hi Kelisha, your appointment between 12:00 PM and 1:00 PM on Wednesday has been cancelled. When's a good day and time to reschedule you for?",
+      "unread": 2,
+      "sentiment": "No response yet",
+      "days_since_cancel": 4,
+      "priority": "HIGH",
+      "status": "RESCHEDULE",
+      "action": "Follow up again. The original reschedule ask got no reply.",
+      "suggested_reply": "Hey Kelisha! Just circling back — we'd love to get you on the schedule. What works for you this week or next?",
+      "pipeline_update": "Lost/Not Interested → Contacted (if she responds)"
+    },
+    {
+      "id": "colby-smith",
+      "name": "Colby Smith",
+      "location": "Orlando",
+      "original_date": "2026-02-23T11:30:00",
+      "calendar": "Lex Internal Appointment Setting",
+      "owner": "Owner A (Lex)",
+      "value": 0,
+      "opp_stage": "Lost/Not Interested",
+      "last_message": "Hi Colby, your appointment between 11:30 AM and 12:30 PM on Monday has been cancelled. When's a good day and time to reschedule you for?",
+      "unread": 3,
+      "sentiment": "No response",
+      "days_since_cancel": 13,
+      "priority": "MEDIUM",
+      "status": "RESCHEDULE",
+      "action": "Final follow-up attempt. If no reply, mark as cold.",
+      "suggested_reply": "Hi Colby! Just wanted to check in one more time about rescheduling your estimate. We're happy to work around your schedule — just let us know!"
+    },
+    {
+      "id": "phat-gagne",
+      "name": "Phat Gagne",
+      "location": "Maitland",
+      "original_date": "2026-02-11T11:00:00",
+      "calendar": "Lex Internal Appointment Setting",
+      "owner": "Owner A (Lex)",
+      "value": 0,
+      "opp_stage": "Lost/Not Interested",
+      "last_message": "Hey it's Anthony. We are still on course to meet in about 2 - 3 hours. See you soon!",
+      "unread": 2,
+      "sentiment": "Contradictory",
+      "days_since_cancel": 25,
+      "priority": "VERIFY",
+      "status": "VERIFY STATUS",
+      "action": "CONTRADICTORY DATA. Verify in GHL whether Phat was seen or not. If not, reach out to reschedule.",
+      "suggested_reply": "Hi Phat! Apologies for any confusion with scheduling. We'd love to still come out for your estimate — what day works best?"
+    },
+    {
+      "id": "jackie-galdi",
+      "name": "Jackie Galdi",
+      "location": "Sanford",
+      "original_date": "2026-02-27T13:30:00",
+      "calendar": "Lex Internal Appointment Setting",
+      "owner": "Owner A (Lex)",
+      "value": 0,
+      "opp_stage": "Lost/Not Interested",
+      "sentiment": "Unknown",
+      "days_since_cancel": 9,
+      "priority": "LOW",
+      "status": "FOLLOW UP",
+      "action": "One outreach attempt to reschedule. If no response, close.",
+      "suggested_reply": "Hi Jackie! We had to reschedule your estimate visit. We'd love to still come take a look — are you still interested? We have openings this week."
+    },
+    {
+      "id": "claud-bowers",
+      "name": "Claud Bowers",
+      "location": "Longwood",
+      "original_date": "2026-02-07T13:00:00",
+      "calendar": "Lex Internal Appointment Setting",
+      "owner": "Owner A (Lex)",
+      "value": 0,
+      "opp_stage": "Lost/Not Interested",
+      "last_message": "No Tks.",
+      "unread": 1,
+      "sentiment": "Declined",
+      "days_since_cancel": 29,
+      "priority": "CLOSED",
+      "status": "CLOSED",
+      "action": "No reschedule. Close out. Mark conversation as read."
+    },
+    {
+      "id": "katty-polo",
+      "name": "Katty Polo",
+      "location": "Windermere",
+      "original_date": "2026-03-02T13:00:00",
+      "calendar": "Anthony Internal Appointment Setting",
+      "owner": "Owner B (Anthony)",
+      "value": 0,
+      "opp_stage": "Lost/Not Interested",
+      "sentiment": "Unknown",
+      "days_since_cancel": 6,
+      "priority": "MEDIUM",
+      "status": "FOLLOW UP",
+      "action": "Outreach to reschedule. This was Anthony's lead.",
+      "suggested_reply": "Hi Katty! We had to reschedule your appointment. We'd love to still come out to Windermere for an estimate — what day works this week?"
+    },
+    {
+      "id": "zach-adams",
+      "name": "Zach Adams",
+      "original_date": "2026-02-16T11:00:00",
+      "calendar": "Book an Estimate",
+      "owner": "Owner A (Lex)",
+      "value": 0,
+      "opp_stage": "Lost/Not Interested",
+      "sentiment": "No data",
+      "days_since_cancel": 20,
+      "priority": "CLOSED",
+      "status": "CLOSED",
+      "action": "No reschedule. Close out."
+    }
+  ],
+  "upcoming_appointments": [
+    {
+      "date": "2026-03-09",
+      "label": "Monday, March 9",
+      "appointments": [
+        { "time": "9:00 AM", "name": "David Fraser", "location": "Altamonte Springs", "calendar": "Anthony Internal", "owner": "Owner B", "unread": 0, "note": null },
+        { "time": "3:30 PM", "name": "Elise Johnson", "location": "New Smyrna Beach", "calendar": "Lex Internal", "owner": "Owner A", "unread": 1, "note": "She has 1 unread confirming the appointment. Acknowledge before tomorrow's visit." }
+      ]
+    },
+    {
+      "date": "2026-03-10",
+      "label": "Tuesday, March 10",
+      "appointments": [
+        { "time": "10:00 AM", "name": "Roberta & Claude Cromer", "location": "Orlando", "calendar": "Lex Internal", "owner": "Owner A", "unread": 1, "note": "Time constraint — customer must leave at 11:15 AM. Plan accordingly." }
+      ]
+    },
+    {
+      "date": "2026-03-11",
+      "label": "Wednesday, March 11",
+      "appointments": [
+        { "time": "10:00 AM", "name": "Tyler Dixon", "location": "DeLand", "calendar": "Lex Internal", "owner": "Owner A", "unread": 0, "note": null }
+      ]
+    }
+  ]
+}

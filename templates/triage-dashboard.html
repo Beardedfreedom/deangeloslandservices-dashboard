@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DeAngelos Land Services — Live Triage Dashboard</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #232733;
+    --border: #2e3345;
+    --text: #e4e6ed;
+    --text-dim: #8b90a0;
+    --urgent: #ff4d4f;
+    --hot: #ff7a00;
+    --warm: #faad14;
+    --new-lead: #1890ff;
+    --follow-up: #722ed1;
+    --cold: #8b90a0;
+    --green: #52c41a;
+    --accent: #4f9cf7;
+    --radius: 10px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.5;
+  }
+  /* WordPress embed mode — no body bg if inside wp */
+  .wp-embed body { background: transparent; }
+
+  .header {
+    background: linear-gradient(135deg, #1a3a2a 0%, #0f1117 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 24px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .header h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+  .header h1 span { color: var(--green); }
+  .header-meta { text-align: right; font-size: 13px; color: var(--text-dim); }
+  .header-meta .live {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--green); font-weight: 600;
+  }
+  .live-dot {
+    width: 8px; height: 8px; background: var(--green);
+    border-radius: 50%; animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+
+  /* KPI Strip */
+  .kpi-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .kpi {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    text-align: center;
+  }
+  .kpi-value { font-size: 28px; font-weight: 800; }
+  .kpi-label { font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+
+  /* Revenue Bar */
+  .revenue-bar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 28px;
+  }
+  .revenue-bar h3 { font-size: 14px; color: var(--text-dim); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .revenue-total { font-size: 36px; font-weight: 800; color: var(--green); margin-bottom: 16px; }
+  .revenue-tiers { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+  .rev-tier {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 14px; background: var(--surface2); border-radius: 8px;
+  }
+  .rev-tier-label { font-size: 13px; }
+  .rev-tier-value { font-weight: 700; font-size: 15px; }
+
+  /* Lead Cards */
+  .tier-section { margin-bottom: 32px; }
+  .tier-header {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 16px; padding-bottom: 8px;
+    border-bottom: 2px solid var(--border);
+  }
+  .tier-badge {
+    padding: 4px 12px; border-radius: 6px; font-size: 11px;
+    font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .tier-badge.t1 { background: var(--urgent); color: #fff; }
+  .tier-badge.t2 { background: var(--hot); color: #fff; }
+  .tier-badge.t3 { background: var(--warm); color: #111; }
+  .tier-badge.t4 { background: var(--follow-up); color: #fff; }
+  .tier-count { font-size: 13px; color: var(--text-dim); }
+
+  .lead-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    margin-bottom: 10px;
+    transition: border-color 0.2s;
+    position: relative;
+  }
+  .lead-card:hover { border-color: var(--accent); }
+  .lead-card.has-unread { border-left: 3px solid var(--urgent); }
+
+  .lead-top {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 8px; flex-wrap: wrap; gap: 8px;
+  }
+  .lead-name { font-size: 16px; font-weight: 700; }
+  .lead-value { font-size: 16px; font-weight: 700; color: var(--green); }
+  .lead-meta { font-size: 12px; color: var(--text-dim); margin-bottom: 8px; }
+  .lead-meta span { margin-right: 14px; }
+
+  .unread-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: var(--urgent); color: #fff; padding: 2px 8px;
+    border-radius: 10px; font-size: 11px; font-weight: 700;
+  }
+  .stage-badge {
+    display: inline-block; padding: 2px 8px; border-radius: 6px;
+    font-size: 11px; font-weight: 600; background: var(--surface2);
+    color: var(--accent);
+  }
+  .owner-unassigned { color: var(--urgent); font-weight: 700; }
+
+  .lead-message {
+    background: var(--surface2); border-radius: 8px;
+    padding: 10px 14px; font-size: 13px; color: var(--text);
+    margin-bottom: 10px; border-left: 3px solid var(--accent);
+  }
+  .lead-action {
+    font-size: 13px; color: var(--warm); margin-bottom: 8px;
+    font-weight: 600;
+  }
+  .lead-reply {
+    background: #1a2e1a; border: 1px solid #2d4a2d; border-radius: 8px;
+    padding: 10px 14px; font-size: 13px; color: #a8e6a8;
+    position: relative;
+  }
+  .lead-reply::before {
+    content: 'SUGGESTED REPLY';
+    display: block; font-size: 10px; font-weight: 700;
+    color: var(--green); margin-bottom: 4px;
+    letter-spacing: 0.5px;
+  }
+  .copy-btn {
+    position: absolute; top: 8px; right: 8px;
+    background: var(--green); color: #111; border: none;
+    padding: 4px 10px; border-radius: 4px; font-size: 11px;
+    cursor: pointer; font-weight: 600;
+  }
+  .copy-btn:hover { opacity: 0.85; }
+
+  /* Compact table cards for tier 3/4 */
+  .compact-table {
+    width: 100%; border-collapse: collapse;
+    background: var(--surface); border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .compact-table th {
+    background: var(--surface2); text-align: left;
+    padding: 10px 14px; font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.5px; color: var(--text-dim);
+  }
+  .compact-table td {
+    padding: 10px 14px; border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .compact-table tr:last-child td { border-bottom: none; }
+
+  /* Unassigned Alert */
+  .alert-banner {
+    background: linear-gradient(135deg, #3a1a1a, #2a1515);
+    border: 1px solid #5a2020;
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 24px;
+  }
+  .alert-banner h3 { color: var(--urgent); font-size: 14px; margin-bottom: 10px; }
+  .alert-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 6px 0; font-size: 13px;
+  }
+  .alert-item + .alert-item { border-top: 1px solid #3a2020; }
+
+  /* Refresh indicator */
+  .refresh-bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--surface); border-top: 1px solid var(--border);
+    padding: 8px 24px; font-size: 12px; color: var(--text-dim);
+    display: flex; justify-content: space-between; align-items: center;
+    z-index: 100;
+  }
+  .refresh-bar button {
+    background: var(--accent); color: #fff; border: none;
+    padding: 6px 14px; border-radius: 6px; font-size: 12px;
+    cursor: pointer; font-weight: 600;
+  }
+  .refresh-bar button:hover { opacity: 0.85; }
+
+  .loading { text-align: center; padding: 60px; color: var(--text-dim); }
+  .loading .spinner {
+    width: 32px; height: 32px; border: 3px solid var(--border);
+    border-top-color: var(--green); border-radius: 50%;
+    animation: spin 0.8s linear infinite; margin: 0 auto 12px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media (max-width: 768px) {
+    .header { padding: 16px; }
+    .container { padding: 16px; }
+    .kpi-strip { grid-template-columns: repeat(2, 1fr); }
+    .revenue-tiers { grid-template-columns: 1fr; }
+  }
+  body { padding-bottom: 50px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>DeAngelos <span>Land Services</span> — Live Triage</h1>
+  <div class="header-meta">
+    <div class="live"><div class="live-dot"></div> LIVE DATA</div>
+    <div id="last-updated">Loading...</div>
+  </div>
+</div>
+
+<div class="container" id="app">
+  <div class="loading">
+    <div class="spinner"></div>
+    Connecting to data feed...
+  </div>
+</div>
+
+<div class="refresh-bar">
+  <span id="refresh-status">Auto-refresh: every 30s</span>
+  <button onclick="loadData()">Refresh Now</button>
+</div>
+
+<script>
+// CONFIG — change this to your WordPress data endpoint
+const DATA_URL = '/dashboard/data/dashboard-data.json';
+const REFRESH_INTERVAL = 30000; // 30 seconds
+
+function $(s) { return document.querySelector(s); }
+function fmt(n) { return '$' + n.toLocaleString(); }
+function timeAgo(dateStr) {
+  if (!dateStr) return '';
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 60) return mins + 'm ago';
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return hrs + 'h ago';
+  return Math.floor(hrs / 24) + 'd ago';
+}
+
+function renderLeadCard(lead, tier) {
+  const unreadHtml = lead.unread ? `<span class="unread-badge">${lead.unread} UNREAD</span>` : '';
+  const ownerClass = lead.owner === 'UNASSIGNED' ? 'owner-unassigned' : '';
+  const replyHtml = lead.suggested_reply ? `
+    <div class="lead-reply">
+      <button class="copy-btn" onclick="copyReply(this, '${lead.suggested_reply.replace(/'/g, "\\'")}')">Copy</button>
+      ${lead.suggested_reply}
+    </div>` : '';
+
+  return `
+    <div class="lead-card ${lead.unread ? 'has-unread' : ''}">
+      <div class="lead-top">
+        <div>
+          <span class="lead-name">${lead.name}</span>
+          ${unreadHtml}
+        </div>
+        <span class="lead-value">${lead.value ? fmt(lead.value) : ''}</span>
+      </div>
+      <div class="lead-meta">
+        <span class="stage-badge">${lead.stage || ''}</span>
+        <span class="${ownerClass}">${lead.owner || ''}</span>
+        ${lead.phone ? `<span>${lead.phone}</span>` : ''}
+        ${lead.last_activity ? `<span>${timeAgo(lead.last_activity)}</span>` : ''}
+      </div>
+      ${lead.last_message ? `<div class="lead-message">"${lead.last_message}"</div>` : ''}
+      ${lead.action ? `<div class="lead-action">→ ${lead.action}</div>` : ''}
+      ${replyHtml}
+    </div>`;
+}
+
+function renderApp(data) {
+  const d = data;
+  const m = d.meta;
+  const r = d.revenue_summary;
+
+  $('#last-updated').textContent = `Updated: ${new Date(m.generated).toLocaleString()} | ${m.unread_conversations} unread`;
+
+  let html = '';
+
+  // KPI Strip
+  html += `<div class="kpi-strip">
+    <div class="kpi"><div class="kpi-value" style="color:var(--urgent)">${d.priority_counts.urgent}</div><div class="kpi-label">Urgent</div></div>
+    <div class="kpi"><div class="kpi-value" style="color:var(--hot)">${d.priority_counts.hot}</div><div class="kpi-label">Hot</div></div>
+    <div class="kpi"><div class="kpi-value" style="color:var(--new-lead)">${d.priority_counts.new_lead}</div><div class="kpi-label">New Leads</div></div>
+    <div class="kpi"><div class="kpi-value" style="color:var(--follow-up)">${d.priority_counts.follow_up}</div><div class="kpi-label">Follow-Up</div></div>
+    <div class="kpi"><div class="kpi-value" style="color:var(--green)">${m.total_opportunities}</div><div class="kpi-label">Total Opps</div></div>
+    <div class="kpi"><div class="kpi-value" style="color:var(--warm)">${m.total_conversations}</div><div class="kpi-label">Conversations</div></div>
+  </div>`;
+
+  // Revenue Bar
+  html += `<div class="revenue-bar">
+    <h3>Revenue at Risk</h3>
+    <div class="revenue-total">${fmt(r.total.value)}</div>
+    <div class="revenue-tiers">
+      <div class="rev-tier"><span class="rev-tier-label" style="color:var(--urgent)">Tier 1 — Respond Now (${r.tier1.count})</span><span class="rev-tier-value">${fmt(r.tier1.value)}</span></div>
+      <div class="rev-tier"><span class="rev-tier-label" style="color:var(--hot)">Tier 2 — Respond Today (${r.tier2.count})</span><span class="rev-tier-value">${fmt(r.tier2.value)}</span></div>
+      <div class="rev-tier"><span class="rev-tier-label" style="color:var(--warm)">Tier 3 — This Week (${r.tier3.count})</span><span class="rev-tier-value">${fmt(r.tier3.value)}</span></div>
+      <div class="rev-tier"><span class="rev-tier-label" style="color:var(--follow-up)">Tier 4 — Pipeline Updates (${r.tier4.count})</span><span class="rev-tier-value">${fmt(r.tier4.value)}</span></div>
+    </div>
+  </div>`;
+
+  // Unassigned Alert
+  if (d.unassigned_high_value && d.unassigned_high_value.length) {
+    html += `<div class="alert-banner">
+      <h3>UNASSIGNED HIGH-VALUE — NEEDS OWNER NOW</h3>
+      ${d.unassigned_high_value.map(u => `
+        <div class="alert-item">
+          <span>${u.name} — ${u.stage}</span>
+          <span style="color:var(--green);font-weight:700">${fmt(u.value)}</span>
+        </div>`).join('')}
+    </div>`;
+  }
+
+  // Tier 1
+  html += `<div class="tier-section">
+    <div class="tier-header">
+      <span class="tier-badge t1">Tier 1 — Respond Now</span>
+      <span class="tier-count">${d.tier1.length} leads | Revenue at risk</span>
+    </div>
+    ${d.tier1.map(l => renderLeadCard(l, 1)).join('')}
+  </div>`;
+
+  // Tier 2
+  html += `<div class="tier-section">
+    <div class="tier-header">
+      <span class="tier-badge t2">Tier 2 — Respond Today</span>
+      <span class="tier-count">${d.tier2.length} leads</span>
+    </div>
+    ${d.tier2.map(l => renderLeadCard(l, 2)).join('')}
+  </div>`;
+
+  // Tier 3
+  html += `<div class="tier-section">
+    <div class="tier-header">
+      <span class="tier-badge t3">Tier 3 — Follow Up This Week</span>
+      <span class="tier-count">${d.tier3.length} leads</span>
+    </div>
+    <table class="compact-table">
+      <tr><th>Contact</th><th>Value</th><th>Message</th><th>Action</th></tr>
+      ${d.tier3.map(l => `<tr>
+        <td style="font-weight:600">${l.name}</td>
+        <td style="color:var(--green)">${l.value ? fmt(l.value) : '—'}</td>
+        <td style="color:var(--text-dim)">${l.message}</td>
+        <td>${l.action}</td>
+      </tr>`).join('')}
+    </table>
+  </div>`;
+
+  // Tier 4
+  html += `<div class="tier-section">
+    <div class="tier-header">
+      <span class="tier-badge t4">Tier 4 — Pipeline Updates Needed</span>
+      <span class="tier-count">${d.tier4_pipeline_updates.length} leads | No reply required</span>
+    </div>
+    <table class="compact-table">
+      <tr><th>Contact</th><th>Message</th><th>Current Stage</th><th>Value</th><th>Update To</th></tr>
+      ${d.tier4_pipeline_updates.map(l => `<tr>
+        <td style="font-weight:600">${l.name}</td>
+        <td style="color:var(--text-dim)">${l.message}</td>
+        <td>${l.current_stage}</td>
+        <td style="color:var(--green)">${l.value ? fmt(l.value) : '—'}</td>
+        <td style="color:var(--warm);font-weight:600">${l.update_to}</td>
+      </tr>`).join('')}
+    </table>
+  </div>`;
+
+  // Missed Calls
+  if (d.missed_calls && d.missed_calls.length) {
+    html += `<div class="tier-section">
+      <div class="tier-header">
+        <span class="tier-badge" style="background:var(--cold);color:#fff">Missed Calls / Unknown</span>
+        <span class="tier-count">${d.missed_calls.length} numbers</span>
+      </div>
+      <table class="compact-table">
+        <tr><th>Phone</th><th>Action</th></tr>
+        ${d.missed_calls.map(c => `<tr><td>${c.phone}</td><td>${c.action}</td></tr>`).join('')}
+      </table>
+    </div>`;
+  }
+
+  $('#app').innerHTML = html;
+}
+
+function copyReply(btn, text) {
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 1500);
+  });
+}
+
+let refreshTimer;
+async function loadData() {
+  try {
+    const res = await fetch(DATA_URL + '?t=' + Date.now());
+    const data = await res.json();
+    renderApp(data);
+    $('#refresh-status').textContent = `Auto-refresh: every 30s | Last fetch: ${new Date().toLocaleTimeString()}`;
+  } catch (e) {
+    console.error('Data fetch failed:', e);
+    $('#refresh-status').textContent = 'Fetch failed — retrying...';
+  }
+}
+
+loadData();
+refreshTimer = setInterval(loadData, REFRESH_INTERVAL);
+</script>
+</body>
+</html>

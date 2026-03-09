@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DeAngelos — Agent Reply Hub</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #232733;
+    --border: #2e3345;
+    --text: #e4e6ed;
+    --text-dim: #8b90a0;
+    --urgent: #ff4d4f;
+    --hot: #ff7a00;
+    --warm: #faad14;
+    --green: #52c41a;
+    --accent: #4f9cf7;
+    --radius: 10px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.5;
+    padding-bottom: 50px;
+  }
+
+  .header {
+    background: linear-gradient(135deg, #2a1a3a 0%, #0f1117 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 24px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .header h1 { font-size: 20px; font-weight: 700; }
+  .header h1 span { color: #b388ff; }
+  .header-meta { text-align: right; font-size: 13px; color: var(--text-dim); }
+  .header-meta .live {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--green); font-weight: 600;
+  }
+  .live-dot {
+    width: 8px; height: 8px; background: var(--green);
+    border-radius: 50%; animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 24px; }
+
+  /* Rules Section */
+  .rules-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 28px;
+    overflow: hidden;
+  }
+  .rules-header {
+    background: var(--surface2);
+    padding: 14px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+  }
+  .rules-header h3 { font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .rules-toggle { background: none; border: none; color: var(--accent); cursor: pointer; font-size: 13px; }
+  .rules-body { padding: 20px; display: none; }
+  .rules-body.open { display: block; }
+  .rules-body h4 { color: var(--accent); font-size: 13px; margin: 12px 0 6px; }
+  .rules-body h4:first-child { margin-top: 0; }
+  .rules-body ul { padding-left: 20px; }
+  .rules-body li { font-size: 13px; color: var(--text-dim); margin-bottom: 4px; }
+  .rules-body ol { padding-left: 20px; }
+  .rules-body ol li { margin-bottom: 6px; }
+
+  /* Filter Bar */
+  .filter-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .filter-btn {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-dim);
+    font-size: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .filter-btn:hover { border-color: var(--accent); color: var(--text); }
+  .filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* Reply Queue */
+  .queue-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .queue-header h2 { font-size: 18px; }
+  .queue-count { font-size: 13px; color: var(--text-dim); }
+
+  .reply-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .reply-card:hover { border-color: var(--accent); }
+  .reply-card.tier-1 { border-left: 4px solid var(--urgent); }
+  .reply-card.tier-2 { border-left: 4px solid var(--hot); }
+  .reply-card.tier-3 { border-left: 4px solid var(--warm); }
+
+  .reply-top {
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .reply-name { font-size: 16px; font-weight: 700; }
+  .reply-value { font-size: 16px; font-weight: 700; color: var(--green); }
+
+  .reply-meta {
+    padding: 0 20px 8px;
+    font-size: 12px;
+    color: var(--text-dim);
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .unread-badge {
+    background: var(--urgent); color: #fff; padding: 2px 8px;
+    border-radius: 10px; font-size: 11px; font-weight: 700;
+  }
+  .stage-pill {
+    background: var(--surface2); color: var(--accent);
+    padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 600;
+  }
+  .owner-warn { color: var(--urgent); font-weight: 700; }
+
+  .reply-conversation {
+    padding: 0 20px 12px;
+  }
+  .reply-bubble {
+    background: var(--surface2); border-radius: 8px;
+    padding: 10px 14px; font-size: 13px;
+    border-left: 3px solid var(--accent);
+  }
+
+  .reply-action {
+    padding: 0 20px 10px;
+    font-size: 13px; color: var(--warm); font-weight: 600;
+  }
+
+  .reply-draft {
+    margin: 0 20px 16px;
+    background: #1a2e1a; border: 1px solid #2d4a2d; border-radius: 8px;
+    padding: 12px 14px;
+    position: relative;
+  }
+  .reply-draft-label {
+    font-size: 10px; font-weight: 700; color: var(--green);
+    margin-bottom: 6px; letter-spacing: 0.5px;
+  }
+  .reply-draft-text {
+    font-size: 13px; color: #a8e6a8;
+    min-height: 40px;
+  }
+  .reply-draft-text[contenteditable] { outline: none; }
+  .reply-draft-text[contenteditable]:focus {
+    background: rgba(82, 196, 26, 0.05);
+    border-radius: 4px;
+    padding: 4px;
+    margin: -4px;
+  }
+
+  .reply-actions {
+    padding: 0 20px 16px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    padding: 8px 16px; border-radius: 6px; font-size: 12px;
+    font-weight: 600; cursor: pointer; border: none;
+    transition: opacity 0.2s;
+  }
+  .btn:hover { opacity: 0.85; }
+  .btn-approve { background: var(--green); color: #111; }
+  .btn-edit { background: var(--accent); color: #fff; }
+  .btn-copy { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+  .btn-skip { background: transparent; color: var(--text-dim); border: 1px solid var(--border); }
+
+  .reply-status {
+    padding: 8px 20px;
+    font-size: 12px;
+    background: var(--surface2);
+    color: var(--text-dim);
+    display: none;
+  }
+  .reply-status.show { display: block; }
+  .reply-status.approved { color: var(--green); }
+  .reply-status.skipped { color: var(--text-dim); }
+
+  /* Checklist */
+  .checklist {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 24px;
+  }
+  .checklist h3 { font-size: 14px; margin-bottom: 10px; color: var(--accent); }
+  .check-item {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; color: var(--text-dim);
+    padding: 4px 0;
+  }
+  .check-item input[type="checkbox"] { accent-color: var(--green); }
+
+  .refresh-bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--surface); border-top: 1px solid var(--border);
+    padding: 8px 24px; font-size: 12px; color: var(--text-dim);
+    display: flex; justify-content: space-between; align-items: center;
+    z-index: 100;
+  }
+  .refresh-bar button {
+    background: var(--accent); color: #fff; border: none;
+    padding: 6px 14px; border-radius: 6px; font-size: 12px;
+    cursor: pointer; font-weight: 600;
+  }
+
+  .loading { text-align: center; padding: 60px; color: var(--text-dim); }
+  .loading .spinner {
+    width: 32px; height: 32px; border: 3px solid var(--border);
+    border-top-color: #b388ff; border-radius: 50%;
+    animation: spin 0.8s linear infinite; margin: 0 auto 12px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media (max-width: 768px) {
+    .header { padding: 16px; }
+    .container { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Agent <span>Reply Hub</span> — Human Approval Required</h1>
+  <div class="header-meta">
+    <div class="live"><div class="live-dot"></div> LIVE DATA</div>
+    <div id="last-updated">Loading...</div>
+  </div>
+</div>
+
+<div class="container" id="app">
+  <div class="loading">
+    <div class="spinner"></div>
+    Connecting to data feed...
+  </div>
+</div>
+
+<div class="refresh-bar">
+  <span id="refresh-status">Auto-refresh: every 30s</span>
+  <button onclick="loadData()">Refresh Now</button>
+</div>
+
+<script>
+const DATA_URL = '/dashboard/data/dashboard-data.json';
+const REFRESH_INTERVAL = 30000;
+
+function $(s) { return document.querySelector(s); }
+function fmt(n) { return n ? '$' + n.toLocaleString() : ''; }
+
+let currentFilter = 'all';
+let approvedIds = new Set();
+let skippedIds = new Set();
+
+function renderApp(data) {
+  const allLeads = [
+    ...(data.tier1 || []).map(l => ({...l, tier: 1})),
+    ...(data.tier2 || []).map(l => ({...l, tier: 2})),
+  ];
+
+  const filteredLeads = allLeads.filter(l => {
+    if (currentFilter === 'all') return true;
+    if (currentFilter === 'tier1') return l.tier === 1;
+    if (currentFilter === 'tier2') return l.tier === 2;
+    if (currentFilter === 'unread') return l.unread > 0;
+    if (currentFilter === 'unassigned') return l.owner === 'UNASSIGNED';
+    return true;
+  });
+
+  $('#last-updated').textContent = `Updated: ${new Date(data.meta.generated).toLocaleString()} | ${data.meta.unread_conversations} unread`;
+
+  let html = '';
+
+  // Operating Rules (collapsible)
+  html += `<div class="rules-panel">
+    <div class="rules-header" onclick="toggleRules()">
+      <h3>Operating Rules & Workflow</h3>
+      <span class="rules-toggle" id="rules-toggle">Show</span>
+    </div>
+    <div class="rules-body" id="rules-body">
+      <h4>Operating Rules</h4>
+      <ul>
+        <li>Always review the lead note and the full GHL conversation before sending.</li>
+        <li>Treat suggested replies as <strong>drafts only</strong> — edit for accuracy and tone.</li>
+        <li>Do not send if the lead opted out (STOP, not interested, do-not-contact).</li>
+        <li>If a message is legal/financial/dispute-sensitive, escalate to owner before sending.</li>
+      </ul>
+      <h4>Triage Workflow</h4>
+      <ol>
+        <li>Process <strong>Tier 1 (Respond Now)</strong> first, then Tier 2.</li>
+        <li>Verify: owner, opportunity stage, latest inbound/outbound, unread count.</li>
+        <li>Approve, edit, or reject the suggested reply below.</li>
+        <li>Record outcome in GHL (replied, no reply, follow-up date).</li>
+      </ol>
+      <h4>Reply Quality Checklist</h4>
+      <ul>
+        <li>Confirm names, scheduling details, and estimate context are correct.</li>
+        <li>Keep replies short and actionable.</li>
+        <li>Include one clear next step (time options, callback, or confirmation).</li>
+        <li>Avoid assumptions not present in the conversation.</li>
+      </ul>
+    </div>
+  </div>`;
+
+  // Pre-send Checklist
+  html += `<div class="checklist">
+    <h3>Pre-Send Checklist</h3>
+    <label class="check-item"><input type="checkbox"> Verified contact name and details</label>
+    <label class="check-item"><input type="checkbox"> Reviewed full GHL conversation</label>
+    <label class="check-item"><input type="checkbox"> Confirmed opportunity stage is current</label>
+    <label class="check-item"><input type="checkbox"> Reply includes clear next step</label>
+    <label class="check-item"><input type="checkbox"> No opt-out / DND flags on contact</label>
+  </div>`;
+
+  // Filter Bar
+  html += `<div class="filter-bar">
+    <button class="filter-btn ${currentFilter==='all'?'active':''}" onclick="setFilter('all')">All (${allLeads.length})</button>
+    <button class="filter-btn ${currentFilter==='tier1'?'active':''}" onclick="setFilter('tier1')">Tier 1 — Now (${allLeads.filter(l=>l.tier===1).length})</button>
+    <button class="filter-btn ${currentFilter==='tier2'?'active':''}" onclick="setFilter('tier2')">Tier 2 — Today (${allLeads.filter(l=>l.tier===2).length})</button>
+    <button class="filter-btn ${currentFilter==='unread'?'active':''}" onclick="setFilter('unread')">Unread (${allLeads.filter(l=>l.unread>0).length})</button>
+    <button class="filter-btn ${currentFilter==='unassigned'?'active':''}" onclick="setFilter('unassigned')">Unassigned (${allLeads.filter(l=>l.owner==='UNASSIGNED').length})</button>
+  </div>`;
+
+  // Queue Header
+  html += `<div class="queue-header">
+    <h2>Reply Queue</h2>
+    <span class="queue-count">${filteredLeads.length} leads | ${approvedIds.size} approved | ${skippedIds.size} skipped</span>
+  </div>`;
+
+  // Reply Cards
+  filteredLeads.forEach(lead => {
+    const id = lead.id || lead.name.toLowerCase().replace(/\s+/g, '-');
+    const tierClass = `tier-${lead.tier}`;
+    const isApproved = approvedIds.has(id);
+    const isSkipped = skippedIds.has(id);
+
+    html += `
+      <div class="reply-card ${tierClass}" id="card-${id}">
+        <div class="reply-top">
+          <div>
+            <span class="reply-name">${lead.name}</span>
+            ${lead.unread ? `<span class="unread-badge">${lead.unread} UNREAD</span>` : ''}
+          </div>
+          <span class="reply-value">${fmt(lead.value)}</span>
+        </div>
+        <div class="reply-meta">
+          <span class="stage-pill">${lead.stage || ''}</span>
+          <span class="${lead.owner === 'UNASSIGNED' ? 'owner-warn' : ''}">${lead.owner || ''}</span>
+          ${lead.phone ? `<span>${lead.phone}</span>` : ''}
+        </div>
+        <div class="reply-conversation">
+          <div class="reply-bubble">"${lead.last_message || 'No message'}"</div>
+        </div>
+        ${lead.action ? `<div class="reply-action">${lead.action}</div>` : ''}
+        ${lead.suggested_reply ? `
+          <div class="reply-draft">
+            <div class="reply-draft-label">DRAFT REPLY (click to edit)</div>
+            <div class="reply-draft-text" contenteditable="true" id="draft-${id}">${lead.suggested_reply}</div>
+          </div>
+          <div class="reply-actions">
+            <button class="btn btn-approve" onclick="approveReply('${id}')">Approve & Send</button>
+            <button class="btn btn-copy" onclick="copyDraft('${id}')">Copy to Clipboard</button>
+            <button class="btn btn-skip" onclick="skipReply('${id}')">Skip</button>
+          </div>
+        ` : ''}
+        <div class="reply-status ${isApproved ? 'show approved' : ''} ${isSkipped ? 'show skipped' : ''}" id="status-${id}">
+          ${isApproved ? 'APPROVED — Ready to send in GHL' : ''}
+          ${isSkipped ? 'SKIPPED — No action taken' : ''}
+        </div>
+      </div>`;
+  });
+
+  if (filteredLeads.length === 0) {
+    html += `<div style="text-align:center;padding:40px;color:var(--text-dim)">No leads match this filter.</div>`;
+  }
+
+  $('#app').innerHTML = html;
+}
+
+function toggleRules() {
+  const body = document.getElementById('rules-body');
+  const toggle = document.getElementById('rules-toggle');
+  if (body.classList.contains('open')) {
+    body.classList.remove('open');
+    toggle.textContent = 'Show';
+  } else {
+    body.classList.add('open');
+    toggle.textContent = 'Hide';
+  }
+}
+
+function setFilter(f) {
+  currentFilter = f;
+  loadData();
+}
+
+function approveReply(id) {
+  approvedIds.add(id);
+  skippedIds.delete(id);
+  const statusEl = document.getElementById('status-' + id);
+  if (statusEl) {
+    statusEl.className = 'reply-status show approved';
+    statusEl.textContent = 'APPROVED — Ready to send in GHL';
+  }
+}
+
+function skipReply(id) {
+  skippedIds.add(id);
+  approvedIds.delete(id);
+  const statusEl = document.getElementById('status-' + id);
+  if (statusEl) {
+    statusEl.className = 'reply-status show skipped';
+    statusEl.textContent = 'SKIPPED — No action taken';
+  }
+}
+
+function copyDraft(id) {
+  const el = document.getElementById('draft-' + id);
+  if (el) {
+    navigator.clipboard.writeText(el.textContent).then(() => {
+      const btn = el.closest('.reply-card').querySelector('.btn-copy');
+      if (btn) { btn.textContent = 'Copied!'; setTimeout(() => btn.textContent = 'Copy to Clipboard', 1500); }
+    });
+  }
+}
+
+let cachedData = null;
+async function loadData() {
+  try {
+    const res = await fetch(DATA_URL + '?t=' + Date.now());
+    cachedData = await res.json();
+    renderApp(cachedData);
+    $('#refresh-status').textContent = `Auto-refresh: every 30s | Last fetch: ${new Date().toLocaleTimeString()}`;
+  } catch (e) {
+    if (cachedData) renderApp(cachedData);
+    console.error('Data fetch failed:', e);
+    $('#refresh-status').textContent = 'Fetch failed — retrying...';
+  }
+}
+
+loadData();
+setInterval(loadData, REFRESH_INTERVAL);
+</script>
+</body>
+</html>
