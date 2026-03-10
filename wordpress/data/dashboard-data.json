@@ -4,9 +4,15 @@
     "location_id": "Fqv0HfBV4jdcZsHDMg0n",
     "total_conversations": 684,
     "total_opportunities": 188,
-    "generated": "2026-03-10T19:00:16",
+    "generated": "2026-03-10T19:08:27",
     "refresh_interval": "Every 30 minutes starting at 7:30 AM ET",
-    "unread_conversations": 79
+    "unread_conversations": 54,
+    "unread_threads": 54,
+    "unread_messages": 79,
+    "unread_sms_threads": 49,
+    "unread_sms_messages": 66,
+    "team_inbox_sms_threads": 47,
+    "team_inbox_sms_messages": 63
   },
   "revenue_summary": {
     "tier1": {
@@ -45,7 +51,7 @@
   },
   "tier1": [
     {
-      "id": "sandra-mohr",
+      "id": "contact-prybgj7r2qvd7cxl4lk9",
       "name": "Sandra Mohr",
       "phone": "+15748071790",
       "owner": "Owner B",
@@ -58,7 +64,7 @@
       "suggested_reply": "Hi Sandra, thanks for the message. I saw this and I am checking availability/details now. I will follow up shortly."
     },
     {
-      "id": "mark-pellham",
+      "id": "contact-aivzcjsxczbochgiy7wc",
       "name": "Mark Pellham",
       "phone": "+14072528835",
       "owner": "Owner A",
@@ -71,7 +77,7 @@
       "suggested_reply": "Hi Mark, thanks for the message. I saw this and I am checking availability/details now. I will follow up shortly."
     },
     {
-      "id": "lay-hodge",
+      "id": "contact-lg5esetwejc2ykxea7ja",
       "name": "Lay Hodge",
       "phone": "+16083546265",
       "owner": "Owner A",
@@ -84,7 +90,7 @@
       "suggested_reply": "Hi Lay, thanks for the message. I saw this and I am checking availability/details now. I will follow up shortly."
     },
     {
-      "id": "lyndsey-mcmillan",
+      "id": "contact-l5atxamtewbagm0a18yu",
       "name": "Lyndsey McMillan",
       "phone": "+14076208971",
       "owner": "Owner A",
@@ -97,7 +103,7 @@
       "suggested_reply": "Hi Lyndsey, thanks for the message. I saw this and I am checking availability/details now. I will follow up shortly."
     },
     {
-      "id": "tyler-dixon",
+      "id": "contact-ul5qxhkyisb3dlqyjdtg",
       "name": "Tyler Dixon",
       "phone": "+13868526033",
       "owner": "Owner A",
@@ -110,7 +116,7 @@
       "suggested_reply": "Hi Tyler, thanks for checking in. We are confirming timing now and will send you an exact update shortly."
     },
     {
-      "id": "julie-jaeb",
+      "id": "contact-gq6lzfbgosk075lhekup",
       "name": "Julie Jaeb",
       "phone": "+14072279280",
       "owner": "Owner A",
@@ -123,7 +129,7 @@
       "suggested_reply": "Hi Julie, thanks for the message. I saw this and I am checking availability/details now. I will follow up shortly."
     },
     {
-      "id": "walter-valentin",
+      "id": "contact-asio0fxs6voytlcixqta",
       "name": "Walter Valentin",
       "phone": "+16467195547",
       "owner": "Owner A",
@@ -136,7 +142,7 @@
       "suggested_reply": "Hi Walter, thanks for checking in. We are confirming timing now and will send you an exact update shortly."
     },
     {
-      "id": "evelyn-chew",
+      "id": "contact-mqagxq6tcy7s6l0rv9hw",
       "name": "Evelyn Chew",
       "phone": "+14079244522",
       "owner": "Owner B",
@@ -149,7 +155,7 @@
       "suggested_reply": "Hi Evelyn, thanks for the message. I saw this and I am checking availability/details now. I will follow up shortly."
     },
     {
-      "id": "geri-devol",
+      "id": "contact-ivdg85iy8govmgtxxq3b",
       "name": "Geri Devol",
       "phone": "+19144266387",
       "owner": "Owner B",
@@ -162,7 +168,7 @@
       "suggested_reply": "Hi Geri, thanks for the message. I saw this and I am checking availability/details now. I will follow up shortly."
     },
     {
-      "id": "david-fraser",
+      "id": "contact-waiqjukd0hwlj8puizbh",
       "name": "David Fraser",
       "phone": "+14806399620",
       "owner": "Owner B",
@@ -175,7 +181,7 @@
       "suggested_reply": "Hi David, thanks for the message. I saw this and I am checking availability/details now. I will follow up shortly."
     },
     {
-      "id": "daniel-harrison",
+      "id": "contact-t0bg5vldsfsmopgubyg1",
       "name": "Daniel Harrison",
       "phone": "+15202471358",
       "owner": "Owner B",
@@ -188,7 +194,7 @@
       "suggested_reply": "Hi Daniel, thanks for the message. I saw this and I am checking availability/details now. I will follow up shortly."
     },
     {
-      "id": "mireya-booher",
+      "id": "contact-aj4khpia305jlwvwqemp",
       "name": "Mireya Booher",
       "phone": "+14079246653",
       "owner": "Owner B",
@@ -201,7 +207,7 @@
       "suggested_reply": "Hi Mireya, thanks for the message. I saw this and I am checking availability/details now. I will follow up shortly."
     },
     {
-      "id": "elise-johnson",
+      "id": "contact-l7e2ts5lzctydsxqjrkd",
       "name": "Elise Johnson",
       "phone": "+14079859280",
       "owner": "Owner A",
@@ -214,7 +220,7 @@
       "suggested_reply": "Hi Elise, thanks for the message. I saw this and I am checking availability/details now. I will follow up shortly."
     },
     {
-      "id": "marie-breen",
+      "id": "contact-rcepxivzzi0gdzbt2wnz",
       "name": "Marie Breen",
       "phone": "+14077653698",
       "owner": "UNASSIGNED",
@@ -227,7 +233,7 @@
       "suggested_reply": "Hi Marie, thanks for the message. I saw this and I am checking availability/details now. I will follow up shortly."
     },
     {
-      "id": "eddie-muse",
+      "id": "contact-mey5pcjd2stnoleqv9tv",
       "name": "Eddie Muse",
       "phone": "+14074620115",
       "owner": "Owner A",
@@ -242,7 +248,7 @@
   ],
   "tier2": [
     {
-      "id": "steven-sanders",
+      "id": "contact-ui7qbwlplmlju3uvrdvo",
       "name": "Steven Sanders",
       "phone": "+13522127356",
       "owner": "Owner A",
@@ -254,7 +260,7 @@
       "suggested_reply": "Hi Steven, checking in on the estimate. Any questions or revisions you want before we schedule next steps?"
     },
     {
-      "id": "lex-test",
+      "id": "contact-qqfizna2ee7sgtwz1dki",
       "name": "Lex Test",
       "phone": "+13866752303",
       "owner": "Owner A",
@@ -266,7 +272,7 @@
       "suggested_reply": "Hi Lex, checking in on the estimate. Any questions or revisions you want before we schedule next steps?"
     },
     {
-      "id": "roberta-and-claude-cromer",
+      "id": "contact-dbqsefleo0wp5erkbmun",
       "name": "Roberta & Claude Cromer",
       "phone": "+15707725512",
       "owner": "Owner A",
@@ -279,7 +285,7 @@
       "suggested_reply": "Hi Roberta, checking in on the estimate. Any questions or revisions you want before we schedule next steps?"
     },
     {
-      "id": "bob-testy",
+      "id": "contact-bnnopyxdmwwpk3n9kgge",
       "name": "Bob Testy",
       "phone": "+14076841130",
       "owner": "UNASSIGNED",
@@ -292,7 +298,7 @@
       "suggested_reply": "Hi Bob, checking in on the estimate. Any questions or revisions you want before we schedule next steps?"
     },
     {
-      "id": "luis-campis",
+      "id": "contact-wzwhpqxeywysdceu8fhv",
       "name": "Luis Campis",
       "phone": "+14079885255",
       "owner": "Owner B",
@@ -305,7 +311,7 @@
       "suggested_reply": "Hi Luis, checking in on the estimate. Any questions or revisions you want before we schedule next steps?"
     },
     {
-      "id": "richard-macak",
+      "id": "contact-yv0axtntxm5yggg3us5d",
       "name": "Richard Macak",
       "phone": "+19548952313",
       "owner": "Owner B",
@@ -318,7 +324,7 @@
       "suggested_reply": "Hi Richard, checking in on the estimate. Any questions or revisions you want before we schedule next steps?"
     },
     {
-      "id": "christine-hurst",
+      "id": "contact-5jw9cdhmnkllarjhweoq",
       "name": "Christine Hurst",
       "phone": "+14079558126",
       "owner": "Owner B",
@@ -331,7 +337,7 @@
       "suggested_reply": "Hi Christine, checking in on the estimate. Any questions or revisions you want before we schedule next steps?"
     },
     {
-      "id": "erwin-goehring",
+      "id": "contact-41dk8t5djfi1vqqyvmot",
       "name": "Erwin Goehring",
       "phone": "+13213616811",
       "owner": "Owner A",
@@ -344,7 +350,7 @@
       "suggested_reply": "Hi Erwin, checking in on the estimate. Any questions or revisions you want before we schedule next steps?"
     },
     {
-      "id": "maria-freyre",
+      "id": "contact-8kto4zslhzjcee61uicz",
       "name": "Maria Freyre",
       "phone": "+14077977340",
       "owner": "Owner B",
@@ -357,7 +363,7 @@
       "suggested_reply": "Hi Maria, checking in on the estimate. Any questions or revisions you want before we schedule next steps?"
     },
     {
-      "id": "darcy-lee",
+      "id": "contact-d7ocydypiv3qj9wqfqeb",
       "name": "Darcy Lee",
       "phone": "+17744447076",
       "owner": "Owner B",
@@ -370,7 +376,7 @@
       "suggested_reply": "Hi Darcy, checking in on the estimate. Any questions or revisions you want before we schedule next steps?"
     },
     {
-      "id": "kirtus-bocox",
+      "id": "contact-evvre9ok6wfy8mjefqve",
       "name": "Kirtus Bocox",
       "phone": "+18165478286",
       "owner": "Owner B",
@@ -383,7 +389,7 @@
       "suggested_reply": "Hi Kirtus, checking in on the estimate. Any questions or revisions you want before we schedule next steps?"
     },
     {
-      "id": "roberto-pujol",
+      "id": "contact-htlzhmqtqqokpz9lmagz",
       "name": "Roberto Pujol",
       "phone": "+12025173677",
       "owner": "Owner B",
@@ -396,7 +402,7 @@
       "suggested_reply": "Hi Roberto, checking in on the estimate. Any questions or revisions you want before we schedule next steps?"
     },
     {
-      "id": "kenny-grenzer",
+      "id": "contact-1u6pjevhgagw9uvdhoin",
       "name": "Kenny Grenzer",
       "phone": "+14074321917",
       "owner": "Owner A",
@@ -409,7 +415,7 @@
       "suggested_reply": "Hi Kenny, checking in on the estimate. Any questions or revisions you want before we schedule next steps?"
     },
     {
-      "id": "gil-alstein",
+      "id": "contact-jr0eiwb8nhdqv3pr2jee",
       "name": "Gil Alstein",
       "phone": "+14079216775",
       "owner": "Owner A",
@@ -422,7 +428,7 @@
       "suggested_reply": "Hi Gil, checking in on the estimate. Any questions or revisions you want before we schedule next steps?"
     },
     {
-      "id": "proleads-amy",
+      "id": "contact-btpzwchztnhntvbsltau",
       "name": "Proleads Amy",
       "phone": "+17543993769",
       "owner": "UNASSIGNED",
@@ -643,7 +649,7 @@
       "action": "RESCHEDULE IMMEDIATELY. Customer is warm and engaged. Move opportunity back from \"Lost\" to \"Estimate Scheduled.\"",
       "suggested_reply": "\"Hi Krystal! Sorry about the reschedule — everything's back to normal. What day works for you this week? I'd love to come take a look.\"",
       "pipeline_update": "Lost/Not Interested → **Estimate Scheduled**",
-      "source_generated": "2026-03-10T19:00:16"
+      "source_generated": "2026-03-10T19:08:27"
     },
     {
       "name": "Kelisha Hart",
@@ -659,7 +665,7 @@
       "action": "Follow up again. The original reschedule ask got no reply.",
       "suggested_reply": "\"Hey Kelisha! Just circling back — we'd love to get you on the schedule. What works for you this week or next?\"",
       "pipeline_update": "Lost/Not Interested → **Contacted** (if she responds)",
-      "source_generated": "2026-03-10T19:00:16"
+      "source_generated": "2026-03-10T19:08:27"
     },
     {
       "name": "Colby Smith",
@@ -675,7 +681,7 @@
       "action": "Final follow-up attempt. If no reply, mark as cold.",
       "suggested_reply": "\"Hi Colby! Just wanted to check in one more time about rescheduling your estimate. We're happy to work around your schedule — just let us know!\"",
       "pipeline_update": "Hold at Lost/Not Interested unless customer re-engages",
-      "source_generated": "2026-03-10T19:00:16"
+      "source_generated": "2026-03-10T19:08:27"
     },
     {
       "name": "Phat Gagne",
@@ -691,7 +697,7 @@
       "action": "Verify in GHL whether Phat was seen or not. If not, reach out to reschedule.",
       "suggested_reply": "\"Hi Phat! Apologies for any confusion with scheduling. We'd love to still come out for your estimate — what day works best?\"",
       "pipeline_update": "",
-      "source_generated": "2026-03-10T19:00:16"
+      "source_generated": "2026-03-10T19:08:27"
     },
     {
       "name": "Jackie Galdi",
@@ -707,7 +713,7 @@
       "action": "One outreach attempt to reschedule. If no response, close.",
       "suggested_reply": "\"Hi Jackie! We had to reschedule your estimate visit. We'd love to still come take a look — are you still interested? We have openings this week.\"",
       "pipeline_update": "",
-      "source_generated": "2026-03-10T19:00:16"
+      "source_generated": "2026-03-10T19:08:27"
     },
     {
       "name": "Claud Bowers",
@@ -723,7 +729,7 @@
       "action": "No reschedule. Close out. Mark conversation as read.",
       "suggested_reply": "",
       "pipeline_update": "Already at Lost/Not Interested. Correct.",
-      "source_generated": "2026-03-10T19:00:16"
+      "source_generated": "2026-03-10T19:08:27"
     },
     {
       "name": "Katty Polo",
@@ -739,7 +745,7 @@
       "action": "Outreach to reschedule. This was Anthony's lead.",
       "suggested_reply": "\"Hi Katty! We had to reschedule your appointment. We'd love to still come out to Windermere for an estimate — what day works this week?\"",
       "pipeline_update": "",
-      "source_generated": "2026-03-10T19:00:16"
+      "source_generated": "2026-03-10T19:08:27"
     },
     {
       "name": "Zach Adams",
@@ -755,7 +761,7 @@
       "action": "No reschedule. Close out.",
       "suggested_reply": "",
       "pipeline_update": "",
-      "source_generated": "2026-03-10T19:00:16"
+      "source_generated": "2026-03-10T19:08:27"
     }
   ],
   "upcoming_appointments": [

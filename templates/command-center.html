@@ -247,15 +247,33 @@
 const REFRESH_INTERVAL = 30000;
 
 function fmt(n) { return '$' + n.toLocaleString(); }
+function getUnreadMeta(meta) {
+  const hasTeamInboxSms = Object.prototype.hasOwnProperty.call(meta || {}, 'team_inbox_sms_threads');
+  const hasSeparatedUnread = Object.prototype.hasOwnProperty.call(meta || {}, 'unread_threads')
+    || Object.prototype.hasOwnProperty.call(meta || {}, 'unread_messages');
+
+  if (hasTeamInboxSms) {
+    return {
+      value: Number(meta?.team_inbox_sms_threads ?? 0),
+      label: 'Team Inbox SMS',
+    };
+  }
+
+  return {
+    value: Number(hasSeparatedUnread ? (meta?.unread_threads ?? meta?.unread_conversations ?? 0) : (meta?.unread_conversations ?? 0)),
+    label: hasSeparatedUnread ? 'Unread Threads' : 'Unread Messages',
+  };
+}
 
 function renderKPIs(d, fetchedAt) {
   const m = d.meta;
   const r = d.revenue_summary;
+  const unread = getUnreadMeta(m);
 
   document.getElementById('kpis').innerHTML = `
     <div class="kpi"><div class="kpi-value" style="color:var(--primary)">${fmt(r.total.value)}</div><div class="kpi-label">Revenue at Risk</div></div>
     <div class="kpi"><div class="kpi-value" style="color:var(--urgent)">${d.priority_counts.urgent}</div><div class="kpi-label">Urgent</div></div>
-    <div class="kpi"><div class="kpi-value" style="color:var(--warm)">${m.unread_conversations}</div><div class="kpi-label">Unread</div></div>
+    <div class="kpi"><div class="kpi-value" style="color:var(--warm)">${unread.value}</div><div class="kpi-label">${unread.label}</div></div>
     <div class="kpi"><div class="kpi-value" style="color:var(--text)">${r.total.count}</div><div class="kpi-label">Active Leads</div></div>
     <div class="kpi"><div class="kpi-value" style="color:var(--green)">${m.total_opportunities}</div><div class="kpi-label">Total Opps</div></div>
   `;

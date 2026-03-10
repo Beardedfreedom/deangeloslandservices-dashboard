@@ -265,6 +265,27 @@ const REFRESH_INTERVAL = 30000; // 30 seconds
 
 function $(s) { return document.querySelector(s); }
 function fmt(n) { return '$' + n.toLocaleString(); }
+function getUnreadStatus(meta) {
+  const hasTeamInboxSms = Object.prototype.hasOwnProperty.call(meta || {}, 'team_inbox_sms_threads');
+  if (hasTeamInboxSms) {
+    const threads = Number(meta?.team_inbox_sms_threads ?? 0);
+    const messages = Number(meta?.team_inbox_sms_messages ?? 0);
+    return messages !== threads
+      ? `${threads} team inbox SMS threads | ${messages} unread SMS messages`
+      : `${threads} team inbox SMS threads`;
+  }
+
+  const hasSeparatedUnread = Object.prototype.hasOwnProperty.call(meta || {}, 'unread_threads')
+    || Object.prototype.hasOwnProperty.call(meta || {}, 'unread_messages');
+  const threads = Number(meta?.unread_threads ?? meta?.unread_conversations ?? 0);
+  const messages = Number(meta?.unread_messages ?? meta?.unread_conversations ?? 0);
+
+  if (hasSeparatedUnread && messages !== threads) {
+    return `${threads} unread threads | ${messages} unread messages`;
+  }
+
+  return `${hasSeparatedUnread ? threads : messages} unread ${hasSeparatedUnread ? 'threads' : 'messages'}`;
+}
 function timeAgo(dateStr) {
   if (!dateStr) return '';
   const diff = Date.now() - new Date(dateStr).getTime();
@@ -310,7 +331,7 @@ function renderApp(data) {
   const m = d.meta;
   const r = d.revenue_summary;
 
-  $('#last-updated').textContent = `Updated: ${new Date(m.generated).toLocaleString()} | ${m.unread_conversations} unread`;
+  $('#last-updated').textContent = `Updated: ${new Date(m.generated).toLocaleString()} | ${getUnreadStatus(m)}`;
 
   let html = '';
 
