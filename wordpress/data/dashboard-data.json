@@ -4,7 +4,7 @@
     "location_id": "Fqv0HfBV4jdcZsHDMg0n",
     "total_conversations": 684,
     "total_opportunities": 186,
-    "generated": "2026-03-10T10:30:15",
+    "generated": "2026-03-10T11:00:20",
     "refresh_interval": "Every 30 minutes starting at 7:30 AM ET",
     "unread_conversations": 107
   },
@@ -35,8 +35,8 @@
     }
   },
   "priority_counts": {
-    "urgent": 45,
-    "hot": 6,
+    "urgent": 44,
+    "hot": 7,
     "warm": 8,
     "new_lead": 17,
     "follow_up": 58,
@@ -44,6 +44,19 @@
     "monitor": 548
   },
   "tier1": [
+    {
+      "id": "luis-campis",
+      "name": "Luis Campis",
+      "phone": "+14079885255",
+      "owner": "Owner B",
+      "value": 0,
+      "stage": "open",
+      "unread": 2,
+      "last_message": "Yes, tomorrow still sounds good",
+      "last_activity": "2026-03-10T10:59:18",
+      "action": "Time-sensitive conversation. Follow up today.",
+      "suggested_reply": "Hi Luis, thanks for checking in. We are confirming timing now and will send you an exact update shortly."
+    },
     {
       "id": "lyndsey-mcmillan",
       "name": "Lyndsey McMillan",
@@ -121,19 +134,6 @@
       "last_activity": "2026-03-09T22:03:13",
       "action": "Time-sensitive conversation. Follow up today.",
       "suggested_reply": "Hi Walter, thanks for checking in. We are confirming timing now and will send you an exact update shortly."
-    },
-    {
-      "id": "luis-campis",
-      "name": "Luis Campis",
-      "phone": "+14079885255",
-      "owner": "Owner B",
-      "value": 0,
-      "stage": "open",
-      "unread": 2,
-      "last_message": "Yes, tomorrow still sounds good",
-      "last_activity": "2026-03-09T13:12:39",
-      "action": "Unread inbound message. Review and respond as soon as possible.",
-      "suggested_reply": "Hi Luis, thanks for the message. I saw this and I am checking availability/details now. I will follow up shortly."
     },
     {
       "id": "evelyn-chew",
@@ -643,7 +643,7 @@
       "action": "RESCHEDULE IMMEDIATELY. Customer is warm and engaged. Move opportunity back from \"Lost\" to \"Estimate Scheduled.\"",
       "suggested_reply": "\"Hi Krystal! Sorry about the reschedule — everything's back to normal. What day works for you this week? I'd love to come take a look.\"",
       "pipeline_update": "Lost/Not Interested → **Estimate Scheduled**",
-      "source_generated": "2026-03-10T10:30:15"
+      "source_generated": "2026-03-10T11:00:20"
     },
     {
       "name": "Kelisha Hart",
@@ -659,7 +659,7 @@
       "action": "Follow up again. The original reschedule ask got no reply.",
       "suggested_reply": "\"Hey Kelisha! Just circling back — we'd love to get you on the schedule. What works for you this week or next?\"",
       "pipeline_update": "Lost/Not Interested → **Contacted** (if she responds)",
-      "source_generated": "2026-03-10T10:30:15"
+      "source_generated": "2026-03-10T11:00:20"
     },
     {
       "name": "Colby Smith",
@@ -675,7 +675,7 @@
       "action": "Final follow-up attempt. If no reply, mark as cold.",
       "suggested_reply": "\"Hi Colby! Just wanted to check in one more time about rescheduling your estimate. We're happy to work around your schedule — just let us know!\"",
       "pipeline_update": "Hold at Lost/Not Interested unless customer re-engages",
-      "source_generated": "2026-03-10T10:30:15"
+      "source_generated": "2026-03-10T11:00:20"
     },
     {
       "name": "Phat Gagne",
@@ -691,7 +691,7 @@
       "action": "Verify in GHL whether Phat was seen or not. If not, reach out to reschedule.",
       "suggested_reply": "\"Hi Phat! Apologies for any confusion with scheduling. We'd love to still come out for your estimate — what day works best?\"",
       "pipeline_update": "",
-      "source_generated": "2026-03-10T10:30:15"
+      "source_generated": "2026-03-10T11:00:20"
     },
     {
       "name": "Jackie Galdi",
@@ -707,7 +707,7 @@
       "action": "One outreach attempt to reschedule. If no response, close.",
       "suggested_reply": "\"Hi Jackie! We had to reschedule your estimate visit. We'd love to still come take a look — are you still interested? We have openings this week.\"",
       "pipeline_update": "",
-      "source_generated": "2026-03-10T10:30:15"
+      "source_generated": "2026-03-10T11:00:20"
     },
     {
       "name": "Claud Bowers",
@@ -723,7 +723,7 @@
       "action": "No reschedule. Close out. Mark conversation as read.",
       "suggested_reply": "",
       "pipeline_update": "Already at Lost/Not Interested. Correct.",
-      "source_generated": "2026-03-10T10:30:15"
+      "source_generated": "2026-03-10T11:00:20"
     },
     {
       "name": "Katty Polo",
@@ -739,7 +739,7 @@
       "action": "Outreach to reschedule. This was Anthony's lead.",
       "suggested_reply": "\"Hi Katty! We had to reschedule your appointment. We'd love to still come out to Windermere for an estimate — what day works this week?\"",
       "pipeline_update": "",
-      "source_generated": "2026-03-10T10:30:15"
+      "source_generated": "2026-03-10T11:00:20"
     },
     {
       "name": "Zach Adams",
@@ -755,7 +755,7 @@
       "action": "No reschedule. Close out.",
       "suggested_reply": "",
       "pipeline_update": "",
-      "source_generated": "2026-03-10T10:30:15"
+      "source_generated": "2026-03-10T11:00:20"
     }
   ],
   "upcoming_appointments": [
