@@ -256,13 +256,11 @@
 </div>
 
 <div class="refresh-bar">
-  <span id="refresh-status">Auto-refresh: every 30s</span>
+  <span id="refresh-status">Browser checks every 30s</span>
   <button onclick="loadData()">Refresh Now</button>
 </div>
 
 <script>
-// CONFIG — change this to your WordPress data endpoint
-const DATA_URL = '/dashboard/data/dashboard-data.json';
 const REFRESH_INTERVAL = 30000; // 30 seconds
 
 function $(s) { return document.querySelector(s); }
@@ -427,21 +425,27 @@ function copyReply(btn, text) {
   });
 }
 
-let refreshTimer;
-async function loadData() {
-  try {
-    const res = await fetch(DATA_URL + '?t=' + Date.now());
-    const data = await res.json();
-    renderApp(data);
-    $('#refresh-status').textContent = `Auto-refresh: every 30s | Last fetch: ${new Date().toLocaleTimeString()}`;
-  } catch (e) {
-    console.error('Data fetch failed:', e);
-    $('#refresh-status').textContent = 'Fetch failed — retrying...';
-  }
+let cachedData = null;
+
+function loadData() {
+  return dashboardPoller.refresh();
 }
 
-loadData();
-refreshTimer = setInterval(loadData, REFRESH_INTERVAL);
+const dashboardPoller = DalsDashboard.createPoller({
+  intervalMs: REFRESH_INTERVAL,
+  onData: ({ data, fetchedAt }) => {
+    cachedData = data;
+    renderApp(data);
+    $('#refresh-status').textContent = DalsDashboard.buildRefreshStatus(data.meta, fetchedAt, REFRESH_INTERVAL);
+  },
+  onError: ({ error, lastSuccessAt }) => {
+    if (cachedData) renderApp(cachedData);
+    console.error('Data fetch failed:', error);
+    $('#refresh-status').textContent = DalsDashboard.buildErrorStatus(error, lastSuccessAt, REFRESH_INTERVAL);
+  }
+});
+
+dashboardPoller.start();
 </script>
 </body>
 </html>

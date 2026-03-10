@@ -190,8 +190,8 @@
     </svg>
     <h1>DeAngelos <span class="brand">Land Services</span></h1>
   </div>
-  <p>GHL Command Center — Real-Time Operations Dashboard</p>
-  <div class="live"><div class="live-dot"></div> <span id="live-status">Loading backend sync status...</span></div>
+  <p>GHL Command Center — Live Operations Overview</p>
+  <div class="live"><div class="live-dot"></div> <span id="live-status">Loading backend sync and browser check status...</span></div>
   <div class="kpi-strip" id="kpis"></div>
 </div>
 
@@ -240,85 +240,79 @@
 </div>
 
 <div class="footer">
-  DeAngelos Land Services LLC — GHL Command Center | Pages auto-refresh every 30s
+  DeAngelos Land Services LLC — GHL Command Center | Browser checks every 30s
 </div>
 
 <script>
-const DATA_URL = '/dashboard/data/dashboard-data.json';
+const REFRESH_INTERVAL = 30000;
 
 function fmt(n) { return '$' + n.toLocaleString(); }
 
-function syncStatus(meta) {
-  const generated = meta && meta.generated ? new Date(meta.generated) : null;
-  if (!generated || Number.isNaN(generated.getTime())) {
-    return 'Waiting for command center sync';
-  }
+function renderKPIs(d, fetchedAt) {
+  const m = d.meta;
+  const r = d.revenue_summary;
 
-  const ageMinutes = Math.max(0, Math.round((Date.now() - generated.getTime()) / 60000));
-  const freshness = ageMinutes <= 35 ? 'Fresh' : 'Stale';
-  const interval = meta.refresh_interval || 'scheduled interval unavailable';
-  return `${freshness} — last backend sync ${generated.toLocaleTimeString()} | ${interval}`;
+  document.getElementById('kpis').innerHTML = `
+    <div class="kpi"><div class="kpi-value" style="color:var(--primary)">${fmt(r.total.value)}</div><div class="kpi-label">Revenue at Risk</div></div>
+    <div class="kpi"><div class="kpi-value" style="color:var(--urgent)">${d.priority_counts.urgent}</div><div class="kpi-label">Urgent</div></div>
+    <div class="kpi"><div class="kpi-value" style="color:var(--warm)">${m.unread_conversations}</div><div class="kpi-label">Unread</div></div>
+    <div class="kpi"><div class="kpi-value" style="color:var(--text)">${r.total.count}</div><div class="kpi-label">Active Leads</div></div>
+    <div class="kpi"><div class="kpi-value" style="color:var(--green)">${m.total_opportunities}</div><div class="kpi-label">Total Opps</div></div>
+  `;
+
+  document.getElementById('live-status').textContent = DalsDashboard.buildRefreshStatus(m, fetchedAt, REFRESH_INTERVAL);
+  document.getElementById('urgent-badge').textContent = d.priority_counts.urgent + ' URGENT';
+  document.getElementById('reply-badge').textContent = (d.tier1.length + d.tier2.length) + ' DRAFTS';
+
+  document.getElementById('triage-stats').innerHTML = `
+    <span class="card-stat">Tier 1: <strong>${r.tier1.count}</strong></span>
+    <span class="card-stat">Tier 2: <strong>${r.tier2.count}</strong></span>
+    <span class="card-stat">Total: <strong>${fmt(r.total.value)}</strong></span>
+  `;
+
+  document.getElementById('reply-stats').innerHTML = `
+    <span class="card-stat">Ready: <strong>${d.tier1.length + d.tier2.length}</strong></span>
+    <span class="card-stat">Unassigned: <strong>${d.unassigned_high_value.length}</strong></span>
+  `;
+
+  const cancelledCount = d.cancelled_appointments ? d.cancelled_appointments.length : 0;
+  const rescheduleCount = d.cancelled_appointments ? d.cancelled_appointments.filter(a => a.status && a.status.includes('RESCHEDULE')).length : 0;
+  document.getElementById('appt-stats').innerHTML = `
+    <span class="card-stat">Cancelled: <strong>${cancelledCount}</strong></span>
+    <span class="card-stat">Reschedule: <strong>${rescheduleCount}</strong></span>
+  `;
+
+  const allLeads = [...(d.tier1 || []), ...(d.tier2 || []), ...(d.tier3 || []), ...(d.tier4_pipeline_updates || d.tier4 || [])];
+  let lexCount = 0;
+  let anthonyCount = 0;
+  let unassignedCount = 0;
+
+  allLeads.forEach(l => {
+    const o = (l.owner || '').toLowerCase();
+    if (o.includes('owner a') || o.includes('lex')) lexCount++;
+    else if (o.includes('owner b') || o.includes('anthony')) anthonyCount++;
+    else unassignedCount++;
+  });
+
+  document.getElementById('owner-stats').innerHTML = `
+    <span class="card-stat">Lex: <strong>${lexCount}</strong></span>
+    <span class="card-stat">Anthony: <strong>${anthonyCount}</strong></span>
+    <span class="card-stat">Unassigned: <strong style="color:var(--urgent)">${unassignedCount}</strong></span>
+  `;
 }
 
-async function loadKPIs() {
-  try {
-    const res = await fetch(DATA_URL + '?t=' + Date.now());
-    const d = await res.json();
-    const m = d.meta;
-    const r = d.revenue_summary;
-
-    document.getElementById('kpis').innerHTML = `
-      <div class="kpi"><div class="kpi-value" style="color:var(--primary)">${fmt(r.total.value)}</div><div class="kpi-label">Revenue at Risk</div></div>
-      <div class="kpi"><div class="kpi-value" style="color:var(--urgent)">${d.priority_counts.urgent}</div><div class="kpi-label">Urgent</div></div>
-      <div class="kpi"><div class="kpi-value" style="color:var(--warm)">${m.unread_conversations}</div><div class="kpi-label">Unread</div></div>
-      <div class="kpi"><div class="kpi-value" style="color:var(--text)">${r.total.count}</div><div class="kpi-label">Active Leads</div></div>
-      <div class="kpi"><div class="kpi-value" style="color:var(--green)">${m.total_opportunities}</div><div class="kpi-label">Total Opps</div></div>
-    `;
-    document.getElementById('live-status').textContent = syncStatus(m);
-
-    document.getElementById('urgent-badge').textContent = d.priority_counts.urgent + ' URGENT';
-    document.getElementById('reply-badge').textContent = (d.tier1.length + d.tier2.length) + ' DRAFTS';
-
-    document.getElementById('triage-stats').innerHTML = `
-      <span class="card-stat">Tier 1: <strong>${r.tier1.count}</strong></span>
-      <span class="card-stat">Tier 2: <strong>${r.tier2.count}</strong></span>
-      <span class="card-stat">Total: <strong>${fmt(r.total.value)}</strong></span>
-    `;
-
-    document.getElementById('reply-stats').innerHTML = `
-      <span class="card-stat">Ready: <strong>${d.tier1.length + d.tier2.length}</strong></span>
-      <span class="card-stat">Unassigned: <strong>${d.unassigned_high_value.length}</strong></span>
-    `;
-
-    const cancelledCount = d.cancelled_appointments ? d.cancelled_appointments.length : 0;
-    const rescheduleCount = d.cancelled_appointments ? d.cancelled_appointments.filter(a => a.status && a.status.includes('RESCHEDULE')).length : 0;
-    document.getElementById('appt-stats').innerHTML = `
-      <span class="card-stat">Cancelled: <strong>${cancelledCount}</strong></span>
-      <span class="card-stat">Reschedule: <strong>${rescheduleCount}</strong></span>
-    `;
-
-    const allLeads = [...(d.tier1||[]), ...(d.tier2||[]), ...(d.tier3||[]), ...(d.tier4_pipeline_updates||d.tier4||[])];
-    let lexCount = 0, anthonyCount = 0, unassignedCount = 0;
-    allLeads.forEach(l => {
-      const o = (l.owner || '').toLowerCase();
-      if (o.includes('owner a') || o.includes('lex')) lexCount++;
-      else if (o.includes('owner b') || o.includes('anthony')) anthonyCount++;
-      else unassignedCount++;
-    });
-    document.getElementById('owner-stats').innerHTML = `
-      <span class="card-stat">Lex: <strong>${lexCount}</strong></span>
-      <span class="card-stat">Anthony: <strong>${anthonyCount}</strong></span>
-      <span class="card-stat">Unassigned: <strong style="color:var(--urgent)">${unassignedCount}</strong></span>
-    `;
-
-  } catch (e) {
-    console.error('Failed to load KPIs:', e);
-    document.getElementById('live-status').textContent = 'Backend sync unavailable — retrying...';
+const dashboardPoller = DalsDashboard.createPoller({
+  intervalMs: REFRESH_INTERVAL,
+  onData: ({ data, fetchedAt }) => {
+    renderKPIs(data, fetchedAt);
+  },
+  onError: ({ error, lastSuccessAt }) => {
+    console.error('Failed to load KPIs:', error);
+    document.getElementById('live-status').textContent = DalsDashboard.buildErrorStatus(error, lastSuccessAt, REFRESH_INTERVAL);
   }
-}
+});
 
-loadKPIs();
-setInterval(loadKPIs, 30000);
+dashboardPoller.start();
 </script>
 </body>
 </html>

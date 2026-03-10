@@ -279,12 +279,11 @@
 </div>
 
 <div class="refresh-bar">
-  <span id="refresh-status">Auto-refresh: every 30s</span>
+  <span id="refresh-status">Browser checks every 30s</span>
   <button onclick="loadData()">Refresh Now</button>
 </div>
 
 <script>
-const DATA_URL = '/dashboard/data/dashboard-data.json';
 const REFRESH_INTERVAL = 30000;
 
 function $(s) { return document.querySelector(s); }
@@ -293,8 +292,51 @@ function fmt(n) { return n ? '$' + n.toLocaleString() : ''; }
 let currentFilter = 'all';
 let approvedIds = new Set();
 let skippedIds = new Set();
+let cachedData = null;
+let draftValues = new Map();
+let checklistState = [];
+let rulesOpen = false;
+
+function captureLocalState() {
+  draftValues = new Map();
+  document.querySelectorAll('.reply-draft-text[id]').forEach(el => {
+    draftValues.set(el.id.replace('draft-', ''), el.innerText);
+  });
+
+  checklistState = Array.from(document.querySelectorAll('.check-item input')).map(input => input.checked);
+
+  const rulesBody = document.getElementById('rules-body');
+  rulesOpen = Boolean(rulesBody && rulesBody.classList.contains('open'));
+}
+
+function restoreLocalState() {
+  document.querySelectorAll('.reply-draft-text[id]').forEach(el => {
+    const key = el.id.replace('draft-', '');
+    if (draftValues.has(key)) {
+      el.textContent = draftValues.get(key);
+    }
+  });
+
+  document.querySelectorAll('.check-item input').forEach((input, index) => {
+    input.checked = Boolean(checklistState[index]);
+  });
+
+  const rulesBody = document.getElementById('rules-body');
+  const toggle = document.getElementById('rules-toggle');
+  if (!rulesBody || !toggle) return;
+
+  if (rulesOpen) {
+    rulesBody.classList.add('open');
+    toggle.textContent = 'Hide';
+  } else {
+    rulesBody.classList.remove('open');
+    toggle.textContent = 'Show';
+  }
+}
 
 function renderApp(data) {
+  captureLocalState();
+
   const allLeads = [
     ...(data.tier1 || []).map(l => ({...l, tier: 1})),
     ...(data.tier2 || []).map(l => ({...l, tier: 2})),
@@ -417,6 +459,7 @@ function renderApp(data) {
   }
 
   $('#app').innerHTML = html;
+  restoreLocalState();
 }
 
 function toggleRules() {
@@ -433,7 +476,7 @@ function toggleRules() {
 
 function setFilter(f) {
   currentFilter = f;
-  loadData();
+  if (cachedData) renderApp(cachedData);
 }
 
 function approveReply(id) {
@@ -459,29 +502,32 @@ function skipReply(id) {
 function copyDraft(id) {
   const el = document.getElementById('draft-' + id);
   if (el) {
-    navigator.clipboard.writeText(el.textContent).then(() => {
+    navigator.clipboard.writeText(el.innerText).then(() => {
       const btn = el.closest('.reply-card').querySelector('.btn-copy');
       if (btn) { btn.textContent = 'Copied!'; setTimeout(() => btn.textContent = 'Copy to Clipboard', 1500); }
     });
   }
 }
 
-let cachedData = null;
-async function loadData() {
-  try {
-    const res = await fetch(DATA_URL + '?t=' + Date.now());
-    cachedData = await res.json();
-    renderApp(cachedData);
-    $('#refresh-status').textContent = `Auto-refresh: every 30s | Last fetch: ${new Date().toLocaleTimeString()}`;
-  } catch (e) {
-    if (cachedData) renderApp(cachedData);
-    console.error('Data fetch failed:', e);
-    $('#refresh-status').textContent = 'Fetch failed — retrying...';
-  }
+function loadData() {
+  return dashboardPoller.refresh();
 }
 
-loadData();
-setInterval(loadData, REFRESH_INTERVAL);
+const dashboardPoller = DalsDashboard.createPoller({
+  intervalMs: REFRESH_INTERVAL,
+  onData: ({ data, fetchedAt }) => {
+    cachedData = data;
+    renderApp(cachedData);
+    $('#refresh-status').textContent = DalsDashboard.buildRefreshStatus(data.meta, fetchedAt, REFRESH_INTERVAL);
+  },
+  onError: ({ error, lastSuccessAt }) => {
+    if (cachedData) renderApp(cachedData);
+    console.error('Data fetch failed:', error);
+    $('#refresh-status').textContent = DalsDashboard.buildErrorStatus(error, lastSuccessAt, REFRESH_INTERVAL);
+  }
+});
+
+dashboardPoller.start();
 </script>
 </body>
 </html>

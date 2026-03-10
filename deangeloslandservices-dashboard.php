@@ -237,11 +237,29 @@ function dals_current_request_url() {
  * Mark the current response as non-cacheable.
  */
 function dals_disable_cache() {
-    if ( ! defined( 'DONOTCACHEPAGE' ) ) {
-        define( 'DONOTCACHEPAGE', true );
+    foreach ( array( 'DONOTCACHEPAGE', 'DONOTCACHEOBJECT', 'DONOTCACHEDB', 'DONOTMINIFY', 'DONOTCDN' ) as $constant ) {
+        if ( ! defined( $constant ) ) {
+            define( $constant, true );
+        }
     }
 
     nocache_headers();
+}
+
+/**
+ * Send explicit private no-store headers for protected dashboard responses.
+ */
+function dals_send_private_headers() {
+    dals_send_private_headers();
+
+    header_remove( 'Last-Modified' );
+    header_remove( 'ETag' );
+    header( 'Cache-Control: private, no-store, no-cache, must-revalidate, max-age=0' );
+    header( 'Pragma: no-cache' );
+    header( 'Expires: Wed, 11 Jan 1984 05:00:00 GMT' );
+    header( 'Surrogate-Control: no-store' );
+    header( 'X-DALS-Cache: bypass' );
+    header( 'Vary: Cookie', false );
 }
 
 /**
@@ -438,6 +456,17 @@ function dals_render_template( $file ) {
         exit;
     }
 
+    $client_asset     = DALS_PLUGIN_DIR . 'templates/assets/dashboard-client.js';
+    $client_asset_url = DALS_PLUGIN_URL . 'templates/assets/dashboard-client.js';
+    if ( file_exists( $client_asset ) ) {
+        $version       = (string) filemtime( $client_asset );
+        $client_script = sprintf(
+            '<script src="%s"></script>',
+            esc_url( add_query_arg( 'ver', $version, $client_asset_url ) )
+        );
+        $html = str_replace( '</head>', $client_script . '</head>', $html );
+    }
+
     $logout = sprintf(
         '<a href="%1$s" style="%2$s">Log out</a>',
         esc_url( dals_logout_url() ),
@@ -557,6 +586,7 @@ function dals_serve_page() {
 
     $file = DALS_PLUGIN_DIR . 'templates/' . $map[ $page ];
     if ( file_exists( $file ) ) {
+        dals_send_private_headers();
         header( 'Content-Type: text/html; charset=utf-8' );
         dals_render_template( $file );
         exit;
@@ -569,10 +599,27 @@ function dals_serve_page() {
 add_action( 'init', 'dals_register_data_rewrite' );
 function dals_register_data_rewrite() {
     add_rewrite_rule(
-        '^dashboard/data/dashboard-data\.json$',
+        '^dashboard/data/dashboard-data\.json/?$',
         'index.php?dals_data=1',
         'top'
     );
+}
+
+/**
+ * Prevent canonical redirects on the dashboard JSON feed.
+ */
+add_filter( 'redirect_canonical', 'dals_disable_dashboard_data_canonical', 10, 2 );
+function dals_disable_dashboard_data_canonical( $redirect_url, $requested_url ) {
+    $path = wp_parse_url( $requested_url, PHP_URL_PATH );
+    if ( ! is_string( $path ) ) {
+        return $redirect_url;
+    }
+
+    if ( '/dashboard/data/dashboard-data.json' === untrailingslashit( $path ) ) {
+        return false;
+    }
+
+    return $redirect_url;
 }
 
 add_action( 'template_redirect', 'dals_serve_data' );
@@ -580,6 +627,8 @@ function dals_serve_data() {
     if ( ! get_query_var( 'dals_data' ) ) {
         return;
     }
+
+    dals_send_private_headers();
 
     if ( ! dals_get_authenticated_user() ) {
         status_header( 403 );

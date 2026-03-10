@@ -282,11 +282,10 @@
 </div>
 
 <div class="footer">
-  Auto-refresh: every 30s | <span id="last-fetch"></span>
+  Browser checks every 30s | <span id="last-fetch"></span>
 </div>
 
 <script>
-const DATA_URL = '/dashboard/data/dashboard-data.json';
 const REFRESH_INTERVAL = 30000;
 
 function $(s) { return document.querySelector(s); }
@@ -421,21 +420,27 @@ document.querySelectorAll('.owner-tab').forEach(tab => {
   });
 });
 
-async function loadData() {
-  try {
-    const res = await fetch(DATA_URL + '?t=' + Date.now());
-    cachedData = await res.json();
-    renderTable(cachedData);
-    const now = new Date();
-    $('#last-fetch').textContent = 'Last fetch: ' + now.toLocaleTimeString();
-    $('#update-time').textContent = 'Updated: ' + new Date(cachedData.meta.generated).toLocaleString();
-  } catch (e) {
-    console.error('Failed to load data:', e);
-  }
+function loadData() {
+  return dashboardPoller.refresh();
 }
 
-loadData();
-setInterval(loadData, REFRESH_INTERVAL);
+const dashboardPoller = DalsDashboard.createPoller({
+  intervalMs: REFRESH_INTERVAL,
+  onData: ({ data, fetchedAt }) => {
+    cachedData = data;
+    renderTable(cachedData);
+    $('#last-fetch').textContent = 'Last browser check: ' + fetchedAt.toLocaleTimeString();
+    $('#update-time').textContent = 'Updated: ' + new Date(cachedData.meta.generated).toLocaleString();
+  },
+  onError: ({ error, lastSuccessAt }) => {
+    console.error('Failed to load data:', error);
+    if (lastSuccessAt) {
+      $('#last-fetch').textContent = DalsDashboard.buildErrorStatus(error, lastSuccessAt, REFRESH_INTERVAL);
+    }
+  }
+});
+
+dashboardPoller.start();
 </script>
 </body>
 </html>
