@@ -158,14 +158,40 @@ function dals_get_approved_users() {
 }
 
 /**
+ * Build a dashboard URL using the query-var fallback that does not rely on rewrite flushing.
+ */
+function dals_dashboard_query_url( $page = '', $args = array() ) {
+    $query_args = array();
+    if ( '' !== $page ) {
+        $query_args['dals_page'] = $page;
+    }
+
+    foreach ( $args as $key => $value ) {
+        if ( '' !== $value && null !== $value ) {
+            $query_args[ $key ] = $value;
+        }
+    }
+
+    return add_query_arg( $query_args, home_url( '/' ) );
+}
+
+/**
  * Return the login URL with an optional redirect target.
  */
 function dals_login_url( $redirect = '' ) {
-    $url = home_url( '/dashboard/login/' );
-    if ( $redirect ) {
-        $url = add_query_arg( 'redirect', $redirect, $url );
-    }
-    return $url;
+    return dals_dashboard_query_url(
+        'login',
+        array(
+            'redirect' => $redirect,
+        )
+    );
+}
+
+/**
+ * Return the logout URL.
+ */
+function dals_logout_url() {
+    return dals_dashboard_query_url( 'logout' );
 }
 
 /**
@@ -346,7 +372,7 @@ function dals_render_template( $file ) {
 
     $logout = sprintf(
         '<a href="%1$s" style="%2$s">Log out</a>',
-        esc_url( home_url( '/dashboard/logout/' ) ),
+        esc_url( dals_logout_url() ),
         esc_attr( 'position:fixed;top:18px;right:18px;z-index:9999;padding:10px 14px;border-radius:999px;background:rgba(10,10,8,.85);border:1px solid rgba(245,197,24,.22);color:#f5c518;text-decoration:none;font:600 13px/1.2 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;backdrop-filter:blur(8px);' )
     );
 
