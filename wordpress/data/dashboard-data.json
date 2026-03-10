@@ -4,7 +4,7 @@
     "location_id": "Fqv0HfBV4jdcZsHDMg0n",
     "total_conversations": 685,
     "total_opportunities": 187,
-    "generated": "2026-03-10T11:30:19",
+    "generated": "2026-03-10T12:00:21",
     "refresh_interval": "Every 30 minutes starting at 7:30 AM ET",
     "unread_conversations": 108
   },
@@ -17,7 +17,7 @@
     "tier2": {
       "label": "Respond Today",
       "count": 15,
-      "value": 39932
+      "value": 39632
     },
     "tier3": {
       "label": "This Week",
@@ -31,7 +31,7 @@
     },
     "total": {
       "count": 47,
-      "value": 112250
+      "value": 111950
     }
   },
   "priority_counts": {
@@ -39,9 +39,9 @@
     "hot": 6,
     "warm": 8,
     "new_lead": 17,
-    "follow_up": 58,
+    "follow_up": 59,
     "cold": 2,
-    "monitor": 550
+    "monitor": 549
   },
   "tier1": [
     {
@@ -242,6 +242,19 @@
   ],
   "tier2": [
     {
+      "id": "christine-hurst",
+      "name": "Christine Hurst",
+      "phone": "+14079558126",
+      "owner": "Owner B",
+      "value": 2500,
+      "stage": "open",
+      "unread": 0,
+      "last_message": "One thing that may be helpful as you compare options — if you’re getting other estimates (which is totally normal), just make sure you’re comparing apples to apples. Deangelo’s Land Services has al...",
+      "last_activity": "2026-03-10T11:45:23",
+      "action": "Estimate-related outbound message. Follow up in 24-48h if no response.",
+      "suggested_reply": "Hi Christine, checking in on the estimate. Any questions or revisions you want before we schedule next steps?"
+    },
+    {
       "id": "erwin-goehring",
       "name": "Erwin Goehring",
       "phone": "+13213616811",
@@ -419,32 +432,19 @@
       "last_activity": "2026-03-04T16:07:27",
       "action": "Estimate-related outbound message. Follow up in 24-48h if no response.",
       "suggested_reply": "Hi Ricky, checking in on the estimate. Any questions or revisions you want before we schedule next steps?"
-    },
-    {
-      "id": "paul-starcevic-lpwd-llc",
-      "name": "Paul Starcevic LPWD LLC",
-      "phone": "+13862353189",
-      "owner": "Owner B",
-      "value": 2800,
-      "stage": "open",
-      "unread": 0,
-      "last_message": "Location logo [https://msgsndr-private.storage.googleapis.com/locationPhotos/034bd93f-8c5c-4ad2-acc6-02728f477968.png]   ESTIMATE FOR PAUL  Hi Paul...",
-      "last_activity": "2026-03-04T13:40:58",
-      "action": "Estimate-related outbound message. Follow up in 24-48h if no response.",
-      "suggested_reply": "Hi Paul, checking in on the estimate. Any questions or revisions you want before we schedule next steps?"
     }
   ],
   "tier3": [
     {
-      "name": "Lisa Mabry",
+      "name": "Bob Testy",
       "value": 0,
-      "message": "by the way, here's my card and I’m sure you’ll want to check out who we are b...",
+      "message": "Hi Anthony, your appointment with Lisa Mabry  at Tuesday, March 10, 2026 2:00...",
       "action": "No immediate action required. Keep monitoring thread updates."
     },
     {
-      "name": "Bob Testy",
+      "name": "Lisa Mabry",
       "value": 0,
-      "message": "New appointment! Here is their information:   Lisa Mabry   (386) 233-8344  He...",
+      "message": "Hi Lisa, your appointment with me between 2:00 PM and 3:00 PM on Tuesday has...",
       "action": "No immediate action required. Keep monitoring thread updates."
     },
     {
@@ -643,7 +643,7 @@
       "action": "RESCHEDULE IMMEDIATELY. Customer is warm and engaged. Move opportunity back from \"Lost\" to \"Estimate Scheduled.\"",
       "suggested_reply": "\"Hi Krystal! Sorry about the reschedule — everything's back to normal. What day works for you this week? I'd love to come take a look.\"",
       "pipeline_update": "Lost/Not Interested → **Estimate Scheduled**",
-      "source_generated": "2026-03-10T11:30:19"
+      "source_generated": "2026-03-10T12:00:21"
     },
     {
       "name": "Kelisha Hart",
@@ -659,7 +659,7 @@
       "action": "Follow up again. The original reschedule ask got no reply.",
       "suggested_reply": "\"Hey Kelisha! Just circling back — we'd love to get you on the schedule. What works for you this week or next?\"",
       "pipeline_update": "Lost/Not Interested → **Contacted** (if she responds)",
-      "source_generated": "2026-03-10T11:30:19"
+      "source_generated": "2026-03-10T12:00:21"
     },
     {
       "name": "Colby Smith",
@@ -675,7 +675,7 @@
       "action": "Final follow-up attempt. If no reply, mark as cold.",
       "suggested_reply": "\"Hi Colby! Just wanted to check in one more time about rescheduling your estimate. We're happy to work around your schedule — just let us know!\"",
       "pipeline_update": "Hold at Lost/Not Interested unless customer re-engages",
-      "source_generated": "2026-03-10T11:30:19"
+      "source_generated": "2026-03-10T12:00:21"
     },
     {
       "name": "Phat Gagne",
@@ -691,7 +691,7 @@
       "action": "Verify in GHL whether Phat was seen or not. If not, reach out to reschedule.",
       "suggested_reply": "\"Hi Phat! Apologies for any confusion with scheduling. We'd love to still come out for your estimate — what day works best?\"",
       "pipeline_update": "",
-      "source_generated": "2026-03-10T11:30:19"
+      "source_generated": "2026-03-10T12:00:21"
     },
     {
       "name": "Jackie Galdi",
@@ -707,7 +707,7 @@
       "action": "One outreach attempt to reschedule. If no response, close.",
       "suggested_reply": "\"Hi Jackie! We had to reschedule your estimate visit. We'd love to still come take a look — are you still interested? We have openings this week.\"",
       "pipeline_update": "",
-      "source_generated": "2026-03-10T11:30:19"
+      "source_generated": "2026-03-10T12:00:21"
     },
     {
       "name": "Claud Bowers",
@@ -723,7 +723,7 @@
       "action": "No reschedule. Close out. Mark conversation as read.",
       "suggested_reply": "",
       "pipeline_update": "Already at Lost/Not Interested. Correct.",
-      "source_generated": "2026-03-10T11:30:19"
+      "source_generated": "2026-03-10T12:00:21"
     },
     {
       "name": "Katty Polo",
@@ -739,7 +739,7 @@
       "action": "Outreach to reschedule. This was Anthony's lead.",
       "suggested_reply": "\"Hi Katty! We had to reschedule your appointment. We'd love to still come out to Windermere for an estimate — what day works this week?\"",
       "pipeline_update": "",
-      "source_generated": "2026-03-10T11:30:19"
+      "source_generated": "2026-03-10T12:00:21"
     },
     {
       "name": "Zach Adams",
@@ -755,7 +755,7 @@
       "action": "No reschedule. Close out.",
       "suggested_reply": "",
       "pipeline_update": "",
-      "source_generated": "2026-03-10T11:30:19"
+      "source_generated": "2026-03-10T12:00:21"
     }
   ],
   "upcoming_appointments": [
