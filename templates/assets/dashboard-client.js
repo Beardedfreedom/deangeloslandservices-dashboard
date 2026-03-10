@@ -1,6 +1,6 @@
 (function () {
-  const DEFAULT_DATA_URL = '/dashboard/data/';
-  const LEGACY_DATA_URL = '/dashboard/data/dashboard-data.json/';
+  const DEFAULT_DATA_URL = '/dashboard/data/dashboard-data.json/';
+  const FALLBACK_DATA_URL = '/?dals_data=1';
   const DEFAULT_LOGIN_URL = '/dashboard/login/';
   const DEFAULT_INTERVAL_MS = 30000;
   const DEFAULT_STALE_AFTER_MS = 40 * 60 * 1000;
@@ -125,7 +125,7 @@
 
   async function fetchDashboardData(options = {}) {
     const urls = [options.url || DEFAULT_DATA_URL];
-    const fallbackUrl = options.fallbackUrl === undefined ? LEGACY_DATA_URL : options.fallbackUrl;
+    const fallbackUrl = options.fallbackUrl === undefined ? FALLBACK_DATA_URL : options.fallbackUrl;
 
     if (fallbackUrl && fallbackUrl !== urls[0]) {
       urls.push(fallbackUrl);
@@ -192,7 +192,7 @@
       inFlightController = new AbortController();
       inFlightPromise = fetchDashboardData({
         url: options.url || DEFAULT_DATA_URL,
-        fallbackUrl: options.fallbackUrl === undefined ? LEGACY_DATA_URL : options.fallbackUrl,
+        fallbackUrl: options.fallbackUrl === undefined ? FALLBACK_DATA_URL : options.fallbackUrl,
         signal: inFlightController.signal,
       })
         .then(({ data, fetchedAt }) => {
@@ -276,7 +276,7 @@
     createPoller,
     DEFAULT_DATA_URL,
     DEFAULT_INTERVAL_MS,
-    DEFAULT_LEGACY_DATA_URL: LEGACY_DATA_URL,
+    DEFAULT_FALLBACK_DATA_URL: FALLBACK_DATA_URL,
     fetchDashboardData,
     formatInterval,
   };

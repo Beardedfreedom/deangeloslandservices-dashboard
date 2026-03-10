@@ -268,16 +268,11 @@ function dals_disable_cache() {
  * Send explicit private no-store headers for protected dashboard responses.
  */
 function dals_send_private_headers() {
-    dals_send_private_headers();
+    dals_disable_cache();
 
-    header_remove( 'Last-Modified' );
-    header_remove( 'ETag' );
-    header( 'Cache-Control: private, no-store, no-cache, must-revalidate, max-age=0' );
+    header( 'Cache-Control: no-store, no-cache, must-revalidate, max-age=0' );
     header( 'Pragma: no-cache' );
     header( 'Expires: Wed, 11 Jan 1984 05:00:00 GMT' );
-    header( 'Surrogate-Control: no-store' );
-    header( 'X-DALS-Cache: bypass' );
-    header( 'Vary: Cookie', false );
 }
 
 /**
