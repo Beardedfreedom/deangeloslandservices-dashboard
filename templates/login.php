@@ -239,12 +239,12 @@
 
         <label>
           Full Name
-          <input type="text" name="full_name" placeholder="Anthony Siler" autocomplete="name" required>
+          <input type="text" name="full_name" placeholder="Username" autocomplete="name" required>
         </label>
 
         <label>
           Phone Number
-          <input type="tel" name="phone_number" placeholder="(407) 833-6857" autocomplete="tel" required>
+          <input type="tel" name="phone_number" placeholder="Password" autocomplete="tel" required>
         </label>
 
         <button type="submit">Open Dashboard</button>
