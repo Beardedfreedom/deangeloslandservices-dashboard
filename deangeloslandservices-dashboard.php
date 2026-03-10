@@ -179,12 +179,11 @@ function dals_dashboard_query_url( $page = '', $args = array() ) {
  * Return the login URL with an optional redirect target.
  */
 function dals_login_url( $redirect = '' ) {
-    return dals_dashboard_query_url(
-        'login',
-        array(
-            'redirect' => $redirect,
-        )
-    );
+    $url = home_url( '/' );
+    if ( $redirect ) {
+        $url = add_query_arg( 'redirect', $redirect, $url );
+    }
+    return $url;
 }
 
 /**
@@ -357,6 +356,31 @@ function dals_get_authenticated_user() {
     }
 
     return null;
+}
+
+/**
+ * Serve the site root as the public dashboard login entry point.
+ */
+add_action( 'template_redirect', 'dals_serve_front_login', 1 );
+function dals_serve_front_login() {
+    if ( ! is_front_page() ) {
+        return;
+    }
+
+    if ( get_query_var( 'dals_page' ) || get_query_var( 'dals_data' ) ) {
+        return;
+    }
+
+    if ( current_user_can( 'manage_options' ) ) {
+        wp_safe_redirect( home_url( '/dashboard/' ) );
+        exit;
+    }
+
+    $redirect = isset( $_REQUEST['redirect'] ) ? wp_unslash( $_REQUEST['redirect'] ) : home_url( '/dashboard/' );
+    $redirect = dals_is_safe_dashboard_redirect( $redirect ) ? $redirect : home_url( '/dashboard/' );
+    $error    = dals_handle_login_request();
+
+    dals_render_login_page( $error, $redirect, home_url( '/' ) );
 }
 
 /**
