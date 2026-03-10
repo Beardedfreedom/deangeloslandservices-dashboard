@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DeAngelos Land Services — Meeting Notes Overview</title>
+<style>
+  :root {
+    --bg: #0a0a08;
+    --surface: #141412;
+    --surface2: #1e1e1a;
+    --border: #2d2d22;
+    --text: #f0efe6;
+    --text-dim: #908f80;
+    --primary: #f5c518;
+    --primary-dim: #b8941a;
+    --urgent: #e53935;
+    --hot: #ff6d00;
+    --warm: #fbc02d;
+    --green: #43a047;
+    --tree: #2e7d32;
+    --purple: #7c4dff;
+    --radius: 12px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #1a1a0a 0%, #0f1408 40%, #141410 100%);
+    border-bottom: 2px solid var(--primary-dim);
+    padding: 2rem 2rem 1.5rem;
+    text-align: center;
+  }
+  .back-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--primary); text-decoration: none; font-size: 13px; font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .back-link:hover { text-decoration: underline; }
+  .header h1 { font-size: 1.75rem; font-weight: 800; letter-spacing: -1px; }
+  .header h1 span { color: var(--primary); }
+  .header .subtitle { color: var(--text-dim); font-size: 0.9rem; margin-top: 4px; }
+
+  /* Stats bar */
+  .stats-bar {
+    display: flex;
+    gap: 1px;
+    background: var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .stat {
+    flex: 1;
+    background: var(--surface);
+    padding: 1rem 1.25rem;
+    text-align: center;
+  }
+  .stat-value { font-size: 1.5rem; font-weight: 800; color: var(--primary); }
+  .stat-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-dim); margin-top: 0.15rem; }
+
+  /* Layout */
+  .container { max-width: 1400px; margin: 0 auto; padding: 1.5rem; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .full-width { grid-column: 1 / -1; }
+
+  /* Cards */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .card-header {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+  .card-header .icon {
+    width: 28px; height: 28px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem;
+  }
+  .card-body { padding: 1.25rem; }
+
+  /* People */
+  .person {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .person:last-child { border-bottom: none; }
+  .avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.8rem; flex-shrink: 0;
+  }
+  .person-name { font-weight: 600; font-size: 0.9rem; }
+  .person-role { font-size: 0.8rem; color: var(--text-dim); }
+
+  /* Timeline */
+  .timeline-item {
+    display: flex;
+    gap: 1rem;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .timeline-item:last-child { border-bottom: none; }
+  .timeline-date {
+    flex-shrink: 0;
+    width: 90px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--primary);
+    padding-top: 0.1rem;
+  }
+  .timeline-content { font-size: 0.88rem; }
+  .timeline-content strong { color: var(--green); }
+
+  /* Tags / Themes */
+  .themes { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .theme-tag {
+    padding: 0.4rem 0.85rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    border: 1px solid;
+  }
+  .theme-tag.gold { color: var(--primary); border-color: var(--primary-dim); background: rgba(245,197,24,0.06); }
+  .theme-tag.green { color: #81c784; border-color: var(--tree); background: rgba(46,125,50,0.1); }
+  .theme-tag.orange { color: #ffab40; border-color: #bf5700; background: rgba(255,109,0,0.08); }
+  .theme-tag.red { color: #ef9a9a; border-color: #7f1d1d; background: rgba(229,57,53,0.08); }
+  .theme-tag.purple { color: #b39ddb; border-color: #4a148c; background: rgba(124,77,255,0.08); }
+
+  /* Decisions list */
+  .decision-list { list-style: none; }
+  .decision-list li {
+    padding: 0.65rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.88rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+  .decision-list li:last-child { border-bottom: none; }
+  .decision-list .check {
+    color: var(--green);
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 0.05rem;
+  }
+
+  /* Open items */
+  .open-item {
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.88rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+  .open-item:last-child { border-bottom: none; }
+  .open-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--warm);
+    flex-shrink: 0;
+    margin-top: 0.45rem;
+  }
+
+  /* Agency phases */
+  .agency-phase {
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .agency-phase:last-child { border-bottom: none; }
+  .phase-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+  }
+  .phase-desc { font-size: 0.85rem; color: var(--text-dim); }
+  .phase-desc strong { color: var(--text); }
+
+  /* Arc box */
+  .arc-box {
+    background: linear-gradient(135deg, rgba(245,197,24,0.04) 0%, rgba(46,125,50,0.06) 100%);
+    border: 1px solid var(--primary-dim);
+    border-radius: 10px;
+    padding: 1.25rem;
+    font-size: 0.92rem;
+    line-height: 1.7;
+  }
+  .arc-box strong { color: var(--green); }
+
+  /* Systems table */
+  .sys-table { width: 100%; border-collapse: collapse; }
+  .sys-table th {
+    text-align: left;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-dim);
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .sys-table td {
+    padding: 0.6rem 0.75rem;
+    font-size: 0.85rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .sys-table tr:last-child td { border-bottom: none; }
+  .sys-table .sys-name { font-weight: 600; color: var(--primary); }
+  .sys-status {
+    font-size: 0.75rem;
+    padding: 0.15rem 0.55rem;
+    border-radius: 10px;
+    font-weight: 600;
+    display: inline-block;
+  }
+  .sys-status.active { background: rgba(46,125,50,0.15); color: #81c784; }
+  .sys-status.replaced { background: rgba(229,57,53,0.12); color: #ef9a9a; }
+  .sys-status.new { background: rgba(124,77,255,0.12); color: #b39ddb; }
+
+  /* Tabs */
+  .tab-bar {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 1.5rem;
+    overflow-x: auto;
+  }
+  .tab {
+    padding: 0.7rem 1.25rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-dim);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: color 0.2s, border-color 0.2s;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  .footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 12px;
+    color: var(--text-dim);
+    border-top: 1px solid var(--border);
+    margin-top: 2rem;
+  }
+
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: 1fr; }
+    .stats-bar { flex-wrap: wrap; }
+    .stat { flex: 1 1 50%; }
+    .header { padding: 1.5rem 1rem; }
+    .container { padding: 1rem; }
+    .timeline-item { flex-direction: column; gap: 0.25rem; }
+    .timeline-date { width: auto; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <a href="/dashboard/" class="back-link">&#8592; Back to Command Center</a>
+  <h1>Meeting Notes <span>Overview</span></h1>
+  <div class="subtitle">35 Gemini-transcribed meetings &bull; May 2025 – March 2026 &bull; D'Angelos Land Services</div>
+</div>
+
+<div class="stats-bar">
+  <div class="stat">
+    <div class="stat-value">35</div>
+    <div class="stat-label">Meetings</div>
+  </div>
+  <div class="stat">
+    <div class="stat-value">10 mo</div>
+    <div class="stat-label">Time Span</div>
+  </div>
+  <div class="stat">
+    <div class="stat-value">5</div>
+    <div class="stat-label">Key People</div>
+  </div>
+  <div class="stat">
+    <div class="stat-value" style="color:var(--green);">13</div>
+    <div class="stat-label">Decisions Made</div>
+  </div>
+  <div class="stat">
+    <div class="stat-value" style="color:var(--warm);">12</div>
+    <div class="stat-label">Open Items</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="tab-bar">
+    <button class="tab active" data-tab="overview">Overview</button>
+    <button class="tab" data-tab="timeline">Timeline</button>
+    <button class="tab" data-tab="people">People & Team</button>
+    <button class="tab" data-tab="systems">Systems & Tools</button>
+    <button class="tab" data-tab="marketing">Marketing</button>
+    <button class="tab" data-tab="decisions">Decisions & Open Items</button>
+  </div>
+
+  <!-- OVERVIEW TAB -->
+  <div class="tab-panel active" id="tab-overview">
+    <div class="grid">
+
+      <div class="card full-width">
+        <div class="card-header">
+          <div class="icon" style="background:rgba(245,197,24,0.1);color:var(--primary);">&#9733;</div>
+          The Big Picture
+        </div>
+        <div class="card-body">
+          <div class="arc-box">
+            A growing Central Florida land services company transitioning from <strong>informal processes and agency dependency</strong>
+            toward <strong>AI-powered in-house systems</strong>. Steven Sanders architects the tech transformation — from spreadsheets and HubSpot
+            to a <strong>Claude-integrated GoHighLevel platform</strong> that automates lead triage, conversation management, and appointment booking.
+            By March 2026, the company has an AI-built website, automated CRM agents, and upward-trending sales metrics across the board.
+          </div>
+        </div>
+      </div>
+
+      <div class="card full-width">
+        <div class="card-header">
+          <div class="icon" style="background:rgba(124,77,255,0.1);color:var(--purple);">&#9830;</div>
+          Recurring Themes
+        </div>
+        <div class="card-body">
+          <div class="themes">
+            <span class="theme-tag gold">CRM Evolution</span>
+            <span class="theme-tag green">AI & Automation</span>
+            <span class="theme-tag orange">Lead Gen & ROI</span>
+            <span class="theme-tag red">Crew Accountability</span>
+            <span class="theme-tag purple">Marketing Agencies</span>
+            <span class="theme-tag gold">Pipeline Management</span>
+            <span class="theme-tag green">New Services (Fencing)</span>
+            <span class="theme-tag orange">Equipment & Tools</span>
+            <span class="theme-tag red">Financial Pressures</span>
+            <span class="theme-tag purple">Website Management</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="icon" style="background:rgba(46,125,50,0.12);color:var(--green);">&#9679;</div>
+          Core Team
+        </div>
+        <div class="card-body">
+          <div class="person">
+            <div class="avatar" style="background:rgba(245,197,24,0.12);color:var(--primary);">LK</div>
+            <div><div class="person-name">Lex Kovacs</div><div class="person-role">Owner / Operator — strategy, estimates, client relations</div></div>
+          </div>
+          <div class="person">
+            <div class="avatar" style="background:rgba(46,125,50,0.15);color:#81c784;">MD</div>
+            <div><div class="person-name">Mark Deangelo</div><div class="person-role">Co-owner — heavy equipment, field projects</div></div>
+          </div>
+          <div class="person">
+            <div class="avatar" style="background:rgba(124,77,255,0.12);color:#b39ddb;">SS</div>
+            <div><div class="person-name">Steven Sanders</div><div class="person-role">Ops / Tech / Marketing — CRM, AI, SEO, automations</div></div>
+          </div>
+          <div class="person">
+            <div class="avatar" style="background:rgba(255,109,0,0.12);color:#ffab40;">AS</div>
+            <div><div class="person-name">Anthony Siler</div><div class="person-role">Field estimator & crew supervisor</div></div>
+          </div>
+          <div class="person">
+            <div class="avatar" style="background:rgba(229,57,53,0.1);color:#ef9a9a;">TL</div>
+            <div><div class="person-name">Talmage Layman</div><div class="person-role">External consultant — web/tech (early meetings)</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="icon" style="background:rgba(245,197,24,0.1);color:var(--primary);">$</div>
+          Revenue Highlights
+        </div>
+        <div class="card-body">
+          <ul class="decision-list">
+            <li><span class="check" style="color:var(--primary);">$</span> $70-80K Lake Butler landscape design project</li>
+            <li><span class="check" style="color:var(--primary);">$</span> $53K Target EV Concrete (lesson: should've been ~$78K)</li>
+            <li><span class="check" style="color:var(--primary);">$</span> $4,900 palm tree bid — Ponce Inlet</li>
+            <li><span class="check" style="color:var(--primary);">$</span> ~$10K Winter Garden landscape anticipated</li>
+            <li><span class="check" style="color:var(--primary);">$</span> 44% avg margin (22% after partner split)</li>
+            <li><span class="check" style="color:var(--primary);">$</span> Vinyl fencing launched — 2 jobs in first week</li>
+            <li><span class="check" style="color:var(--primary);">$</span> DeBerry gov contract opportunity (turf/fertilization)</li>
+            <li><span class="check" style="color:var(--green);">&#8593;</span> March 2026: leads, estimates, revenue, closed jobs all trending up</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TIMELINE TAB -->
+  <div class="tab-panel" id="tab-timeline">
+    <div class="card">
+      <div class="card-header">
+        <div class="icon" style="background:rgba(245,197,24,0.1);color:var(--primary);">&#9716;</div>
+        Major Events Timeline
+      </div>
+      <div class="card-body">
+        <div class="timeline-item">
+          <div class="timeline-date">May 2025</div>
+          <div class="timeline-content">Website/SEO analysis with Semrush. Margin study reveals <strong>44% avg margin, 22% after split</strong>. Revenue per marketing channel analysis begins.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">Jul 2025</div>
+          <div class="timeline-content"><strong>Target EV Concrete project</strong> — $53K bid, should've been ~$78K. Budget overruns from weather, groundwater, scope gaps. Major lesson in change orders.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">Sep 2025</div>
+          <div class="timeline-content"><strong>Construction Clock onboarded</strong> for time tracking. Anthony Siler joins as manager. DNS/website crisis — someone disrupted DNS records, site went down.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">Oct 2025</div>
+          <div class="timeline-content"><strong>Ali Ali agency dropped</strong> — pursuing 3-month refund. Evaluating Mega AI vs. Awkward Media. HubSpot pipeline tuned (new fields, removed required joist link).</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">Nov 2025</div>
+          <div class="timeline-content">Morning meeting cadence begins. Post-Thanksgiving check-ins. Caleb's inaccurate time reporting flagged.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">Dec 2025</div>
+          <div class="timeline-content"><strong>Busiest month.</strong> $70-80K Lake Butler project. AI "Amy leads" all replied &amp; booked. Lead cost analysis ($85-105/lead). Brooke departs — Steven absorbs social media. Financing via Hearth. Crew incentive problems. Google ranking: <strong>top 2 for "Tree Services Lake Mary."</strong> Pro leads spreadsheet completed (32 leads).</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">Jan 2026</div>
+          <div class="timeline-content"><strong>GoHighLevel replaces HubSpot + Joist.</strong> Lead handoff protocol: Steven as "Amy" routes to Lex or Anthony. GHL follow-up automations working. Data migration begins. ROI calculation on pro leads.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">Feb 2026</div>
+          <div class="timeline-content"><strong>Pipeline crisis</strong> — multiple leads with no notes, no estimates, no follow-up. Confrontation about Anthony's pipeline maintenance. <strong>Vinyl fence service launched</strong> (2 jobs first week). AI reply drafting begins.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">Mar 2026</div>
+          <div class="timeline-content"><strong>AI transformation peaks.</strong> Steven builds website with 3 AIs in 2 hours. <strong>Claude integrated into GoHighLevel</strong> — reads conversations, triages leads, drafts replies, books appointments live. Dashboard via GitHub for ROI. Sales metrics all trending up.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PEOPLE TAB -->
+  <div class="tab-panel" id="tab-people">
+    <div class="grid">
+      <div class="card">
+        <div class="card-header">
+          <div class="icon" style="background:rgba(46,125,50,0.12);color:var(--green);">&#9679;</div>
+          Team Members
+        </div>
+        <div class="card-body">
+          <div class="person">
+            <div class="avatar" style="background:rgba(245,197,24,0.12);color:var(--primary);">LK</div>
+            <div>
+              <div class="person-name">Lex Kovacs</div>
+              <div class="person-role">Owner/operator. Runs field operations, performs high-value estimates, manages crews, handles major client relationships, and sets strategic direction. Business partner with Mark.</div>
+            </div>
+          </div>
+          <div class="person">
+            <div class="avatar" style="background:rgba(46,125,50,0.15);color:#81c784;">MD</div>
+            <div>
+              <div class="person-name">Mark Deangelo</div>
+              <div class="person-role">Co-owner. Heavy equipment, field projects (pergolas, land clearing), yard management. Less involved in office/CRM/marketing. Had personal challenges (hospitalized infant twin, Oct 2025).</div>
+            </div>
+          </div>
+          <div class="person">
+            <div class="avatar" style="background:rgba(124,77,255,0.12);color:#b39ddb;">SS</div>
+            <div>
+              <div class="person-name">Steven Sanders</div>
+              <div class="person-role">Operations/tech/marketing lead. CRM systems, lead management, SEO, social media, AI automations, website management, Construction Clock admin. Role expanded from marketing/data to full AI integration architect.</div>
+            </div>
+          </div>
+          <div class="person">
+            <div class="avatar" style="background:rgba(255,109,0,0.12);color:#ffab40;">AS</div>
+            <div>
+              <div class="person-name">Anthony Siler</div>
+              <div class="person-role">Field estimator and crew supervisor. In-person estimates, equipment logistics, crew oversight, check collection. Also does lead follow-up and door-knocking. Pipeline maintenance issues flagged Feb 2026.</div>
+            </div>
+          </div>
+          <div class="person">
+            <div class="avatar" style="background:rgba(229,57,53,0.1);color:#ef9a9a;">TL</div>
+            <div>
+              <div class="person-name">Talmage Layman</div>
+              <div class="person-role">External technical consultant/web developer. Advised on HubSpot, website hosting, SEO, agency evaluation. Only in earlier meetings (Oct 2025 and before).</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="icon" style="background:rgba(255,109,0,0.1);color:var(--hot);">&#9679;</div>
+          Crew & Other
+        </div>
+        <div class="card-body">
+          <div class="person">
+            <div class="avatar" style="background:var(--surface2);color:var(--text-dim);">T</div>
+            <div><div class="person-name">Trenton</div><div class="person-role">Climber, new hire (Dec 2025). Given performance ultimatum.</div></div>
+          </div>
+          <div class="person">
+            <div class="avatar" style="background:var(--surface2);color:var(--text-dim);">G</div>
+            <div><div class="person-name">Gabe</div><div class="person-role">Crew member, given production bonus opportunities.</div></div>
+          </div>
+          <div class="person">
+            <div class="avatar" style="background:var(--surface2);color:var(--text-dim);">R</div>
+            <div><div class="person-name">Ramon</div><div class="person-role">Day rate worker. Chronic lateness issues.</div></div>
+          </div>
+          <div class="person">
+            <div class="avatar" style="background:var(--surface2);color:var(--text-dim);">C</div>
+            <div><div class="person-name">Caleb</div><div class="person-role">Inaccurate time reporting. Apple account issues prevented app download.</div></div>
+          </div>
+          <div class="person">
+            <div class="avatar" style="background:var(--surface2);color:var(--text-dim);">A</div>
+            <div><div class="person-name">Adrien</div><div class="person-role">Grading work. Language/app settings confusion.</div></div>
+          </div>
+          <div class="person">
+            <div class="avatar" style="background:var(--surface2);color:var(--text-dim);">B</div>
+            <div><div class="person-name">Brooke</div><div class="person-role">Former social media person. Departed Dec 2025 — Steven absorbed duties.</div></div>
+          </div>
+          <div class="person">
+            <div class="avatar" style="background:var(--surface2);color:var(--text-dim);">JC</div>
+            <div><div class="person-name">JeanClaude</div><div class="person-role">Pro leads vendor & appointment system partner. AI "Amy" leads at $85-105/lead.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SYSTEMS TAB -->
+  <div class="tab-panel" id="tab-systems">
+    <div class="card">
+      <div class="card-header">
+        <div class="icon" style="background:rgba(245,197,24,0.1);color:var(--primary);">&#9881;</div>
+        Systems & Tools
+      </div>
+      <div class="card-body">
+        <table class="sys-table">
+          <thead>
+            <tr><th>System</th><th>Purpose</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="sys-name">GoHighLevel</td>
+              <td>Primary CRM, estimates, invoicing, SMS, automations, pipeline. Claude-integrated for AI lead management.</td>
+              <td><span class="sys-status active">Active</span></td>
+            </tr>
+            <tr>
+              <td class="sys-name">Claude AI</td>
+              <td>Integrated into GHL — automated lead triage, conversation reading, reply drafting, appointment booking.</td>
+              <td><span class="sys-status new">New (Mar 2026)</span></td>
+            </tr>
+            <tr>
+              <td class="sys-name">Construction Clock</td>
+              <td>Time tracking with GPS auto-check-in. Had Excel math bug — PDF export recommended. Two free months obtained.</td>
+              <td><span class="sys-status active">Active</span></td>
+            </tr>
+            <tr>
+              <td class="sys-name">HubSpot</td>
+              <td>Former CRM — deal pipeline, contact management. Replaced by GoHighLevel in Jan 2026.</td>
+              <td><span class="sys-status replaced">Replaced</span></td>
+            </tr>
+            <tr>
+              <td class="sys-name">Joist</td>
+              <td>Former estimating/invoicing tool. Phased out in favor of GoHighLevel.</td>
+              <td><span class="sys-status replaced">Replaced</span></td>
+            </tr>
+            <tr>
+              <td class="sys-name">Semrush</td>
+              <td>SEO/backlink analysis.</td>
+              <td><span class="sys-status active">Active</span></td>
+            </tr>
+            <tr>
+              <td class="sys-name">Google Analytics</td>
+              <td>Website traffic monitoring, keyword ranking.</td>
+              <td><span class="sys-status active">Active</span></td>
+            </tr>
+            <tr>
+              <td class="sys-name">Obsidian</td>
+              <td>API key vault for Claude integrations.</td>
+              <td><span class="sys-status new">New (Mar 2026)</span></td>
+            </tr>
+            <tr>
+              <td class="sys-name">WhatsApp</td>
+              <td>Internal team comms (required due to Android user).</td>
+              <td><span class="sys-status active">Active</span></td>
+            </tr>
+            <tr>
+              <td class="sys-name">Master Spreadsheet</td>
+              <td>Google Sheets — pro leads, statuses, duplicate flagging, estimator assignment.</td>
+              <td><span class="sys-status active">Active</span></td>
+            </tr>
+            <tr>
+              <td class="sys-name">Hearth</td>
+              <td>Customer financing option for larger jobs.</td>
+              <td><span class="sys-status active">Active</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- MARKETING TAB -->
+  <div class="tab-panel" id="tab-marketing">
+    <div class="grid">
+      <div class="card">
+        <div class="card-header">
+          <div class="icon" style="background:rgba(229,57,53,0.1);color:var(--urgent);">&#10140;</div>
+          Agency Evolution
+        </div>
+        <div class="card-body">
+          <div class="agency-phase">
+            <div class="phase-label" style="color:#ef9a9a;">Phase 1 — Ali Ali (Pre-Oct 2025)</div>
+            <div class="phase-desc">Original marketing agency. Unsatisfactory work — missing H1 tags, poor content, incorrect headings. Ali Ali admitted to poor quality. Team pursued <strong>3-month refund</strong>.</div>
+          </div>
+          <div class="agency-phase">
+            <div class="phase-label" style="color:var(--warm);">Phase 2 — Evaluation (Oct 2025)</div>
+            <div class="phase-desc"><strong>Mega AI:</strong> AI-driven content strategy, 20+ articles. Questioned if focused enough on local SEO.<br><strong>Awkward Media:</strong> Map-ranking focus, crucial for local service. Lex asked Mega AI for hyper-local proposal.</div>
+          </div>
+          <div class="agency-phase">
+            <div class="phase-label" style="color:var(--primary);">Phase 3 — Mega AI (Late 2025 – Early 2026)</div>
+            <div class="phase-desc">Mega AI engaged. Content had quality issues: orphan blog posts, <strong>incorrect pricing on site</strong>, poor AI-generated images, inconsistent blog dates. Lindsay is contact.</div>
+          </div>
+          <div class="agency-phase">
+            <div class="phase-label" style="color:var(--green);">Phase 4 — In-House AI (Jan–Mar 2026)</div>
+            <div class="phase-desc">Steven builds capabilities in-house. <strong>AI-built website in 2 hours</strong> (3 AIs). Claude integrated into GoHighLevel for automated lead management. Agency relationship may become redundant.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="icon" style="background:rgba(46,125,50,0.12);color:var(--green);">&#9733;</div>
+          Lead Sources
+        </div>
+        <div class="card-body">
+          <div class="agency-phase">
+            <div class="phase-label" style="color:var(--green);">Pro Leads (JeanClaude)</div>
+            <div class="phase-desc">AI "Amy" leads at <strong>$85-105/lead</strong>. Highly closable. 32 leads tracked in master spreadsheet. Cost rising but ROI strong.</div>
+          </div>
+          <div class="agency-phase">
+            <div class="phase-label" style="color:var(--primary);">Google LSAs</div>
+            <div class="phase-desc">Local Service Ads. Quality improving. Credits pursued for bad leads. <strong>Ranked top 2 for "Tree Services Lake Mary"</strong> by Dec 2025.</div>
+          </div>
+          <div class="agency-phase">
+            <div class="phase-label" style="color:#b39ddb;">Organic / SEO</div>
+            <div class="phase-desc">Semrush analysis, competitor backlinks, keyword targeting. Stroll Magazine for local backlinks.</div>
+          </div>
+          <div class="agency-phase">
+            <div class="phase-label" style="color:var(--warm);">Door-Knocking</div>
+            <div class="phase-desc">Anthony doing in-person outreach in neighborhoods after completing nearby jobs.</div>
+          </div>
+          <div class="agency-phase">
+            <div class="phase-label" style="color:#ef9a9a;">Referrals / Word-of-Mouth</div>
+            <div class="phase-desc">In-person review collection more effective than text-based requests.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DECISIONS TAB -->
+  <div class="tab-panel" id="tab-decisions">
+    <div class="grid">
+      <div class="card">
+        <div class="card-header">
+          <div class="icon" style="background:rgba(46,125,50,0.12);color:var(--green);">&#10003;</div>
+          Key Decisions Made
+        </div>
+        <div class="card-body">
+          <ul class="decision-list">
+            <li><span class="check">&#10003;</span> Drop Ali Ali agency, pursue 3-month refund</li>
+            <li><span class="check">&#10003;</span> Switch to GoHighLevel — replace HubSpot + Joist as primary CRM/estimating/comms</li>
+            <li><span class="check">&#10003;</span> AI-first approach — Claude-powered automations for lead management, triage, booking</li>
+            <li><span class="check">&#10003;</span> Launch vinyl fence installation as new service line</li>
+            <li><span class="check">&#10003;</span> Water features offered via subcontractor, not in-house</li>
+            <li><span class="check">&#10003;</span> Formalized lead coverage shifts (Steven mornings, Anthony afternoons, Lex evenings)</li>
+            <li><span class="check">&#10003;</span> Weekly accomplishment reporting from Steven to Lex</li>
+            <li><span class="check">&#10003;</span> Pipeline maintenance required daily from Anthony</li>
+            <li><span class="check">&#10003;</span> Subcontract underbid work or charge $50 lead fee</li>
+            <li><span class="check">&#10003;</span> In-person review collection prioritized over text-based</li>
+            <li><span class="check">&#10003;</span> Truck-delivered concrete over bag mixes for visible work</li>
+            <li><span class="check">&#10003;</span> Customer financing via Hearth for holiday sales push</li>
+            <li><span class="check">&#10003;</span> Steven takes over Construction Clock location management</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="icon" style="background:rgba(251,192,45,0.1);color:var(--warm);">!</div>
+          Open / Unresolved Items
+        </div>
+        <div class="card-body">
+          <div class="open-item"><div class="open-dot"></div><div>Ali Ali 3-month refund — status unknown</div></div>
+          <div class="open-item"><div class="open-dot"></div><div>Mega AI relationship — unclear if still engaged or redundant with in-house AI</div></div>
+          <div class="open-item"><div class="open-dot"></div><div>Anthony's GHL calendar sync — appointments may not be reaching his calendar</div></div>
+          <div class="open-item"><div class="open-dot"></div><div>DeBerry government contract — scope breakdown in progress, spray subcontractor needed</div></div>
+          <div class="open-item"><div class="open-dot"></div><div>Vinyl fence licensing in Orange County — unconfirmed</div></div>
+          <div class="open-item"><div class="open-dot"></div><div>Commercial lead gen hire ("Mark") — no follow-up after initial discussion</div></div>
+          <div class="open-item"><div class="open-dot"></div><div>Claude enterprise plan — usage limits hit, research needed</div></div>
+          <div class="open-item"><div class="open-dot"></div><div>Crew incentive structure — discussed but no formal policy change</div></div>
+          <div class="open-item"><div class="open-dot"></div><div>Highland Games booth — discussed Dec 2025, no confirmation it happened</div></div>
+          <div class="open-item"><div class="open-dot"></div><div>Google account access issues — recurring difficulties with Ads/Analytics</div></div>
+          <div class="open-item"><div class="open-dot"></div><div>Website calendar booking — hidden feature needs Google Calendar sync</div></div>
+          <div class="open-item"><div class="open-dot"></div><div>Insurance (Liberty Mutual) — policy at risk of being dropped in Volusia County</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  DeAngelos Land Services LLC — Meeting Notes Overview | 35 meetings analyzed
+</div>
+
+<script>
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

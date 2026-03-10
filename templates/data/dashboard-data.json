@@ -4,15 +4,15 @@
     "location_id": "Fqv0HfBV4jdcZsHDMg0n",
     "total_conversations": 684,
     "total_opportunities": 186,
-    "generated": "2026-03-09T21:42:09",
+    "generated": "2026-03-10T09:00:16",
     "refresh_interval": "Every 30 minutes starting at 7:30 AM ET",
-    "unread_conversations": 111
+    "unread_conversations": 106
   },
   "revenue_summary": {
     "tier1": {
       "label": "Respond Now",
       "count": 15,
-      "value": 52193
+      "value": 46914
     },
     "tier2": {
       "label": "Respond Today",
@@ -22,7 +22,7 @@
     "tier3": {
       "label": "This Week",
       "count": 15,
-      "value": 36043
+      "value": 23748
     },
     "tier4": {
       "label": "Pipeline Updates",
@@ -31,45 +31,19 @@
     },
     "total": {
       "count": 47,
-      "value": 138198
+      "value": 120624
     }
   },
   "priority_counts": {
-    "urgent": 48,
-    "hot": 5,
+    "urgent": 44,
+    "hot": 6,
     "warm": 8,
     "new_lead": 17,
     "follow_up": 58,
     "cold": 2,
-    "monitor": 546
+    "monitor": 549
   },
   "tier1": [
-    {
-      "id": "anthony-eugene",
-      "name": "Anthony Eugene",
-      "phone": "+14079230783",
-      "owner": "Owner B",
-      "value": 6000,
-      "stage": "open",
-      "unread": 2,
-      "last_message": "Mr Anthony the neighbor with the white. Vinyl fence said the pile of rubble is blocking his access to their gates",
-      "last_activity": "2026-03-09T20:39:15",
-      "action": "Unread inbound message. Review and respond as soon as possible.",
-      "suggested_reply": "Hi Anthony, thanks for the message. I saw this and I am checking availability/details now. I will follow up shortly."
-    },
-    {
-      "id": "glynn-stiles",
-      "name": "Glynn Stiles",
-      "phone": "+14076948354",
-      "owner": "Owner A",
-      "value": 3279,
-      "stage": "open",
-      "unread": 1,
-      "last_message": "Thanks, yep recieved just waiting on couple more to come in, then I can review and get back with you.",
-      "last_activity": "2026-03-09T20:11:17",
-      "action": "Unread inbound message. Review and respond as soon as possible.",
-      "suggested_reply": "Hi Glynn, thanks for the message. I saw this and I am checking availability/details now. I will follow up shortly."
-    },
     {
       "id": "richard-macak",
       "name": "Richard Macak",
@@ -78,23 +52,10 @@
       "value": 0,
       "stage": "open",
       "unread": 1,
-      "last_message": "Thank you sir. See you tomorrow",
-      "last_activity": "2026-03-09T15:42:58",
+      "last_message": "See you soon",
+      "last_activity": "2026-03-10T08:57:30",
       "action": "Unread inbound message. Review and respond as soon as possible.",
       "suggested_reply": "Hi Richard, thanks for the message. I saw this and I am checking availability/details now. I will follow up shortly."
-    },
-    {
-      "id": "walter-valentin",
-      "name": "Walter Valentin",
-      "phone": "+16467195547",
-      "owner": "Owner A",
-      "value": 15275,
-      "stage": "open",
-      "unread": 1,
-      "last_message": "To be honest with you we do not want to do this in phases. We would like to be done one shot but even with the changes we are not sure we are still able to come close to the number. We can talk abo...",
-      "last_activity": "2026-03-09T15:09:07",
-      "action": "Unread inbound message. Review and respond as soon as possible.",
-      "suggested_reply": "Hi Walter, thanks for the message. I saw this and I am checking availability/details now. I will follow up shortly."
     },
     {
       "id": "julie-jaeb",
@@ -103,11 +64,24 @@
       "owner": "Owner A",
       "value": 3878,
       "stage": "open",
-      "unread": 2,
-      "last_message": "Will it take 2 days?",
-      "last_activity": "2026-03-09T13:26:20",
+      "unread": 1,
+      "last_message": "That's great!",
+      "last_activity": "2026-03-10T08:31:02",
       "action": "Unread inbound message. Review and respond as soon as possible.",
       "suggested_reply": "Hi Julie, thanks for the message. I saw this and I am checking availability/details now. I will follow up shortly."
+    },
+    {
+      "id": "walter-valentin",
+      "name": "Walter Valentin",
+      "phone": "+16467195547",
+      "owner": "Owner A",
+      "value": 15275,
+      "stage": "open",
+      "unread": 0,
+      "last_message": "Sounds good. I gave you my top tier design that I believe will give you the exact outdoor living experience you discussed with Chris and I. Call me whenever is convenient for you tomorrow.",
+      "last_activity": "2026-03-09T22:03:13",
+      "action": "Time-sensitive conversation. Follow up today.",
+      "suggested_reply": "Hi Walter, thanks for checking in. We are confirming timing now and will send you an exact update shortly."
     },
     {
       "id": "luis-campis",
@@ -160,19 +134,6 @@
       "last_activity": "2026-03-09T12:27:40",
       "action": "Unread inbound message. Review and respond as soon as possible.",
       "suggested_reply": "Hi David, thanks for the message. I saw this and I am checking availability/details now. I will follow up shortly."
-    },
-    {
-      "id": "roberta-and-claude-cromer",
-      "name": "Roberta & Claude Cromer",
-      "phone": "+15707725512",
-      "owner": "Owner A",
-      "value": 0,
-      "stage": "open",
-      "unread": 1,
-      "last_message": "Perfect!",
-      "last_activity": "2026-03-09T11:37:26",
-      "action": "Unread inbound message. Review and respond as soon as possible.",
-      "suggested_reply": "Hi Roberta, thanks for the message. I saw this and I am checking availability/details now. I will follow up shortly."
     },
     {
       "id": "sandra-mohr",
@@ -238,9 +199,60 @@
       "last_activity": "2026-03-07T13:04:11",
       "action": "Unread inbound message. Review and respond as soon as possible.",
       "suggested_reply": "Hi Mireya, thanks for the message. I saw this and I am checking availability/details now. I will follow up shortly."
+    },
+    {
+      "id": "elise-johnson",
+      "name": "Elise Johnson",
+      "phone": "+14079859280",
+      "owner": "Owner A",
+      "value": 0,
+      "stage": "open",
+      "unread": 1,
+      "last_message": "Ok that's fine",
+      "last_activity": "2026-03-07T11:45:03",
+      "action": "Unread inbound message. Review and respond as soon as possible.",
+      "suggested_reply": "Hi Elise, thanks for the message. I saw this and I am checking availability/details now. I will follow up shortly."
+    },
+    {
+      "id": "marie-breen",
+      "name": "Marie Breen",
+      "phone": "+14077653698",
+      "owner": "UNASSIGNED",
+      "value": 500,
+      "stage": "open",
+      "unread": 4,
+      "last_message": "Hi this is DeAngelos Land Services LLC, I saw that we just missed your call how can I help?",
+      "last_activity": "2026-03-07T11:24:32",
+      "action": "Unread inbound message. Review and respond as soon as possible.",
+      "suggested_reply": "Hi Marie, thanks for the message. I saw this and I am checking availability/details now. I will follow up shortly."
+    },
+    {
+      "id": "eddie-muse",
+      "name": "Eddie Muse",
+      "phone": "+14074620115",
+      "owner": "Owner A",
+      "value": 3500,
+      "stage": "open",
+      "unread": 1,
+      "last_message": "Just keep me posted with your schedule. Thanks,",
+      "last_activity": "2026-03-07T11:20:49",
+      "action": "Unread inbound message. Review and respond as soon as possible.",
+      "suggested_reply": "Hi Eddie, thanks for the message. I saw this and I am checking availability/details now. I will follow up shortly."
     }
   ],
   "tier2": [
+    {
+      "id": "lex-test",
+      "name": "Lex Test",
+      "phone": "+13866752303",
+      "owner": "Owner A",
+      "value": 0,
+      "unread": 0,
+      "last_message": "Erwin Goehring has viewed their estimate!   EST-1232566 - $4962.5",
+      "last_activity": "2026-03-09T22:02:06",
+      "action": "Estimate-related outbound message. Follow up in 24-48h if no response.",
+      "suggested_reply": "Hi Lex, checking in on the estimate. Any questions or revisions you want before we schedule next steps?"
+    },
     {
       "id": "lyndsey-mcmillan",
       "name": "Lyndsey McMillan",
@@ -253,18 +265,6 @@
       "last_activity": "2026-03-09T20:32:02",
       "action": "Estimate-related outbound message. Follow up in 24-48h if no response.",
       "suggested_reply": "Hi Lyndsey, checking in on the estimate. Any questions or revisions you want before we schedule next steps?"
-    },
-    {
-      "id": "steven-sanders",
-      "name": "Steven Sanders",
-      "phone": "+13522127356",
-      "owner": "Owner A",
-      "value": 0,
-      "unread": 0,
-      "last_message": "Walter Valentin has viewed their estimate!   EST-1232578 - $15275",
-      "last_activity": "2026-03-09T15:18:32",
-      "action": "Estimate-related outbound message. Follow up in 24-48h if no response.",
-      "suggested_reply": "Hi Steven, checking in on the estimate. Any questions or revisions you want before we schedule next steps?"
     },
     {
       "id": "maria-freyre",
@@ -436,6 +436,30 @@
   ],
   "tier3": [
     {
+      "name": "Steven Sanders",
+      "value": 0,
+      "message": "Location logo [https://msgsndr-private.storage.googleapis.com/locationPhotos/...",
+      "action": "No immediate action required. Keep monitoring thread updates."
+    },
+    {
+      "name": "Roberta & Claude Cromer",
+      "value": 0,
+      "message": "Hey it's Lex. We are still on course to meet in about 2 - 3 hours. See you soon!",
+      "action": "No immediate action required. Keep monitoring thread updates."
+    },
+    {
+      "name": "Anthony Eugene",
+      "value": 6000,
+      "message": "It certainly was. Thank you for being flexible and understanding with the deb...",
+      "action": "No immediate action required. Keep monitoring thread updates."
+    },
+    {
+      "name": "Glynn Stiles",
+      "value": 3279,
+      "message": "Sounds good Glynn, just make sure everyone is apples to apples. Speak soon",
+      "action": "No immediate action required. Keep monitoring thread updates."
+    },
+    {
       "name": "Talmage Layman",
       "value": 0,
       "message": "⭐⭐⭐⭐ (Solid Work ) Jean-Claude Sutherland's just provided some negative feedb...",
@@ -449,12 +473,6 @@
     },
     {
       "name": "anthony@landtree.us",
-      "value": 0,
-      "message": "⭐⭐⭐⭐ (Solid Work ) Jean-Claude Sutherland's just provided some negative feedb...",
-      "action": "No immediate action required. Keep monitoring thread updates."
-    },
-    {
-      "name": "Lex Test",
       "value": 0,
       "message": "⭐⭐⭐⭐ (Solid Work ) Jean-Claude Sutherland's just provided some negative feedb...",
       "action": "No immediate action required. Keep monitoring thread updates."
@@ -505,24 +523,6 @@
       "name": "Tammy Ammerman",
       "value": 5244,
       "message": "For context, here’s how we typically handle projects like yours:  1️⃣ You app...",
-      "action": "No immediate action required. Keep monitoring thread updates."
-    },
-    {
-      "name": "Fernanda Ferreira",
-      "value": 15000,
-      "message": "For context, here’s how we typically handle projects like yours:  1️⃣ You app...",
-      "action": "No immediate action required. Keep monitoring thread updates."
-    },
-    {
-      "name": "Larry Winchowky",
-      "value": 0,
-      "message": "by the way, here's my card and I’m sure you’ll want to check out who we are b...",
-      "action": "No immediate action required. Keep monitoring thread updates."
-    },
-    {
-      "name": "Mark Pellham",
-      "value": 6574,
-      "message": "Hey Mark,  Thanks for the feedback. I appreciate those kind words. I totally...",
       "action": "No immediate action required. Keep monitoring thread updates."
     }
   ],
@@ -643,7 +643,7 @@
       "action": "RESCHEDULE IMMEDIATELY. Customer is warm and engaged. Move opportunity back from \"Lost\" to \"Estimate Scheduled.\"",
       "suggested_reply": "\"Hi Krystal! Sorry about the reschedule — everything's back to normal. What day works for you this week? I'd love to come take a look.\"",
       "pipeline_update": "Lost/Not Interested → **Estimate Scheduled**",
-      "source_generated": "2026-03-09T21:42:09"
+      "source_generated": "2026-03-10T09:00:16"
     },
     {
       "name": "Kelisha Hart",
@@ -659,7 +659,7 @@
       "action": "Follow up again. The original reschedule ask got no reply.",
       "suggested_reply": "\"Hey Kelisha! Just circling back — we'd love to get you on the schedule. What works for you this week or next?\"",
       "pipeline_update": "Lost/Not Interested → **Contacted** (if she responds)",
-      "source_generated": "2026-03-09T21:42:09"
+      "source_generated": "2026-03-10T09:00:16"
     },
     {
       "name": "Colby Smith",
@@ -675,7 +675,7 @@
       "action": "Final follow-up attempt. If no reply, mark as cold.",
       "suggested_reply": "\"Hi Colby! Just wanted to check in one more time about rescheduling your estimate. We're happy to work around your schedule — just let us know!\"",
       "pipeline_update": "Hold at Lost/Not Interested unless customer re-engages",
-      "source_generated": "2026-03-09T21:42:09"
+      "source_generated": "2026-03-10T09:00:16"
     },
     {
       "name": "Phat Gagne",
@@ -691,7 +691,7 @@
       "action": "Verify in GHL whether Phat was seen or not. If not, reach out to reschedule.",
       "suggested_reply": "\"Hi Phat! Apologies for any confusion with scheduling. We'd love to still come out for your estimate — what day works best?\"",
       "pipeline_update": "",
-      "source_generated": "2026-03-09T21:42:09"
+      "source_generated": "2026-03-10T09:00:16"
     },
     {
       "name": "Jackie Galdi",
@@ -707,7 +707,7 @@
       "action": "One outreach attempt to reschedule. If no response, close.",
       "suggested_reply": "\"Hi Jackie! We had to reschedule your estimate visit. We'd love to still come take a look — are you still interested? We have openings this week.\"",
       "pipeline_update": "",
-      "source_generated": "2026-03-09T21:42:09"
+      "source_generated": "2026-03-10T09:00:16"
     },
     {
       "name": "Claud Bowers",
@@ -723,7 +723,7 @@
       "action": "No reschedule. Close out. Mark conversation as read.",
       "suggested_reply": "",
       "pipeline_update": "Already at Lost/Not Interested. Correct.",
-      "source_generated": "2026-03-09T21:42:09"
+      "source_generated": "2026-03-10T09:00:16"
     },
     {
       "name": "Katty Polo",
@@ -739,7 +739,7 @@
       "action": "Outreach to reschedule. This was Anthony's lead.",
       "suggested_reply": "\"Hi Katty! We had to reschedule your appointment. We'd love to still come out to Windermere for an estimate — what day works this week?\"",
       "pipeline_update": "",
-      "source_generated": "2026-03-09T21:42:09"
+      "source_generated": "2026-03-10T09:00:16"
     },
     {
       "name": "Zach Adams",
@@ -755,7 +755,7 @@
       "action": "No reschedule. Close out.",
       "suggested_reply": "",
       "pipeline_update": "",
-      "source_generated": "2026-03-09T21:42:09"
+      "source_generated": "2026-03-10T09:00:16"
     }
   ],
   "upcoming_appointments": [

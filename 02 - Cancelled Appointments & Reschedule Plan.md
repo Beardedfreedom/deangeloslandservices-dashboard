@@ -1,6 +1,6 @@
 ---
 title: "Cancelled Appointments — Cross-Reference & Reschedule Plan"
-api_key_used: "pit-cddcb097-dc5e-49a2-af57-3384f0e1cff3"
+api_secret_ref: "GHL_CALENDARS_API_KEY"
 api_scope: "Calendars / Appointments (Read/Write)"
 generated: "2026-03-08"
 total_appointments: 71
@@ -10,7 +10,7 @@ cancelled: 8
 
 # Cancelled Appointments — Booking Cross-Reference & Reschedule Plan
 
-> **API Key:** `pit-cddcb097-dc5e-49a2-af57-3384f0e1cff3` — Calendars (Read/Write)
+> **API Secret Ref:** `GHL_CALENDARS_API_KEY` — Calendars (Read/Write)
 > **71 total appointments** | **63 confirmed** | **8 cancelled**
 > Cross-referenced against Conversations + Opportunities
 

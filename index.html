@@ -314,6 +314,78 @@
   .cal-confirmed { background: rgba(82,196,26,0.15); color: var(--green); }
   .cal-reschedule { background: rgba(250,173,20,0.15); color: var(--warm); }
 
+  .owner-switcher {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .owner-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 999px;
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .owner-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .owner-view {
+    display: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .owner-view.active { display: block; }
+  .owner-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 10px;
+  }
+  .owner-head h3 {
+    font-size: 16px;
+    font-weight: 800;
+  }
+  .owner-meta {
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  .owner-list {
+    margin: 8px 0 0 0;
+    padding-left: 18px;
+  }
+  .owner-list li {
+    margin-bottom: 8px;
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.35;
+  }
+  .empty-state {
+    padding: 14px;
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+    color: var(--text-dim);
+    background: var(--surface);
+    font-size: 13px;
+  }
+  .ok-note {
+    color: var(--green);
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+  .warn-note {
+    color: var(--warm);
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+
   /* Footer */
   .footer {
     padding: 20px 32px;
@@ -348,12 +420,13 @@
 </div>
 
 <div class="tabs">
-  <div class="tab active" onclick="showPanel('triage')">Conversation Triage <span class="badge">66</span></div>
-  <div class="tab" onclick="showPanel('action')">Action Plan</div>
-  <div class="tab" onclick="showPanel('calendar')">Cancelled Appts</div>
-  <div class="tab" onclick="showPanel('upcoming')">Upcoming Schedule</div>
-  <div class="tab" onclick="showPanel('pipeline')">Pipeline Updates</div>
-  <div class="tab" onclick="showPanel('owners')">Owners</div>
+  <div class="tab active" onclick="showPanel('triage', this)">Conversation Triage <span class="badge">66</span></div>
+  <div class="tab" onclick="showPanel('action', this)">Action Plan</div>
+  <div class="tab" onclick="showPanel('calendar', this)">Cancelled Appts</div>
+  <div class="tab" onclick="showPanel('upcoming', this)">Upcoming Schedule</div>
+  <div class="tab" onclick="showPanel('pipeline', this)">Pipeline Updates</div>
+  <div class="tab" onclick="showPanel('owners', this)">Owners</div>
+  <div class="tab" onclick="showPanel('lsa', this)">LSA ROI</div>
 </div>
 
 <!-- PANEL 1: TRIAGE -->
@@ -820,14 +893,22 @@
 <!-- PANEL 6: OWNERS -->
 <div id="panel-owners" class="panel">
 <div class="content">
-  <div class="stats" style="grid-template-columns: repeat(3, 1fr); max-width:900px;">
-    <div class="stat-card">
-      <div class="count owner-a">40</div>
-      <div class="label">Owner A Needs Action</div>
-    </div>
+  <div class="stats" style="grid-template-columns: repeat(5, 1fr);">
     <div class="stat-card">
       <div class="count owner-b">62</div>
-      <div class="label">Owner B Needs Action</div>
+      <div class="label">Anthony Siler Needs Action</div>
+    </div>
+    <div class="stat-card">
+      <div class="count owner-a">40</div>
+      <div class="label">Lex Kovac Needs Action</div>
+    </div>
+    <div class="stat-card">
+      <div class="count">0</div>
+      <div class="label">Steven Sanders Needs Action</div>
+    </div>
+    <div class="stat-card">
+      <div class="count">0</div>
+      <div class="label">Talmage Needs Action</div>
     </div>
     <div class="stat-card">
       <div class="count unassigned">42</div>
@@ -836,26 +917,111 @@
   </div>
 
   <div class="section">
-    <div class="section-header"><h2>Owner Tabs — What Each Owner Is Missing</h2></div>
+    <div class="section-header"><h2>Click Owner to View Work Queue</h2></div>
+    <div class="owner-switcher">
+      <button class="owner-btn active" data-owner-btn="anthony" onclick="showOwnerDetail('anthony')">Anthony Siler</button>
+      <button class="owner-btn" data-owner-btn="lex" onclick="showOwnerDetail('lex')">Lex Kovac</button>
+      <button class="owner-btn" data-owner-btn="steven" onclick="showOwnerDetail('steven')">Steven Sanders</button>
+      <button class="owner-btn" data-owner-btn="talmage" onclick="showOwnerDetail('talmage')">Talmage</button>
+      <button class="owner-btn" data-owner-btn="unassigned" onclick="showOwnerDetail('unassigned')">Unassigned</button>
+    </div>
+
+    <div id="owner-view-anthony" class="owner-view active">
+      <div class="owner-head">
+        <h3 class="owner-b">Anthony Siler</h3>
+        <div class="owner-meta">160 assigned | 62 need action</div>
+      </div>
+      <ul class="owner-list">
+        <li><strong>David Fraser</strong> (URGENT, 1 unread): confirm tomorrow appointment and close loop.</li>
+        <li><strong>Stephano Nati</strong> (URGENT, 2 unread): follow up on competing quotes before lead cools.</li>
+        <li><strong>Anthony Eugene</strong> (URGENT, 1 unread): service quality complaint; call same day.</li>
+        <li><strong>Mireya Booher</strong> (URGENT, 1 unread): support HOA step to keep estimate moving.</li>
+        <li><strong>Mike Bigley</strong> (HOT): confirm start window and set expectations.</li>
+      </ul>
+    </div>
+
+    <div id="owner-view-lex" class="owner-view">
+      <div class="owner-head">
+        <h3 class="owner-a">Lex Kovac</h3>
+        <div class="owner-meta">239 assigned | 40 need action</div>
+      </div>
+      <ul class="owner-list">
+        <li><strong>Elise Johnson</strong> (URGENT, 1 unread): acknowledge and confirm schedule.</li>
+        <li><strong>Eddie Muse</strong> (URGENT, 1 unread): high-value follow-up with timing update.</li>
+        <li><strong>Tammy Ammerman</strong> (URGENT, 1 unread): set next-week reminder and response.</li>
+        <li><strong>Judy Caruthers</strong> (URGENT, 2 unread): send gentle pricing/decision support follow-up.</li>
+        <li><strong>Glynn Stiles</strong> (FOLLOW-UP): estimate viewed, push to next step.</li>
+      </ul>
+    </div>
+
+    <div id="owner-view-steven" class="owner-view">
+      <div class="owner-head">
+        <h3>Steven Sanders</h3>
+        <div class="owner-meta">0 assigned | 0 need action</div>
+      </div>
+      <ul class="owner-list">
+        <li>No active queue right now. Verify owner assignment rules if this is unexpected.</li>
+      </ul>
+    </div>
+
+    <div id="owner-view-talmage" class="owner-view">
+      <div class="owner-head">
+        <h3>Talmage</h3>
+        <div class="owner-meta">96 assigned | 0 need action</div>
+      </div>
+      <ul class="owner-list">
+        <li>No urgent/hot/warm/new/follow-up items currently flagged.</li>
+      </ul>
+    </div>
+
+    <div id="owner-view-unassigned" class="owner-view">
+      <div class="owner-head">
+        <h3 class="unassigned">Unassigned</h3>
+        <div class="owner-meta">188 assigned | 42 need action</div>
+      </div>
+      <ul class="owner-list">
+        <li><strong>Cristen Brown</strong> (URGENT, 2 unread): assign owner now and book scheduling.</li>
+        <li><strong>Marie Breen</strong> (URGENT, 4 unread): repeated inbound attempts; assign and call back.</li>
+        <li><strong>Shawn Ford</strong> (NEW LEAD): assign owner before estimate workflow.</li>
+        <li><strong>Holly Wood</strong> (NEW LEAD): immediate first-touch outreach needed.</li>
+        <li><strong>Bob Testy</strong> (FOLLOW-UP, 2 unread): estimate-view event needs handoff.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><h2>Owner Summary Table</h2></div>
     <table>
-      <tr><th>Owner</th><th>Total Conversations</th><th>Needs Action</th><th>Open Tab</th></tr>
+      <tr><th>Owner</th><th>Total Conversations</th><th>Needs Action</th><th>View in This Dashboard</th></tr>
       <tr>
-        <td class="owner-a"><strong>Owner A</strong></td>
-        <td>239</td>
-        <td>40</td>
-        <td><a href="../00%20-%20Owner%20Tab%20-%20Owner%20A.md" style="color:var(--accent)">Open Owner A Tab</a></td>
-      </tr>
-      <tr>
-        <td class="owner-b"><strong>Owner B</strong></td>
+        <td class="owner-b"><strong>Anthony Siler</strong></td>
         <td>160</td>
         <td>62</td>
-        <td><a href="../00%20-%20Owner%20Tab%20-%20Owner%20B.md" style="color:var(--accent)">Open Owner B Tab</a></td>
+        <td><button class="owner-btn" onclick="showOwnerDetail('anthony')">Open</button></td>
+      </tr>
+      <tr>
+        <td class="owner-a"><strong>Lex Kovac</strong></td>
+        <td>239</td>
+        <td>40</td>
+        <td><button class="owner-btn" onclick="showOwnerDetail('lex')">Open</button></td>
+      </tr>
+      <tr>
+        <td><strong>Steven Sanders</strong></td>
+        <td>0</td>
+        <td>0</td>
+        <td><button class="owner-btn" onclick="showOwnerDetail('steven')">Open</button></td>
+      </tr>
+      <tr>
+        <td><strong>Talmage</strong></td>
+        <td>96</td>
+        <td>0</td>
+        <td><button class="owner-btn" onclick="showOwnerDetail('talmage')">Open</button></td>
       </tr>
       <tr>
         <td class="unassigned"><strong>Unassigned</strong></td>
-        <td>284</td>
+        <td>188</td>
         <td>42</td>
-        <td><a href="../00%20-%20Owner%20Tab%20-%20Unassigned.md" style="color:var(--accent)">Open Unassigned Tab</a></td>
+        <td><button class="owner-btn" onclick="showOwnerDetail('unassigned')">Open</button></td>
       </tr>
     </table>
   </div>
@@ -864,9 +1030,117 @@
     <div class="section-header"><h2>Owner Focus Right Now</h2></div>
     <table>
       <tr><th>Owner</th><th>Immediate Focus</th></tr>
-      <tr><td class="owner-a">Owner A</td><td class="action-text">Clear URGENT unread first, then FOLLOW-UP estimate threads.</td></tr>
-      <tr><td class="owner-b">Owner B</td><td class="action-text">Highest active queue; prioritize URGENT and HOT same-day follow-up.</td></tr>
+      <tr><td class="owner-b">Anthony Siler</td><td class="action-text">Highest active queue; prioritize URGENT and HOT same-day follow-up.</td></tr>
+      <tr><td class="owner-a">Lex Kovac</td><td class="action-text">Clear URGENT unread first, then FOLLOW-UP estimate threads.</td></tr>
+      <tr><td>Steven Sanders</td><td class="action-text">No assigned conversations in current pull; verify assignment routing.</td></tr>
+      <tr><td>Talmage</td><td class="action-text">No action-needed leads in current pull; monitor queue and confirm owner mapping.</td></tr>
       <tr><td class="unassigned">Unassigned</td><td class="action-text">Assign ownership before outreach to prevent dropped leads.</td></tr>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- PANEL 7: LSA ROI -->
+<div id="panel-lsa" class="panel">
+<div class="content">
+  <div id="lsa-status" class="warn-note">Loading LSA leads...</div>
+
+  <div class="stats" style="grid-template-columns: repeat(4, 1fr);">
+    <div class="stat-card">
+      <div class="count" id="lsa-total-leads">--</div>
+      <div class="label">Total LSA Leads</div>
+    </div>
+    <div class="stat-card">
+      <div class="count" id="lsa-charged-leads" style="color:var(--warm)">--</div>
+      <div class="label">Charged Leads</div>
+    </div>
+    <div class="stat-card">
+      <div class="count" id="lsa-total-spend" style="color:var(--urgent)">--</div>
+      <div class="label">LSA Spend</div>
+    </div>
+    <div class="stat-card">
+      <div class="count" id="lsa-est-roi" style="color:var(--green)">--</div>
+      <div class="label">Estimated ROI</div>
+    </div>
+  </div>
+
+  <div class="revenue-banner">
+    <div>
+      <h3>Estimated Return from LSA Lead Plan</h3>
+      <div class="amount" id="lsa-est-revenue">$0</div>
+      <div class="sub">Model uses lead-type close-rate and avg-ticket assumptions</div>
+    </div>
+    <div class="revenue-cols">
+      <div class="revenue-col">
+        <div style="font-size:20px;font-weight:800;color:var(--urgent)" id="lsa-summary-spend">$0</div>
+        <div class="sub">Total Spend</div>
+      </div>
+      <div class="revenue-col">
+        <div style="font-size:20px;font-weight:800;color:var(--green)" id="lsa-summary-profit">$0</div>
+        <div class="sub">Estimated Profit</div>
+      </div>
+      <div class="revenue-col">
+        <div style="font-size:20px;font-weight:800;color:var(--accent)" id="lsa-summary-roi">0%</div>
+        <div class="sub">Estimated ROI</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><h2>ROI by Lead Type</h2></div>
+    <table>
+      <thead>
+        <tr>
+          <th>Lead Type</th>
+          <th>Total Leads</th>
+          <th>Charged Leads</th>
+          <th>Spend</th>
+          <th>Est. Revenue</th>
+          <th>Est. ROI</th>
+        </tr>
+      </thead>
+      <tbody id="lsa-type-body">
+        <tr><td colspan="6" class="empty-state">No LSA data loaded yet.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><h2>ROI by Location</h2></div>
+    <table>
+      <thead>
+        <tr>
+          <th>Location</th>
+          <th>Total Leads</th>
+          <th>Charged Leads</th>
+          <th>Spend</th>
+          <th>Est. Revenue</th>
+          <th>Est. ROI</th>
+        </tr>
+      </thead>
+      <tbody id="lsa-location-body">
+        <tr><td colspan="6" class="empty-state">No LSA location breakdown loaded yet.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><h2>Recent LSA Leads</h2></div>
+    <table>
+      <thead>
+        <tr>
+          <th>Created</th>
+          <th>Lead</th>
+          <th>Type</th>
+          <th>Location</th>
+          <th>Charge Status</th>
+          <th>Spend</th>
+          <th>Plan ROI</th>
+        </tr>
+      </thead>
+      <tbody id="lsa-recent-body">
+        <tr><td colspan="7" class="empty-state">No recent leads loaded yet.</td></tr>
+      </tbody>
     </table>
   </div>
 </div>
@@ -879,12 +1153,230 @@
 </div>
 
 <script>
-function showPanel(id) {
+const LSA_DATA_URL = "../LSA%20Leads/all_lsa_leads.json";
+const LSA_PLAN = {
+  defaultCloseRate: 0.28,
+  defaultAvgTicket: 2500,
+  byLeadType: {
+    PHONE_CALL: { closeRate: 0.35, avgTicket: 3200 },
+    MESSAGE: { closeRate: 0.22, avgTicket: 2000 },
+    BOOKING: { closeRate: 0.4, avgTicket: 3600 }
+  }
+};
+
+function showPanel(id, tabEl) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById('panel-' + id).classList.add('active');
-  event.target.closest('.tab').classList.add('active');
+  if (tabEl) tabEl.classList.add('active');
 }
+
+function showOwnerDetail(ownerKey) {
+  document.querySelectorAll('.owner-view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('[data-owner-btn]').forEach(b => b.classList.remove('active'));
+  const view = document.getElementById('owner-view-' + ownerKey);
+  const btn = document.querySelector('[data-owner-btn=\"' + ownerKey + '\"]');
+  if (view) view.classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+function fmtMoney(n) {
+  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(n || 0);
+}
+
+function fmtPercent(n) {
+  if (!Number.isFinite(n)) return "N/A";
+  return `${(n * 100).toFixed(1)}%`;
+}
+
+function readChargedAmount(lead) {
+  const charged = lead && lead.chargedAmount ? lead.chargedAmount : {};
+  const units = Number(charged.units || 0);
+  const nanos = Number(charged.nanos || 0) / 1e9;
+  if (Number.isFinite(units + nanos) && units + nanos > 0) return units + nanos;
+  const fallback = Number(lead.chargedAmountMicros || 0) / 1e6;
+  return Number.isFinite(fallback) && fallback > 0 ? fallback : 0;
+}
+
+function leadTypePlan(leadType) {
+  return LSA_PLAN.byLeadType[leadType] || { closeRate: LSA_PLAN.defaultCloseRate, avgTicket: LSA_PLAN.defaultAvgTicket };
+}
+
+function leadTypeLabel(raw) {
+  if (!raw) return "UNKNOWN";
+  return String(raw).trim().toUpperCase();
+}
+
+function leadLocation(lead) {
+  const location = lead.geo || lead.location || lead.area || "Unknown";
+  return String(location).trim() || "Unknown";
+}
+
+function leadName(lead) {
+  const msg = (lead && lead.messageLead) || {};
+  const phone = (lead && lead.phoneLead) || {};
+  return phone.consumerName || msg.customerName || "Unknown";
+}
+
+function leadCreatedAt(lead) {
+  const raw = lead.leadCreationTimestamp || lead.creationTime || lead.createTime || "";
+  const d = new Date(raw);
+  return Number.isNaN(d.getTime()) ? null : d;
+}
+
+function setLSAStatus(text, isOk) {
+  const el = document.getElementById("lsa-status");
+  if (!el) return;
+  el.textContent = text;
+  el.className = isOk ? "ok-note" : "warn-note";
+}
+
+function emptyRow(cols, text) {
+  return `<tr><td colspan="${cols}" class="empty-state">${text}</td></tr>`;
+}
+
+function renderLSA(leads, generatedAt) {
+  const byType = new Map();
+  const byLocation = new Map();
+  let totalSpend = 0;
+  let totalRevenue = 0;
+  let chargedLeads = 0;
+
+  leads.forEach((lead) => {
+    const type = leadTypeLabel(lead.leadType);
+    const location = leadLocation(lead);
+    const spend = readChargedAmount(lead);
+    const chargeStatus = String(lead.chargeStatus || "").toUpperCase();
+    const isCharged = spend > 0 || chargeStatus.includes("CHARGED");
+    const plan = leadTypePlan(type);
+    const estRevenue = plan.closeRate * plan.avgTicket;
+
+    totalSpend += spend;
+    totalRevenue += estRevenue;
+    if (isCharged) chargedLeads += 1;
+
+    if (!byType.has(type)) byType.set(type, { key: type, leads: 0, charged: 0, spend: 0, revenue: 0 });
+    if (!byLocation.has(location)) byLocation.set(location, { key: location, leads: 0, charged: 0, spend: 0, revenue: 0 });
+
+    const typeBucket = byType.get(type);
+    typeBucket.leads += 1;
+    typeBucket.spend += spend;
+    typeBucket.revenue += estRevenue;
+    if (isCharged) typeBucket.charged += 1;
+
+    const locBucket = byLocation.get(location);
+    locBucket.leads += 1;
+    locBucket.spend += spend;
+    locBucket.revenue += estRevenue;
+    if (isCharged) locBucket.charged += 1;
+  });
+
+  const totalROI = totalSpend > 0 ? (totalRevenue - totalSpend) / totalSpend : NaN;
+  const estProfit = totalRevenue - totalSpend;
+
+  document.getElementById("lsa-total-leads").textContent = String(leads.length);
+  document.getElementById("lsa-charged-leads").textContent = String(chargedLeads);
+  document.getElementById("lsa-total-spend").textContent = fmtMoney(totalSpend);
+  document.getElementById("lsa-est-revenue").textContent = fmtMoney(totalRevenue);
+  document.getElementById("lsa-est-roi").textContent = fmtPercent(totalROI);
+  document.getElementById("lsa-summary-spend").textContent = fmtMoney(totalSpend);
+  document.getElementById("lsa-summary-profit").textContent = fmtMoney(estProfit);
+  document.getElementById("lsa-summary-roi").textContent = fmtPercent(totalROI);
+
+  const typeRows = [...byType.values()]
+    .sort((a, b) => b.leads - a.leads)
+    .map((row) => {
+      const roi = row.spend > 0 ? (row.revenue - row.spend) / row.spend : NaN;
+      return `<tr>
+        <td class="name">${row.key}</td>
+        <td>${row.leads}</td>
+        <td>${row.charged}</td>
+        <td>${fmtMoney(row.spend)}</td>
+        <td class="value">${fmtMoney(row.revenue)}</td>
+        <td>${fmtPercent(roi)}</td>
+      </tr>`;
+    }).join("");
+  document.getElementById("lsa-type-body").innerHTML = typeRows || emptyRow(6, "No lead-type rows.");
+
+  const locationRows = [...byLocation.values()]
+    .sort((a, b) => b.leads - a.leads)
+    .slice(0, 20)
+    .map((row) => {
+      const roi = row.spend > 0 ? (row.revenue - row.spend) / row.spend : NaN;
+      return `<tr>
+        <td class="name">${row.key}</td>
+        <td>${row.leads}</td>
+        <td>${row.charged}</td>
+        <td>${fmtMoney(row.spend)}</td>
+        <td class="value">${fmtMoney(row.revenue)}</td>
+        <td>${fmtPercent(roi)}</td>
+      </tr>`;
+    }).join("");
+  document.getElementById("lsa-location-body").innerHTML = locationRows || emptyRow(6, "No location rows.");
+
+  const recentRows = [...leads]
+    .sort((a, b) => {
+      const ad = leadCreatedAt(a);
+      const bd = leadCreatedAt(b);
+      const av = ad ? ad.getTime() : 0;
+      const bv = bd ? bd.getTime() : 0;
+      return bv - av;
+    })
+    .slice(0, 15)
+    .map((lead) => {
+      const type = leadTypeLabel(lead.leadType);
+      const plan = leadTypePlan(type);
+      const spend = readChargedAmount(lead);
+      const revenue = plan.closeRate * plan.avgTicket;
+      const roi = spend > 0 ? (revenue - spend) / spend : NaN;
+      const created = leadCreatedAt(lead);
+      const createdLabel = created
+        ? created.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+        : "N/A";
+      return `<tr>
+        <td>${createdLabel}</td>
+        <td class="name">${leadName(lead)}</td>
+        <td>${type}</td>
+        <td>${leadLocation(lead)}</td>
+        <td>${lead.chargeStatus || "N/A"}</td>
+        <td>${fmtMoney(spend)}</td>
+        <td>${fmtPercent(roi)}</td>
+      </tr>`;
+    }).join("");
+  document.getElementById("lsa-recent-body").innerHTML = recentRows || emptyRow(7, "No recent LSA leads.");
+
+  const generated = generatedAt ? ` Last sync: ${new Date(generatedAt).toLocaleString("en-US")}.` : "";
+  setLSAStatus(`LSA leads loaded successfully.${generated}`, true);
+}
+
+async function loadLSAData() {
+  try {
+    const response = await fetch(`${LSA_DATA_URL}?v=${Date.now()}`);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const payload = await response.json();
+    const leads = Array.isArray(payload.leads) ? payload.leads : [];
+    if (!leads.length) {
+      setLSAStatus("No leads found in LSA JSON. Run the importer to refresh data.", false);
+      return;
+    }
+    renderLSA(leads, payload.generated_at || payload.generatedAt);
+  } catch (err) {
+    setLSAStatus("LSA JSON not found. Run `python3 scripts/fetch_lsa_leads.py` to generate `Conversation report/LSA Leads/all_lsa_leads.json`.", false);
+    document.getElementById("lsa-type-body").innerHTML = emptyRow(6, "Waiting for LSA import file.");
+    document.getElementById("lsa-location-body").innerHTML = emptyRow(6, "Waiting for LSA import file.");
+    document.getElementById("lsa-recent-body").innerHTML = emptyRow(7, "Waiting for LSA import file.");
+    document.getElementById("lsa-total-leads").textContent = "0";
+    document.getElementById("lsa-charged-leads").textContent = "0";
+    document.getElementById("lsa-total-spend").textContent = fmtMoney(0);
+    document.getElementById("lsa-est-revenue").textContent = fmtMoney(0);
+    document.getElementById("lsa-est-roi").textContent = "N/A";
+    document.getElementById("lsa-summary-spend").textContent = fmtMoney(0);
+    document.getElementById("lsa-summary-profit").textContent = fmtMoney(0);
+    document.getElementById("lsa-summary-roi").textContent = "N/A";
+  }
+}
+
+loadLSAData();
 </script>
 </body>
 </html>
