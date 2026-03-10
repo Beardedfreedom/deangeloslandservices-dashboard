@@ -6,6 +6,7 @@
  * - $error
  * - $redirect
  * - $configured
+ * - $action_url
  */
 ?>
 <!DOCTYPE html>
@@ -232,7 +233,7 @@
         <div class="alert error"><?php echo esc_html( $error ); ?></div>
       <?php endif; ?>
 
-      <form method="post" action="<?php echo esc_url( dals_login_url( $redirect ) ); ?>">
+      <form method="post" action="<?php echo esc_url( $action_url ); ?>">
         <?php wp_nonce_field( 'dals_dashboard_login', 'dals_login_nonce' ); ?>
         <input type="hidden" name="redirect_to" value="<?php echo esc_attr( $redirect ); ?>">
 

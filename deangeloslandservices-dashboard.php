@@ -216,6 +216,17 @@ function dals_current_request_url() {
 }
 
 /**
+ * Mark the current response as non-cacheable.
+ */
+function dals_disable_cache() {
+    if ( ! defined( 'DONOTCACHEPAGE' ) ) {
+        define( 'DONOTCACHEPAGE', true );
+    }
+
+    nocache_headers();
+}
+
+/**
  * Return the cookie path for dashboard-only auth state.
  */
 function dals_auth_cookie_path() {
@@ -356,8 +367,8 @@ function dals_require_auth() {
         return true;
     }
 
-    wp_safe_redirect( dals_login_url( dals_current_request_url() ) );
-    exit;
+    dals_disable_cache();
+    dals_render_login_page( '', dals_current_request_url(), dals_login_url( dals_current_request_url() ) );
 }
 
 /**
@@ -425,7 +436,7 @@ function dals_handle_login_request() {
 /**
  * Render the dashboard login page.
  */
-function dals_render_login_page( $error = '' ) {
+function dals_render_login_page( $error = '', $redirect = '', $action_url = '' ) {
     $file = DALS_PLUGIN_DIR . 'templates/login.php';
     if ( ! file_exists( $file ) ) {
         status_header( 500 );
@@ -433,8 +444,11 @@ function dals_render_login_page( $error = '' ) {
         exit;
     }
 
-    $redirect   = isset( $_REQUEST['redirect'] ) ? wp_unslash( $_REQUEST['redirect'] ) : home_url( '/dashboard/' );
+    dals_disable_cache();
+
+    $redirect   = $redirect ? $redirect : ( isset( $_REQUEST['redirect'] ) ? wp_unslash( $_REQUEST['redirect'] ) : home_url( '/dashboard/' ) );
     $redirect   = dals_is_safe_dashboard_redirect( $redirect ) ? $redirect : home_url( '/dashboard/' );
+    $action_url = $action_url ? $action_url : dals_login_url( $redirect );
     $configured = ! empty( dals_get_approved_users() );
     $error      = (string) $error;
 
