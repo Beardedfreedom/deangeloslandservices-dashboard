@@ -4,7 +4,7 @@
     "location_id": "Fqv0HfBV4jdcZsHDMg0n",
     "total_conversations": 685,
     "total_opportunities": 187,
-    "generated": "2026-03-10T15:00:19",
+    "generated": "2026-03-10T15:30:19",
     "refresh_interval": "Every 30 minutes starting at 7:30 AM ET",
     "unread_conversations": 107
   },
@@ -643,7 +643,7 @@
       "action": "RESCHEDULE IMMEDIATELY. Customer is warm and engaged. Move opportunity back from \"Lost\" to \"Estimate Scheduled.\"",
       "suggested_reply": "\"Hi Krystal! Sorry about the reschedule — everything's back to normal. What day works for you this week? I'd love to come take a look.\"",
       "pipeline_update": "Lost/Not Interested → **Estimate Scheduled**",
-      "source_generated": "2026-03-10T15:00:19"
+      "source_generated": "2026-03-10T15:30:19"
     },
     {
       "name": "Kelisha Hart",
@@ -659,7 +659,7 @@
       "action": "Follow up again. The original reschedule ask got no reply.",
       "suggested_reply": "\"Hey Kelisha! Just circling back — we'd love to get you on the schedule. What works for you this week or next?\"",
       "pipeline_update": "Lost/Not Interested → **Contacted** (if she responds)",
-      "source_generated": "2026-03-10T15:00:19"
+      "source_generated": "2026-03-10T15:30:19"
     },
     {
       "name": "Colby Smith",
@@ -675,7 +675,7 @@
       "action": "Final follow-up attempt. If no reply, mark as cold.",
       "suggested_reply": "\"Hi Colby! Just wanted to check in one more time about rescheduling your estimate. We're happy to work around your schedule — just let us know!\"",
       "pipeline_update": "Hold at Lost/Not Interested unless customer re-engages",
-      "source_generated": "2026-03-10T15:00:19"
+      "source_generated": "2026-03-10T15:30:19"
     },
     {
       "name": "Phat Gagne",
@@ -691,7 +691,7 @@
       "action": "Verify in GHL whether Phat was seen or not. If not, reach out to reschedule.",
       "suggested_reply": "\"Hi Phat! Apologies for any confusion with scheduling. We'd love to still come out for your estimate — what day works best?\"",
       "pipeline_update": "",
-      "source_generated": "2026-03-10T15:00:19"
+      "source_generated": "2026-03-10T15:30:19"
     },
     {
       "name": "Jackie Galdi",
@@ -707,7 +707,7 @@
       "action": "One outreach attempt to reschedule. If no response, close.",
       "suggested_reply": "\"Hi Jackie! We had to reschedule your estimate visit. We'd love to still come take a look — are you still interested? We have openings this week.\"",
       "pipeline_update": "",
-      "source_generated": "2026-03-10T15:00:19"
+      "source_generated": "2026-03-10T15:30:19"
     },
     {
       "name": "Claud Bowers",
@@ -723,7 +723,7 @@
       "action": "No reschedule. Close out. Mark conversation as read.",
       "suggested_reply": "",
       "pipeline_update": "Already at Lost/Not Interested. Correct.",
-      "source_generated": "2026-03-10T15:00:19"
+      "source_generated": "2026-03-10T15:30:19"
     },
     {
       "name": "Katty Polo",
@@ -739,7 +739,7 @@
       "action": "Outreach to reschedule. This was Anthony's lead.",
       "suggested_reply": "\"Hi Katty! We had to reschedule your appointment. We'd love to still come out to Windermere for an estimate — what day works this week?\"",
       "pipeline_update": "",
-      "source_generated": "2026-03-10T15:00:19"
+      "source_generated": "2026-03-10T15:30:19"
     },
     {
       "name": "Zach Adams",
@@ -755,7 +755,7 @@
       "action": "No reschedule. Close out.",
       "suggested_reply": "",
       "pipeline_update": "",
-      "source_generated": "2026-03-10T15:00:19"
+      "source_generated": "2026-03-10T15:30:19"
     }
   ],
   "upcoming_appointments": [
