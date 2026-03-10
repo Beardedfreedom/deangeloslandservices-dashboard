@@ -359,11 +359,25 @@ function dals_get_authenticated_user() {
 }
 
 /**
+ * Return true when the current request is for the site root.
+ */
+function dals_is_site_root_request() {
+    $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '/';
+    $request_path = wp_parse_url( home_url( $request_uri ), PHP_URL_PATH );
+    $home_path    = wp_parse_url( home_url( '/' ), PHP_URL_PATH );
+
+    $request_path = is_string( $request_path ) ? untrailingslashit( $request_path ) : '';
+    $home_path    = is_string( $home_path ) ? untrailingslashit( $home_path ) : '';
+
+    return $request_path === $home_path || $request_path === $home_path . '/index.php';
+}
+
+/**
  * Serve the site root as the public dashboard login entry point.
  */
 add_action( 'template_redirect', 'dals_serve_front_login', 1 );
 function dals_serve_front_login() {
-    if ( ! is_front_page() ) {
+    if ( ! dals_is_site_root_request() ) {
         return;
     }
 
