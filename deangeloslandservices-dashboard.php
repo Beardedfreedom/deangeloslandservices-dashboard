@@ -176,6 +176,24 @@ function dals_dashboard_query_url( $page = '', $args = array() ) {
 }
 
 /**
+ * Return a stable cache-bust token for freshly deployed dashboard pages.
+ */
+function dals_dashboard_version_token() {
+    return (string) filemtime( __FILE__ );
+}
+
+/**
+ * Append the current dashboard version token to an internal dashboard URL.
+ */
+function dals_versioned_dashboard_url( $url ) {
+    if ( ! dals_is_safe_dashboard_redirect( $url ) ) {
+        return $url;
+    }
+
+    return add_query_arg( 'v', dals_dashboard_version_token(), $url );
+}
+
+/**
  * Return true when the current request explicitly wants the login screen.
  */
 function dals_force_login_requested() {
@@ -510,6 +528,8 @@ function dals_handle_login_request() {
                 $redirect = home_url( '/dashboard/' );
             }
 
+            $redirect = dals_versioned_dashboard_url( $redirect );
+
             wp_safe_redirect( $redirect );
             exit;
         }
@@ -599,6 +619,11 @@ function dals_serve_page() {
 add_action( 'init', 'dals_register_data_rewrite' );
 function dals_register_data_rewrite() {
     add_rewrite_rule(
+        '^dashboard/data/?$',
+        'index.php?dals_data=1',
+        'top'
+    );
+    add_rewrite_rule(
         '^dashboard/data/dashboard-data\.json/?$',
         'index.php?dals_data=1',
         'top'
@@ -615,7 +640,8 @@ function dals_disable_dashboard_data_canonical( $redirect_url, $requested_url ) 
         return $redirect_url;
     }
 
-    if ( '/dashboard/data/dashboard-data.json' === untrailingslashit( $path ) ) {
+    $trimmed_path = untrailingslashit( $path );
+    if ( '/dashboard/data' === $trimmed_path || '/dashboard/data/dashboard-data.json' === $trimmed_path ) {
         return false;
     }
 

@@ -1,8 +1,10 @@
 (function () {
-  const DEFAULT_DATA_URL = '/dashboard/data/dashboard-data.json/';
+  const DEFAULT_DATA_URL = '/dashboard/data/';
+  const LEGACY_DATA_URL = '/dashboard/data/dashboard-data.json/';
   const DEFAULT_LOGIN_URL = '/dashboard/login/';
   const DEFAULT_INTERVAL_MS = 30000;
   const DEFAULT_STALE_AFTER_MS = 40 * 60 * 1000;
+  const DEPLOY_VERSION = new URL(document.currentScript.src, window.location.origin).searchParams.get('ver') || '';
 
   function parseDate(value) {
     if (!value) return null;
@@ -83,8 +85,7 @@
     window.location.assign(url.toString());
   }
 
-  async function fetchDashboardData(options = {}) {
-    const url = options.url || DEFAULT_DATA_URL;
+  async function requestJson(url, options = {}) {
     const response = await fetch(url, {
       cache: 'no-store',
       credentials: 'same-origin',
@@ -122,6 +123,52 @@
     };
   }
 
+  async function fetchDashboardData(options = {}) {
+    const urls = [options.url || DEFAULT_DATA_URL];
+    const fallbackUrl = options.fallbackUrl === undefined ? LEGACY_DATA_URL : options.fallbackUrl;
+
+    if (fallbackUrl && fallbackUrl !== urls[0]) {
+      urls.push(fallbackUrl);
+    }
+
+    let lastError = null;
+
+    for (const url of urls) {
+      try {
+        return await requestJson(url, options);
+      } catch (error) {
+        lastError = error;
+
+        if (error && error.code === 'AUTH') {
+          throw error;
+        }
+
+        if (error && error.code === 'HTTP' && error.status && error.status < 500 && error.status !== 404) {
+          throw error;
+        }
+      }
+    }
+
+    throw lastError || new Error('Dashboard fetch failed.');
+  }
+
+  function versionDashboardLinks() {
+    if (!DEPLOY_VERSION) return;
+
+    document.querySelectorAll('a[href^="/dashboard/"]').forEach((link) => {
+      const rawHref = link.getAttribute('href');
+      if (!rawHref) return;
+
+      const url = new URL(rawHref, window.location.origin);
+      if (!url.searchParams.has('v')) {
+        url.searchParams.set('v', DEPLOY_VERSION);
+      }
+
+      const nextHref = `${url.pathname}${url.search}${url.hash}`;
+      link.setAttribute('href', nextHref);
+    });
+  }
+
   function createPoller(options = {}) {
     const intervalMs = Number(options.intervalMs || options.interval) || DEFAULT_INTERVAL_MS;
     let active = true;
@@ -145,6 +192,7 @@
       inFlightController = new AbortController();
       inFlightPromise = fetchDashboardData({
         url: options.url || DEFAULT_DATA_URL,
+        fallbackUrl: options.fallbackUrl === undefined ? LEGACY_DATA_URL : options.fallbackUrl,
         signal: inFlightController.signal,
       })
         .then(({ data, fetchedAt }) => {
@@ -228,7 +276,10 @@
     createPoller,
     DEFAULT_DATA_URL,
     DEFAULT_INTERVAL_MS,
+    DEFAULT_LEGACY_DATA_URL: LEGACY_DATA_URL,
     fetchDashboardData,
     formatInterval,
   };
+
+  versionDashboardLinks();
 })();
