@@ -176,12 +176,31 @@ function dals_dashboard_query_url( $page = '', $args = array() ) {
 }
 
 /**
+ * Return true when the current request explicitly wants the login screen.
+ */
+function dals_force_login_requested() {
+    if ( ! isset( $_REQUEST['force_login'] ) ) {
+        return false;
+    }
+
+    $value = strtolower( trim( sanitize_text_field( wp_unslash( $_REQUEST['force_login'] ) ) ) );
+    return in_array( $value, array( '1', 'true', 'yes' ), true );
+}
+
+/**
  * Return the login URL with an optional redirect target.
  */
 function dals_login_url( $redirect = '' ) {
     $url = home_url( '/' );
+    $args = array();
     if ( $redirect ) {
-        $url = add_query_arg( 'redirect', $redirect, $url );
+        $args['redirect'] = $redirect;
+    }
+    if ( dals_force_login_requested() ) {
+        $args['force_login'] = '1';
+    }
+    if ( ! empty( $args ) ) {
+        $url = add_query_arg( $args, $url );
     }
     return $url;
 }
@@ -318,7 +337,7 @@ function dals_clear_auth_cookie() {
  * Return the authenticated dashboard user or null.
  */
 function dals_get_authenticated_user() {
-    if ( current_user_can( 'manage_options' ) ) {
+    if ( current_user_can( 'manage_options' ) && ! dals_force_login_requested() ) {
         $user = wp_get_current_user();
         return array(
             'label' => $user->display_name ? $user->display_name : 'Administrator',
@@ -385,7 +404,7 @@ function dals_serve_front_login() {
         return;
     }
 
-    if ( current_user_can( 'manage_options' ) ) {
+    if ( current_user_can( 'manage_options' ) && ! dals_force_login_requested() ) {
         wp_safe_redirect( home_url( '/dashboard/' ) );
         exit;
     }
