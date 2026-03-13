@@ -1,0 +1,985 @@
+{
+  "meta": {
+    "snapshot_label": "Manual weekly labor dashboard source",
+    "imported_on": "2026-03-10",
+    "source": "/Users/stevensanders/Downloads/landtree.us/GoHighlevel Dashboard/labor_analysis_tab.html",
+    "labor_rate_per_hour": 20,
+    "period_label": "Sep 2025 - Mar 2026"
+  },
+  "summary_metrics": {
+    "total_jobs_tracked": 54,
+    "total_pipeline_value": 205040,
+    "total_labor_budget_40_percent": 82016,
+    "jobs_over_40_percent": 3,
+    "jobs_under_40_percent": 19,
+    "no_cc_data_count": 15,
+    "accepted_estimates_count": 13,
+    "accepted_total_value": 31789,
+    "accepted_labor_budget_40_percent": 12716,
+    "accepted_avg_job_value": 2445,
+    "work_completed_count": 1,
+    "payment_collected_count": 40,
+    "completed_total_value": 173451,
+    "completed_labor_budget_40_percent": 69380,
+    "alerts_over_budget_count": 3,
+    "alerts_watch_count": 3,
+    "alerts_total_overage": 306,
+    "alerts_missing_cc_data_count": 15
+  },
+  "accepted_jobs": [
+    {
+      "job_number": 1,
+      "name": "David Fraser",
+      "address": "602 Red Sail Ln, Altamonte Springs, FL 32701",
+      "job_value": 950,
+      "labor_budget_40_percent": 380,
+      "phone": "+14806399620"
+    },
+    {
+      "job_number": 2,
+      "name": "Eddie Muse",
+      "address": "1280 Delk Rd, Longwood, FL 32779",
+      "job_value": 3500,
+      "labor_budget_40_percent": 1400,
+      "phone": "+14074620115"
+    },
+    {
+      "job_number": 3,
+      "name": "Kenny Grenzer",
+      "address": "15810 Shorebird Ln, Winter Garden, FL 34787",
+      "job_value": 3174,
+      "labor_budget_40_percent": 1270,
+      "phone": "+14074321917"
+    },
+    {
+      "job_number": 4,
+      "name": "Michelle Bellville",
+      "address": "9062 Exploration Ave, Orlando, FL 32832",
+      "job_value": 400,
+      "labor_budget_40_percent": 160,
+      "phone": "+17272446651"
+    },
+    {
+      "job_number": 5,
+      "name": "Clare Mendell",
+      "address": "121 Partridge Cir, Winter Springs, FL 32708",
+      "job_value": 2000,
+      "labor_budget_40_percent": 800,
+      "phone": "+17708627202"
+    },
+    {
+      "job_number": 6,
+      "name": "Cristen Brown",
+      "address": "110 Oakmont Ln, New Smyrna Beach, FL 32168",
+      "job_value": 7925,
+      "labor_budget_40_percent": 3170,
+      "phone": "+13213776303"
+    },
+    {
+      "job_number": 7,
+      "name": "Marie Breen",
+      "address": "2102 Northumbria Dr, Sanford, FL 32771",
+      "job_value": 500,
+      "labor_budget_40_percent": 200,
+      "phone": "+14077653698"
+    },
+    {
+      "job_number": 8,
+      "name": "Richard Swormar",
+      "address": "3157 Waters Bend Ln, Deland, FL 32724",
+      "job_value": 750,
+      "labor_budget_40_percent": 300,
+      "phone": "+18147770688"
+    },
+    {
+      "job_number": 9,
+      "name": "Scott Dinan",
+      "address": "509 Hebrides Ct, Apopka, FL 32712",
+      "job_value": 500,
+      "labor_budget_40_percent": 200,
+      "phone": "+16785967678"
+    },
+    {
+      "job_number": 10,
+      "name": "Gil Alstein",
+      "address": "255 N Mounts Bay Ct, Longwood, FL 32779",
+      "job_value": 6640,
+      "labor_budget_40_percent": 2656,
+      "phone": "+14079216775"
+    },
+    {
+      "job_number": 11,
+      "name": "Paul Queen",
+      "address": "1624 S Summerlin Ave, Orlando, FL 32806",
+      "job_value": 2900,
+      "labor_budget_40_percent": 1160,
+      "phone": "+13212462382"
+    },
+    {
+      "job_number": 12,
+      "name": "Daniel Harrison",
+      "address": "3977 Irma Shores Dr, Orlando, FL 32817",
+      "job_value": 1000,
+      "labor_budget_40_percent": 400,
+      "phone": "+15202471358"
+    },
+    {
+      "job_number": 13,
+      "name": "Andre Alabd",
+      "address": "465 Songbird Way, Apopka, FL 32712",
+      "job_value": 1550,
+      "labor_budget_40_percent": 620,
+      "phone": "+14846366102"
+    }
+  ],
+  "work_completed_jobs": [
+    {
+      "job_number": 1,
+      "name": "Chris Lyons",
+      "address": "659 N Endeavour Dr, Winter Springs, FL 32708",
+      "job_value": 1200,
+      "budget_40_percent": 480,
+      "cc_hours": 8.8,
+      "actual_labor": 176,
+      "labor_percent": 15,
+      "status": "OK"
+    }
+  ],
+  "payment_collected_jobs": [
+    {
+      "job_number": 1,
+      "name": "Sovereign Commercial",
+      "address": "211 N. State St, Clarks Summit, PA",
+      "job_value": 0,
+      "budget_40_percent": 0,
+      "cc_hours": null,
+      "actual_labor": null,
+      "labor_percent": null,
+      "status": "$0"
+    },
+    {
+      "job_number": 2,
+      "name": "Katie Mullican",
+      "address": "15798 Shorebird Ln, Winter Garden",
+      "job_value": 0,
+      "budget_40_percent": 0,
+      "cc_hours": 77.2,
+      "actual_labor": 1544,
+      "labor_percent": null,
+      "status": "$0"
+    },
+    {
+      "job_number": 3,
+      "name": "Paul Starcevic LPWD",
+      "address": "\u2014",
+      "job_value": 2800,
+      "budget_40_percent": 1120,
+      "cc_hours": 16.6,
+      "actual_labor": 331,
+      "labor_percent": 12,
+      "status": "OK"
+    },
+    {
+      "job_number": 4,
+      "name": "Shehzad Choudry",
+      "address": "3094 Totika Cove, Longwood, FL",
+      "job_value": 850,
+      "budget_40_percent": 340,
+      "cc_hours": 4.0,
+      "actual_labor": 80,
+      "labor_percent": 9,
+      "status": "OK"
+    },
+    {
+      "job_number": 5,
+      "name": "Tim Clune",
+      "address": "237 Michael Dr, Longwood, FL",
+      "job_value": 1000,
+      "budget_40_percent": 400,
+      "cc_hours": null,
+      "actual_labor": null,
+      "labor_percent": null,
+      "status": "NO CC"
+    },
+    {
+      "job_number": 6,
+      "name": "Kelly Murray",
+      "address": "14704 Henson Rd, Orlando, FL",
+      "job_value": 2000,
+      "budget_40_percent": 800,
+      "cc_hours": 11.0,
+      "actual_labor": 219,
+      "labor_percent": 11,
+      "status": "OK"
+    },
+    {
+      "job_number": 7,
+      "name": "WJ Homes",
+      "address": "FL 32779",
+      "job_value": 1100,
+      "budget_40_percent": 440,
+      "cc_hours": null,
+      "actual_labor": null,
+      "labor_percent": null,
+      "status": "NO CC"
+    },
+    {
+      "job_number": 8,
+      "name": "Nuria Esquilin",
+      "address": "731 Collingwood LN, Oviedo, FL",
+      "job_value": 26000,
+      "budget_40_percent": 10400,
+      "cc_hours": 158.7,
+      "actual_labor": 3173,
+      "labor_percent": 12,
+      "status": "OK"
+    },
+    {
+      "job_number": 9,
+      "name": "Kyle Williamson",
+      "address": "1649 Enclave Cv, Lake Mary",
+      "job_value": 5962,
+      "budget_40_percent": 2385,
+      "cc_hours": 34.2,
+      "actual_labor": 685,
+      "labor_percent": 11,
+      "status": "OK"
+    },
+    {
+      "job_number": 10,
+      "name": "Debbie Rodgers",
+      "address": "3152 Waters Bend Ln, DeLand, FL",
+      "job_value": 1290,
+      "budget_40_percent": 516,
+      "cc_hours": 32.1,
+      "actual_labor": 641,
+      "labor_percent": 50,
+      "status": "OVER"
+    },
+    {
+      "job_number": 11,
+      "name": "Ken Hartman",
+      "address": "1689 S Page Dr, Deltona, FL",
+      "job_value": 1500,
+      "budget_40_percent": 600,
+      "cc_hours": 15.4,
+      "actual_labor": 308,
+      "labor_percent": 21,
+      "status": "OK"
+    },
+    {
+      "job_number": 12,
+      "name": "Eddie Muse",
+      "address": "1280 Delk Rd, Longwood, FL",
+      "job_value": 36000,
+      "budget_40_percent": 14400,
+      "cc_hours": 384.8,
+      "actual_labor": 7697,
+      "labor_percent": 21,
+      "status": "OK"
+    },
+    {
+      "job_number": 13,
+      "name": "Flavia Sunshine",
+      "address": "96 Spring Glen, Debary, FL",
+      "job_value": 400,
+      "budget_40_percent": 160,
+      "cc_hours": null,
+      "actual_labor": null,
+      "labor_percent": null,
+      "status": "NO CC"
+    },
+    {
+      "job_number": 14,
+      "name": "Phyllis Parker",
+      "address": "814 Paddock Way, Casselberry, FL",
+      "job_value": 1000,
+      "budget_40_percent": 400,
+      "cc_hours": 18.6,
+      "actual_labor": 372,
+      "labor_percent": 37,
+      "status": "WATCH"
+    },
+    {
+      "job_number": 15,
+      "name": "Stephanie Fichtel",
+      "address": "7718 Avonwood Ct, Orlando",
+      "job_value": 500,
+      "budget_40_percent": 200,
+      "cc_hours": 2.9,
+      "actual_labor": 58,
+      "labor_percent": 12,
+      "status": "OK"
+    },
+    {
+      "job_number": 16,
+      "name": "Margarita Torres",
+      "address": "206 Magnolia Park Trl, Sanford, FL",
+      "job_value": 400,
+      "budget_40_percent": 160,
+      "cc_hours": 7.1,
+      "actual_labor": 142,
+      "labor_percent": 36,
+      "status": "WATCH"
+    },
+    {
+      "job_number": 17,
+      "name": "Jack Spaulding",
+      "address": "448 Whispering Oak Ln, Apopka, FL",
+      "job_value": 2000,
+      "budget_40_percent": 800,
+      "cc_hours": null,
+      "actual_labor": null,
+      "labor_percent": null,
+      "status": "NO CC"
+    },
+    {
+      "job_number": 18,
+      "name": "Eva Fortino",
+      "address": "5566 Marleon Dr, Windermere, FL",
+      "job_value": 11115,
+      "budget_40_percent": 4446,
+      "cc_hours": 158.8,
+      "actual_labor": 3175,
+      "labor_percent": 29,
+      "status": "OK"
+    },
+    {
+      "job_number": 19,
+      "name": "Dale Brom",
+      "address": "428 Deanna Cir, DeLand, FL",
+      "job_value": 1000,
+      "budget_40_percent": 400,
+      "cc_hours": 15.4,
+      "actual_labor": 307,
+      "labor_percent": 31,
+      "status": "WATCH"
+    },
+    {
+      "job_number": 20,
+      "name": "Mell Leonard",
+      "address": "902 E Oak St, Apopka, FL",
+      "job_value": 2200,
+      "budget_40_percent": 880,
+      "cc_hours": null,
+      "actual_labor": null,
+      "labor_percent": null,
+      "status": "NO CC"
+    },
+    {
+      "job_number": 21,
+      "name": "Erika John",
+      "address": "1830 Orange Tree Dr, Edgewater, FL",
+      "job_value": 8492,
+      "budget_40_percent": 3397,
+      "cc_hours": 9.1,
+      "actual_labor": 182,
+      "labor_percent": 2,
+      "status": "OK"
+    },
+    {
+      "job_number": 22,
+      "name": "Don Magyar",
+      "address": "1231 Punta Gorda Cir, Winter Springs",
+      "job_value": 6000,
+      "budget_40_percent": 2400,
+      "cc_hours": 33.8,
+      "actual_labor": 676,
+      "labor_percent": 11,
+      "status": "OK"
+    },
+    {
+      "job_number": 23,
+      "name": "Brian Keno",
+      "address": "417 S Palmetto Ave, Daytona Beach, FL",
+      "job_value": 15644,
+      "budget_40_percent": 6258,
+      "cc_hours": 149.7,
+      "actual_labor": 2994,
+      "labor_percent": 19,
+      "status": "OK"
+    },
+    {
+      "job_number": 24,
+      "name": "Jean Anderson",
+      "address": "2311 Pleasant Dr, Longwood, FL",
+      "job_value": 2000,
+      "budget_40_percent": 800,
+      "cc_hours": null,
+      "actual_labor": null,
+      "labor_percent": null,
+      "status": "NO CC"
+    },
+    {
+      "job_number": 25,
+      "name": "Lay Hodge",
+      "address": "\u2014",
+      "job_value": 16721,
+      "budget_40_percent": 6689,
+      "cc_hours": null,
+      "actual_labor": null,
+      "labor_percent": null,
+      "status": "NO CC"
+    },
+    {
+      "job_number": 26,
+      "name": "Sandra Wooten",
+      "address": "1000 Faircloth Ct, Oviedo, FL",
+      "job_value": 375,
+      "budget_40_percent": 150,
+      "cc_hours": 15.4,
+      "actual_labor": 308,
+      "labor_percent": 82,
+      "status": "OVER"
+    },
+    {
+      "job_number": 27,
+      "name": "Nancy Keenan",
+      "address": "430 Lakepark Trl, Oviedo, FL",
+      "job_value": 550,
+      "budget_40_percent": 220,
+      "cc_hours": 3.2,
+      "actual_labor": 63,
+      "labor_percent": 11,
+      "status": "OK"
+    },
+    {
+      "job_number": 28,
+      "name": "Jean-Claude Sutherland",
+      "address": "701 Tillery St, Austin, TX",
+      "job_value": 650,
+      "budget_40_percent": 260,
+      "cc_hours": null,
+      "actual_labor": null,
+      "labor_percent": null,
+      "status": "NO CC"
+    },
+    {
+      "job_number": 29,
+      "name": "Thelma Covington",
+      "address": "379 Daisey Ave, Oviedo, FL",
+      "job_value": 1650,
+      "budget_40_percent": 660,
+      "cc_hours": null,
+      "actual_labor": null,
+      "labor_percent": null,
+      "status": "NO CC"
+    },
+    {
+      "job_number": 30,
+      "name": "Keith Kiefer",
+      "address": "1110 Bransford Ct, Apopka, FL",
+      "job_value": 800,
+      "budget_40_percent": 320,
+      "cc_hours": null,
+      "actual_labor": null,
+      "labor_percent": null,
+      "status": "NO CC"
+    },
+    {
+      "job_number": 31,
+      "name": "John Dibattista",
+      "address": "2450 Canterclub Trl, Apopka, FL",
+      "job_value": 450,
+      "budget_40_percent": 180,
+      "cc_hours": 10.2,
+      "actual_labor": 203,
+      "labor_percent": 45,
+      "status": "OVER"
+    },
+    {
+      "job_number": 32,
+      "name": "David Sherer",
+      "address": "1248 Hollow Pine Dr, Oviedo, FL",
+      "job_value": 8550,
+      "budget_40_percent": 3420,
+      "cc_hours": null,
+      "actual_labor": null,
+      "labor_percent": null,
+      "status": "NO CC"
+    },
+    {
+      "job_number": 33,
+      "name": "Cindy Fiacco",
+      "address": "201 Robin Lee Rd, Oviedo, FL",
+      "job_value": 500,
+      "budget_40_percent": 200,
+      "cc_hours": null,
+      "actual_labor": null,
+      "labor_percent": null,
+      "status": "NO CC"
+    },
+    {
+      "job_number": 34,
+      "name": "Douglas Ashe",
+      "address": "809 Palmetto Terr, Oviedo, FL",
+      "job_value": 4000,
+      "budget_40_percent": 1600,
+      "cc_hours": 26.8,
+      "actual_labor": 535,
+      "labor_percent": 13,
+      "status": "OK"
+    },
+    {
+      "job_number": 35,
+      "name": "Adam Ihrig",
+      "address": "552 Valencia St, Sanford, FL",
+      "job_value": 2000,
+      "budget_40_percent": 800,
+      "cc_hours": null,
+      "actual_labor": null,
+      "labor_percent": null,
+      "status": "NO CC"
+    },
+    {
+      "job_number": 36,
+      "name": "Ian Bree",
+      "address": "3460 Hollow Oak Run, Oviedo, FL",
+      "job_value": 0,
+      "budget_40_percent": 0,
+      "cc_hours": 19.4,
+      "actual_labor": 388,
+      "labor_percent": null,
+      "status": "$0"
+    },
+    {
+      "job_number": 37,
+      "name": "Bob Testy",
+      "address": "210 Carriage Hill Dr, Casselberry, FL",
+      "job_value": 0,
+      "budget_40_percent": 0,
+      "cc_hours": null,
+      "actual_labor": null,
+      "labor_percent": null,
+      "status": "$0"
+    },
+    {
+      "job_number": 38,
+      "name": "Michael Degroode",
+      "address": "\u2014",
+      "job_value": 5650,
+      "budget_40_percent": 2260,
+      "cc_hours": null,
+      "actual_labor": null,
+      "labor_percent": null,
+      "status": "NO CC"
+    },
+    {
+      "job_number": 39,
+      "name": "Clare Jackson",
+      "address": "32649 View Haven Ln, Sorrento, FL",
+      "job_value": 100,
+      "budget_40_percent": 40,
+      "cc_hours": null,
+      "actual_labor": null,
+      "labor_percent": null,
+      "status": "NO CC"
+    },
+    {
+      "job_number": 40,
+      "name": "Leasa Maynor",
+      "address": "34152 Fortunado St, Sorrento, FL",
+      "job_value": 1000,
+      "budget_40_percent": 400,
+      "cc_hours": 11.2,
+      "actual_labor": 223,
+      "labor_percent": 22,
+      "status": "OK"
+    }
+  ],
+  "matched_jobs": [
+    {
+      "name": "Chris Lyons",
+      "stage": "Completed",
+      "job_value": 1200,
+      "budget_40_percent": 480,
+      "cc_hours": 8.8,
+      "actual_labor": 176,
+      "labor_percent": 15,
+      "status": "OK"
+    },
+    {
+      "name": "Paul Starcevic LPWD",
+      "stage": "Paid",
+      "job_value": 2800,
+      "budget_40_percent": 1120,
+      "cc_hours": 16.6,
+      "actual_labor": 332,
+      "labor_percent": 12,
+      "status": "OK"
+    },
+    {
+      "name": "Shehzad Choudry",
+      "stage": "Paid",
+      "job_value": 850,
+      "budget_40_percent": 340,
+      "cc_hours": 4.0,
+      "actual_labor": 80,
+      "labor_percent": 9,
+      "status": "OK"
+    },
+    {
+      "name": "Kelly Murray",
+      "stage": "Paid",
+      "job_value": 2000,
+      "budget_40_percent": 800,
+      "cc_hours": 11.0,
+      "actual_labor": 220,
+      "labor_percent": 11,
+      "status": "OK"
+    },
+    {
+      "name": "Nuria Esquilin",
+      "stage": "Paid",
+      "job_value": 26000,
+      "budget_40_percent": 10400,
+      "cc_hours": 158.7,
+      "actual_labor": 3174,
+      "labor_percent": 12,
+      "status": "OK"
+    },
+    {
+      "name": "Kyle Williamson",
+      "stage": "Paid",
+      "job_value": 5962,
+      "budget_40_percent": 2385,
+      "cc_hours": 34.2,
+      "actual_labor": 684,
+      "labor_percent": 11,
+      "status": "OK"
+    },
+    {
+      "name": "Debbie Rodgers",
+      "stage": "Paid",
+      "job_value": 1290,
+      "budget_40_percent": 516,
+      "cc_hours": 32.1,
+      "actual_labor": 642,
+      "labor_percent": 50,
+      "status": "OVER"
+    },
+    {
+      "name": "Ken Hartman",
+      "stage": "Paid",
+      "job_value": 1500,
+      "budget_40_percent": 600,
+      "cc_hours": 15.4,
+      "actual_labor": 308,
+      "labor_percent": 21,
+      "status": "OK"
+    },
+    {
+      "name": "Eddie Muse",
+      "stage": "Paid",
+      "job_value": 36000,
+      "budget_40_percent": 14400,
+      "cc_hours": 384.8,
+      "actual_labor": 7696,
+      "labor_percent": 21,
+      "status": "OK"
+    },
+    {
+      "name": "Phyllis Parker",
+      "stage": "Paid",
+      "job_value": 1000,
+      "budget_40_percent": 400,
+      "cc_hours": 18.6,
+      "actual_labor": 372,
+      "labor_percent": 37,
+      "status": "WATCH"
+    },
+    {
+      "name": "Stephanie Fichtel",
+      "stage": "Paid",
+      "job_value": 500,
+      "budget_40_percent": 200,
+      "cc_hours": 2.9,
+      "actual_labor": 58,
+      "labor_percent": 12,
+      "status": "OK"
+    },
+    {
+      "name": "Margarita Torres",
+      "stage": "Paid",
+      "job_value": 400,
+      "budget_40_percent": 160,
+      "cc_hours": 7.1,
+      "actual_labor": 142,
+      "labor_percent": 36,
+      "status": "WATCH"
+    },
+    {
+      "name": "Eva Fortino",
+      "stage": "Paid",
+      "job_value": 11115,
+      "budget_40_percent": 4446,
+      "cc_hours": 158.8,
+      "actual_labor": 3176,
+      "labor_percent": 29,
+      "status": "OK"
+    },
+    {
+      "name": "Dale Brom",
+      "stage": "Paid",
+      "job_value": 1000,
+      "budget_40_percent": 400,
+      "cc_hours": 15.4,
+      "actual_labor": 308,
+      "labor_percent": 31,
+      "status": "OK"
+    },
+    {
+      "name": "Erika John",
+      "stage": "Paid",
+      "job_value": 8492,
+      "budget_40_percent": 3397,
+      "cc_hours": 9.1,
+      "actual_labor": 182,
+      "labor_percent": 2,
+      "status": "OK"
+    },
+    {
+      "name": "Don Magyar",
+      "stage": "Paid",
+      "job_value": 6000,
+      "budget_40_percent": 2400,
+      "cc_hours": 33.8,
+      "actual_labor": 676,
+      "labor_percent": 11,
+      "status": "OK"
+    },
+    {
+      "name": "Brian Keno",
+      "stage": "Paid",
+      "job_value": 15644,
+      "budget_40_percent": 6258,
+      "cc_hours": 149.7,
+      "actual_labor": 2994,
+      "labor_percent": 19,
+      "status": "OK"
+    },
+    {
+      "name": "Sandra Wooten",
+      "stage": "Paid",
+      "job_value": 375,
+      "budget_40_percent": 150,
+      "cc_hours": 15.4,
+      "actual_labor": 308,
+      "labor_percent": 82,
+      "status": "OVER"
+    },
+    {
+      "name": "Nancy Keenan",
+      "stage": "Paid",
+      "job_value": 550,
+      "budget_40_percent": 220,
+      "cc_hours": 3.2,
+      "actual_labor": 64,
+      "labor_percent": 12,
+      "status": "OK"
+    },
+    {
+      "name": "John Dibattista",
+      "stage": "Paid",
+      "job_value": 450,
+      "budget_40_percent": 180,
+      "cc_hours": 10.2,
+      "actual_labor": 204,
+      "labor_percent": 45,
+      "status": "OVER"
+    },
+    {
+      "name": "Douglas Ashe",
+      "stage": "Paid",
+      "job_value": 4000,
+      "budget_40_percent": 1600,
+      "cc_hours": 26.8,
+      "actual_labor": 536,
+      "labor_percent": 13,
+      "status": "OK"
+    },
+    {
+      "name": "Leasa Maynor",
+      "stage": "Paid",
+      "job_value": 1000,
+      "budget_40_percent": 400,
+      "cc_hours": 11.2,
+      "actual_labor": 224,
+      "labor_percent": 22,
+      "status": "OK"
+    }
+  ],
+  "over_budget_jobs": [
+    {
+      "name": "Sandra Wooten",
+      "address": "1000 Faircloth Ct, Oviedo",
+      "job_value": 375,
+      "budget_40_percent": 150,
+      "actual_labor": 308,
+      "labor_percent": 82,
+      "over_by": 158
+    },
+    {
+      "name": "Debbie Rodgers",
+      "address": "3152 Waters Bend Ln, DeLand",
+      "job_value": 1290,
+      "budget_40_percent": 516,
+      "actual_labor": 641,
+      "labor_percent": 50,
+      "over_by": 125
+    },
+    {
+      "name": "John Dibattista",
+      "address": "2450 Canterclub Trl, Apopka",
+      "job_value": 450,
+      "budget_40_percent": 180,
+      "actual_labor": 203,
+      "labor_percent": 45,
+      "over_by": 23
+    }
+  ],
+  "watch_list_jobs": [
+    {
+      "name": "Phyllis Parker",
+      "job_value": 1000,
+      "labor_percent": 37,
+      "headroom_remaining": 28
+    },
+    {
+      "name": "Margarita Torres",
+      "job_value": 400,
+      "labor_percent": 36,
+      "headroom_remaining": 18
+    },
+    {
+      "name": "Dale Brom",
+      "job_value": 1000,
+      "labor_percent": 31,
+      "headroom_remaining": 93
+    }
+  ],
+  "missing_cc_jobs": [
+    {
+      "name": "Lay Hodge",
+      "job_value": 16721
+    },
+    {
+      "name": "David Sherer",
+      "job_value": 8550
+    },
+    {
+      "name": "Michael Degroode",
+      "job_value": 5650
+    },
+    {
+      "name": "Jack Spaulding",
+      "job_value": 2000
+    },
+    {
+      "name": "Mell Leonard",
+      "job_value": 2200
+    },
+    {
+      "name": "Adam Ihrig",
+      "job_value": 2000
+    },
+    {
+      "name": "Jean Anderson",
+      "job_value": 2000
+    },
+    {
+      "name": "Thelma Covington",
+      "job_value": 1650
+    },
+    {
+      "name": "WJ Homes",
+      "job_value": 1100
+    },
+    {
+      "name": "Tim Clune",
+      "job_value": 1000
+    },
+    {
+      "name": "Keith Kiefer",
+      "job_value": 800
+    },
+    {
+      "name": "Jean-Claude Sutherland",
+      "job_value": 650
+    },
+    {
+      "name": "Cindy Fiacco",
+      "job_value": 500
+    },
+    {
+      "name": "Flavia Sunshine",
+      "job_value": 400
+    },
+    {
+      "name": "Clare Jackson",
+      "job_value": 100
+    }
+  ],
+  "top_savers": [
+    {
+      "name": "Nuria Esquilin",
+      "saved_amount": 7227,
+      "display_value": "$7,227 saved"
+    },
+    {
+      "name": "Eddie Muse",
+      "saved_amount": 6703,
+      "display_value": "$6,703 saved"
+    },
+    {
+      "name": "Erika John",
+      "saved_amount": 3215,
+      "display_value": "$3,215 saved"
+    },
+    {
+      "name": "Brian Keno",
+      "saved_amount": 3264,
+      "display_value": "$3,264 saved"
+    }
+  ],
+  "budget_summary": {
+    "matched_jobs": 22,
+    "total_value_matched": 127242,
+    "total_labor_budget_40_percent": 50897,
+    "actual_labor_spent": 22394,
+    "budget_remaining": 28503,
+    "avg_labor_percent": 22,
+    "total_overage": 306,
+    "total_untracked_value": 45321
+  },
+  "accepted_totals": {
+    "label": "TOTAL",
+    "job_value": 31789,
+    "labor_budget_40_percent": 12716
+  },
+  "payment_collected_totals": {
+    "label": "TOTAL",
+    "job_value": 172251,
+    "budget_40_percent": 68900
+  },
+  "root_cause_pattern": [
+    "All 3 over-budget jobs are under $1,300",
+    "Mobilization/travel overhead eats a larger % on small jobs",
+    "Sandra Wooten: 15.4 hrs on a $375 job = nearly 2 crew-days",
+    "Debbie Rodgers: 32.1 hrs on a $1,290 job = 4 crew-days"
+  ],
+  "root_cause_points": [
+    "All 3 over-budget jobs are under $1,300",
+    "Mobilization/travel overhead eats a larger % on small jobs",
+    "Sandra Wooten: 15.4 hrs on a $375 job = nearly 2 crew-days",
+    "Debbie Rodgers: 32.1 hrs on a $1,290 job = 4 crew-days"
+  ],
+  "notes": [
+    "Edit this file directly for weekly manual updates.",
+    "summary_metrics keeps the original card values from the imported HTML snapshot.",
+    "budget_summary and *_jobs arrays are normalized for renderer use.",
+    "Accepted summary cards in source HTML: {}",
+    "Completed summary cards in source HTML: {}",
+    "Alert summary cards in source HTML: {}"
+  ]
+}

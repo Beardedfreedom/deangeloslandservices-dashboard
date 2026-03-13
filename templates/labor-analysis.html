@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DeAngelos Land Services - Labor Cost Analysis</title>
+<style>
+  :root {
+    --bg: #0a0a08;
+    --surface: #141412;
+    --surface2: #1e1e1a;
+    --border: #2d2d22;
+    --text: #f0efe6;
+    --text-dim: #908f80;
+    --muted: #908f80;
+    --primary: #f5c518;
+    --labor: #2dd4bf;
+    --danger: #e53935;
+    --ok: #43a047;
+    --warn: #fbc02d;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+    color: var(--text);
+    background:
+      radial-gradient(circle at 12% -8%, rgba(45, 212, 191, 0.12) 0%, transparent 36%),
+      radial-gradient(circle at 92% 6%, rgba(245, 197, 24, 0.12) 0%, transparent 30%),
+      var(--bg);
+    min-height: 100vh;
+  }
+  .header {
+    background: linear-gradient(135deg, #1a1a0a 0%, #0f1408 45%, #141410 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 24px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .header h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .header h1 span { color: var(--labor); }
+  .sub {
+    color: var(--text-dim);
+    margin-top: 6px;
+    font-size: 13px;
+  }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .back-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .back-link:hover { text-decoration: underline; }
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(45, 212, 191, 0.24);
+    background: rgba(45, 212, 191, 0.08);
+    color: var(--labor);
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--labor);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+  .btn {
+    padding: 9px 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(245, 197, 24, 0.22);
+    background: rgba(245, 197, 24, 0.08);
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .btn:hover { background: rgba(245, 197, 24, 0.18); }
+  .wrap {
+    max-width: 1340px;
+    margin: 0 auto;
+    padding: 24px;
+  }
+  .page-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    color: var(--text-dim);
+    font-size: 12px;
+  }
+  .mono { font-family: Menlo, Monaco, monospace; font-size: 12px; }
+  .tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .tab {
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--text-dim);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active {
+    background: var(--surface);
+    color: var(--text);
+    border-color: rgba(45, 212, 191, 0.28);
+    box-shadow: inset 0 0 0 1px rgba(45, 212, 191, 0.14);
+  }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+  }
+  .card.alert { border-color: rgba(229, 57, 53, 0.35); }
+  .card.good { border-color: rgba(67, 160, 71, 0.35); }
+  .k {
+    font-size: 11px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .v {
+    font-size: 28px;
+    font-weight: 800;
+    margin-top: 6px;
+  }
+  .v.danger { color: var(--danger); }
+  .v.ok { color: var(--ok); }
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .panel.alert-panel {
+    border-color: rgba(229, 57, 53, 0.28);
+    background: rgba(229, 57, 53, 0.06);
+  }
+  .panel.good-panel {
+    border-color: rgba(67, 160, 71, 0.28);
+    background: rgba(67, 160, 71, 0.06);
+  }
+  .panel.warn-panel {
+    border-color: rgba(251, 192, 45, 0.28);
+    background: rgba(251, 192, 45, 0.05);
+  }
+  .panel h2 {
+    margin: 0 0 10px;
+    font-size: 17px;
+  }
+  .panel h3 {
+    margin: 12px 0 8px;
+    font-size: 14px;
+    color: var(--text-dim);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+  }
+  th, td {
+    border-bottom: 1px solid var(--border);
+    padding: 8px 9px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    font-size: 10.5px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    position: sticky;
+    top: 0;
+    background: var(--surface2);
+  }
+  tr:last-child td { border-bottom: 0; }
+  td.right, th.right { text-align: right; }
+  tr.row-over { background: rgba(229, 57, 53, 0.08); }
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 10.5px;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+  .tag-over { background: rgba(229, 57, 53, 0.16); color: #ff9d9d; }
+  .tag-warn { background: rgba(251, 192, 45, 0.16); color: #ffd76f; }
+  .tag-ok { background: rgba(67, 160, 71, 0.16); color: #8be28f; }
+  .tag-none { background: rgba(255, 255, 255, 0.05); color: #b4b7a8; }
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .grid-main {
+    display: grid;
+    grid-template-columns: 1.5fr 0.5fr;
+    gap: 12px;
+  }
+  .scroll-table {
+    max-height: 520px;
+    overflow-y: auto;
+  }
+  .small {
+    display: inline-block;
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+  .footer {
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 11px;
+    margin-top: 20px;
+    padding: 10px 0 18px;
+  }
+  .loading,
+  .error-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 36px;
+    text-align: center;
+    color: var(--text-dim);
+  }
+  .error-card {
+    color: #ffc9c9;
+    border-color: rgba(229, 57, 53, 0.25);
+  }
+  .loading .spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid var(--border);
+    border-top-color: var(--labor);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 12px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .note-list {
+    margin: 0;
+    padding-left: 18px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .note-list li + li { margin-top: 6px; }
+  @media (max-width: 1000px) {
+    .grid-2, .grid-main { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 768px) {
+    .header { padding: 18px 16px; }
+    .wrap { padding: 16px; }
+    .tabs { overflow-x: auto; }
+    .tab { white-space: nowrap; }
+  }
+</style>
+</head>
+<body>
+<div class="header">
+  <div>
+    <h1>
+      <svg viewBox="0 0 52 58" width="30" height="34" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="labor-tree" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#43a047"/>
+            <stop offset="100%" stop-color="#2e7d32"/>
+          </linearGradient>
+        </defs>
+        <path d="M26 2 L38 18 L34 18 L42 30 L36 30 L44 42 L8 42 L16 30 L10 30 L18 18 L14 18 Z" fill="url(#labor-tree)"/>
+        <rect x="21" y="42" width="10" height="8" rx="2" fill="#5d4037"/>
+        <rect x="18" y="50" width="16" height="4" rx="2" fill="#4e342e"/>
+      </svg>
+      Labor <span>Cost Analysis</span>
+    </h1>
+    <div class="sub"><span id="subMeta">Manual weekly snapshot</span> | <span class="mono">Landtree.us</span></div>
+  </div>
+  <div class="header-right">
+    <div class="status-pill"><span class="status-dot"></span> MANUAL WEEKLY SNAPSHOT</div>
+    <a class="back-link" href="/dashboard/">&larr; Command Center</a>
+    <button class="btn" onclick="loadData()">Refresh View</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="page-meta">
+    <div id="snapshotLabel">Loading labor snapshot...</div>
+    <div>Loaded: <span id="lastUpdate">-</span></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" type="button" onclick="switchTab('overview', this)">Overview</button>
+    <button class="tab" type="button" onclick="switchTab('accepted', this)">Estimate Accepted</button>
+    <button class="tab" type="button" onclick="switchTab('completed', this)">Work Completed / Paid</button>
+    <button class="tab" type="button" onclick="switchTab('alerts', this)">Over Budget Alerts</button>
+  </div>
+
+  <div id="tab-overview" class="tab-content active">
+    <div class="loading"><div class="spinner"></div>Loading labor snapshot...</div>
+  </div>
+  <div id="tab-accepted" class="tab-content">
+    <div class="loading"><div class="spinner"></div>Loading labor snapshot...</div>
+  </div>
+  <div id="tab-completed" class="tab-content">
+    <div class="loading"><div class="spinner"></div>Loading labor snapshot...</div>
+  </div>
+  <div id="tab-alerts" class="tab-content">
+    <div class="loading"><div class="spinner"></div>Loading labor snapshot...</div>
+  </div>
+
+  <div class="footer" id="footerText">Loading labor snapshot...</div>
+</div>
+
+<script>
+const DATA_URL = '/dashboard/data/labor-analysis-data.json';
+let laborData = null;
+
+function switchTab(id, tabEl) {
+  document.querySelectorAll('.tab-content').forEach((panel) => panel.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach((tab) => tab.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  if (tabEl) tabEl.classList.add('active');
+}
+
+function safeNum(value) {
+  const num = Number(value);
+  return Number.isFinite(num) ? num : 0;
+}
+
+function hasValue(value) {
+  return value !== null && value !== undefined && value !== '';
+}
+
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function formatCurrency(value) {
+  return '$' + safeNum(value).toLocaleString();
+}
+
+function maybeCurrency(value) {
+  return hasValue(value) ? formatCurrency(value) : '-';
+}
+
+function formatHours(value) {
+  return hasValue(value) ? `${Number(value).toFixed(1)}h` : '-';
+}
+
+function maybeText(value) {
+  return hasValue(value) ? escapeHtml(value) : '-';
+}
+
+function pickValue(record, keys) {
+  for (const key of keys) {
+    if (hasValue(record?.[key])) return record[key];
+  }
+  return null;
+}
+
+function normalizeText(value) {
+  if (!hasValue(value)) return null;
+  return String(value).trim() === '—' ? '-' : value;
+}
+
+function normalizeJob(job) {
+  return {
+    job_number: pickValue(job, ['job_number', 'jobNumber']),
+    name: pickValue(job, ['name']) || '',
+    address: normalizeText(pickValue(job, ['address', 'location'])),
+    value: pickValue(job, ['value', 'job_value']),
+    budget: pickValue(job, ['budget', 'budget_40_percent', 'labor_budget_40_percent']),
+    hours: pickValue(job, ['hours', 'cc_hours']),
+    labor: pickValue(job, ['labor', 'actual_labor']),
+    pct: pickValue(job, ['pct', 'labor_percent']),
+    status: pickValue(job, ['status']),
+    phone: pickValue(job, ['phone']),
+    stage: pickValue(job, ['stage']),
+    over_by: pickValue(job, ['over_by']),
+    actual: pickValue(job, ['actual', 'actual_labor', 'labor']),
+    headroom: pickValue(job, ['headroom', 'headroom_remaining']),
+    saved: pickValue(job, ['saved', 'saved_amount']),
+  };
+}
+
+function normalizeSnapshot(raw) {
+  const meta = raw.meta || {};
+  const budgetSummary = raw.budget_summary || {};
+  return {
+    meta: {
+      snapshot_label: pickValue(meta, ['snapshot_label']) || 'Manual weekly labor snapshot',
+      imported_on: pickValue(meta, ['imported_on']),
+      source: pickValue(meta, ['source']) || 'Manual labor snapshot source',
+      source_label: pickValue(meta, ['source_label']) || 'GHL + Construction Clock manual snapshot',
+      labor_rate_per_hour: pickValue(meta, ['labor_rate_per_hour']) || 20,
+      period_label: pickValue(meta, ['period_label']) || '',
+      root_cause_points: raw.root_cause_points || raw.root_cause_pattern || [],
+    },
+    notes: Array.isArray(raw.notes) ? raw.notes : [],
+    summary_metrics: raw.summary_metrics || {},
+    accepted_jobs: (raw.accepted_jobs || []).map(normalizeJob),
+    work_completed_jobs: (raw.work_completed_jobs || []).map(normalizeJob),
+    payment_collected_jobs: (raw.payment_collected_jobs || []).map(normalizeJob),
+    matched_jobs: (raw.matched_jobs || []).map(normalizeJob),
+    over_budget_jobs: (raw.over_budget_jobs || []).map(normalizeJob),
+    watch_list_jobs: (raw.watch_list_jobs || []).map(normalizeJob),
+    missing_cc_jobs: (raw.missing_cc_jobs || []).map(normalizeJob),
+    top_savers: (raw.top_savers || []).map(normalizeJob),
+    budget_summary: {
+      matched_jobs: pickValue(budgetSummary, ['matched_jobs']),
+      total_value: pickValue(budgetSummary, ['total_value', 'total_value_matched']),
+      total_budget: pickValue(budgetSummary, ['total_budget', 'total_labor_budget_40_percent']),
+      actual_labor: pickValue(budgetSummary, ['actual_labor', 'actual_labor_spent']),
+      budget_remaining: pickValue(budgetSummary, ['budget_remaining']),
+      avg_labor_pct: pickValue(budgetSummary, ['avg_labor_pct', 'avg_labor_percent']),
+      total_overage: pickValue(budgetSummary, ['total_overage']),
+      total_untracked_value: pickValue(budgetSummary, ['total_untracked_value']),
+    },
+  };
+}
+
+function recordBudget(record) {
+  if (hasValue(record.budget)) return safeNum(record.budget);
+  if (hasValue(record.value)) return Math.round(safeNum(record.value) * 0.4);
+  return null;
+}
+
+function recordLabor(record, rate) {
+  if (hasValue(record.labor)) return safeNum(record.labor);
+  if (hasValue(record.hours)) return Math.round(safeNum(record.hours) * rate);
+  return null;
+}
+
+function recordPct(record, rate) {
+  if (hasValue(record.pct)) return Math.round(safeNum(record.pct));
+  const value = safeNum(record.value);
+  const labor = recordLabor(record, rate);
+  if (value > 0 && labor !== null) return Math.round((labor / value) * 100);
+  return null;
+}
+
+function recordStatus(record, rate) {
+  const raw = String(record.status || '').trim();
+  if (raw) return raw;
+  const pct = recordPct(record, rate);
+  const value = safeNum(record.value);
+  if (!hasValue(record.hours) && !hasValue(record.labor)) return value === 0 ? '$0' : 'NO CC';
+  if (pct === null) return value === 0 ? '$0' : 'NO CC';
+  if (pct > 40) return 'OVER';
+  if (pct >= 35) return 'WATCH';
+  return 'OK';
+}
+
+function tagClass(status) {
+  const normalized = String(status || '').toUpperCase();
+  if (normalized.includes('OVER')) return 'tag-over';
+  if (normalized.includes('WATCH')) return 'tag-warn';
+  if (normalized.includes('OK')) return 'tag-ok';
+  return 'tag-none';
+}
+
+function cardHtml(label, value, extraClass = '') {
+  return `<div class="card ${extraClass}"><div class="k">${escapeHtml(label)}</div><div class="v ${extraClass === 'alert' ? 'danger' : extraClass === 'good' ? 'ok' : ''}">${value}</div></div>`;
+}
+
+function sumBy(items, accessor) {
+  return (items || []).reduce((sum, item) => sum + safeNum(accessor(item)), 0);
+}
+
+function renderOverview(data) {
+  const meta = data.meta || {};
+  const summary = data.summary_metrics || {};
+  const rate = safeNum(meta.labor_rate_per_hour || 20);
+  const accepted = data.accepted_jobs || [];
+  const workCompleted = data.work_completed_jobs || [];
+  const paymentCollected = data.payment_collected_jobs || [];
+  const matchedJobs = (data.matched_jobs || []).map((job) => ({
+    ...job,
+    budget: recordBudget(job),
+    labor: recordLabor(job, rate),
+    pct: recordPct(job, rate),
+    status: recordStatus(job, rate),
+  })).sort((a, b) => safeNum(b.pct) - safeNum(a.pct));
+  const budgetSummary = data.budget_summary || {};
+  const overBudgetJobs = data.over_budget_jobs || [];
+  const topSavers = data.top_savers || [];
+  const totalJobs = hasValue(summary.total_jobs_tracked) ? safeNum(summary.total_jobs_tracked) : accepted.length + workCompleted.length + paymentCollected.length;
+  const totalValue = hasValue(summary.total_pipeline_value) ? safeNum(summary.total_pipeline_value) : sumBy([...accepted, ...workCompleted, ...paymentCollected], (job) => job.value);
+  const totalBudget = hasValue(summary.total_labor_budget_40_percent) ? safeNum(summary.total_labor_budget_40_percent) : sumBy([...accepted, ...workCompleted, ...paymentCollected], (job) => recordBudget(job));
+  const overCount = hasValue(summary.jobs_over_40_percent) ? safeNum(summary.jobs_over_40_percent) : matchedJobs.filter((job) => safeNum(job.pct) > 40).length;
+  const underCount = hasValue(summary.jobs_under_40_percent) ? safeNum(summary.jobs_under_40_percent) : matchedJobs.filter((job) => job.pct !== null && safeNum(job.pct) < 40).length;
+  const noDataCount = hasValue(summary.no_cc_data_count) ? safeNum(summary.no_cc_data_count) : [...workCompleted, ...paymentCollected].filter((job) => String(recordStatus(job, rate)).toUpperCase() === 'NO CC').length;
+  const overageTotal = hasValue(budgetSummary.total_overage) ? safeNum(budgetSummary.total_overage) : sumBy(overBudgetJobs, (job) => job.over_by);
+
+  document.getElementById('tab-overview').innerHTML = `
+    <div class="cards">
+      ${cardHtml('Total Jobs Tracked', String(totalJobs))}
+      ${cardHtml('Total Pipeline Value', formatCurrency(totalValue))}
+      ${cardHtml('Total 40% Labor Budget', formatCurrency(totalBudget))}
+      ${cardHtml('Jobs Over 40%', String(overCount), 'alert')}
+      ${cardHtml('Jobs Under 40%', String(underCount), 'good')}
+      ${cardHtml('No CC Data', String(noDataCount))}
+    </div>
+
+    <div class="grid-main">
+      <div class="panel">
+        <h2>Labor Budget Health - All Matched Jobs</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th class="right">Value</th>
+              <th class="right">40% Budget</th>
+              <th class="right">CC Hours</th>
+              <th class="right">Actual Labor</th>
+              <th class="right">Labor %</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${matchedJobs.map((job) => `
+              <tr class="${safeNum(job.pct) > 40 ? 'row-over' : ''}">
+                <td>${escapeHtml(job.name)}</td>
+                <td class="right">${maybeCurrency(job.value)}</td>
+                <td class="right">${maybeCurrency(job.budget)}</td>
+                <td class="right">${formatHours(job.hours)}</td>
+                <td class="right">${maybeCurrency(job.labor)}</td>
+                <td class="right" ${safeNum(job.pct) > 40 ? 'style="color:var(--danger);font-weight:800"' : ''}>${hasValue(job.pct) ? `${job.pct}%` : '-'}</td>
+                <td><span class="tag ${tagClass(job.status)}">${escapeHtml(job.status)}</span></td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+
+      <div>
+        <div class="panel">
+          <h2>Budget Summary</h2>
+          <table>
+            <tbody>
+              <tr><td>Matched Jobs</td><td class="right"><strong>${safeNum(budgetSummary.matched_jobs || matchedJobs.length)}</strong></td></tr>
+              <tr><td>Total Value (matched)</td><td class="right"><strong>${formatCurrency(hasValue(budgetSummary.total_value) ? budgetSummary.total_value : sumBy(matchedJobs, (job) => job.value))}</strong></td></tr>
+              <tr><td>Total Labor Budget (40%)</td><td class="right"><strong>${formatCurrency(hasValue(budgetSummary.total_budget) ? budgetSummary.total_budget : sumBy(matchedJobs, (job) => job.budget))}</strong></td></tr>
+              <tr><td>Actual Labor Spent</td><td class="right"><strong>${formatCurrency(hasValue(budgetSummary.actual_labor) ? budgetSummary.actual_labor : sumBy(matchedJobs, (job) => job.labor))}</strong></td></tr>
+              <tr><td>Budget Remaining</td><td class="right" style="color:var(--ok)"><strong>${formatCurrency(hasValue(budgetSummary.budget_remaining) ? budgetSummary.budget_remaining : (sumBy(matchedJobs, (job) => job.budget) - sumBy(matchedJobs, (job) => job.labor)))}</strong></td></tr>
+              <tr><td>Avg Labor % (matched)</td><td class="right"><strong>${hasValue(budgetSummary.avg_labor_pct) ? `${Math.round(safeNum(budgetSummary.avg_labor_pct))}%` : '-'}</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="panel alert-panel">
+          <h2 style="color:var(--danger)">Over-Budget Total</h2>
+          <table>
+            <tbody>
+              ${overBudgetJobs.map((job) => `
+                <tr><td>${escapeHtml(job.name)}</td><td class="right" style="color:var(--danger)">+${formatCurrency(job.over_by)}</td></tr>
+              `).join('')}
+              <tr><td><strong>Total Overage</strong></td><td class="right" style="color:var(--danger)"><strong>${formatCurrency(overageTotal)}</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="panel good-panel">
+          <h2 style="color:var(--ok)">Top Savers</h2>
+          <table>
+            <tbody>
+              ${topSavers.map((item) => `
+                <tr><td>${escapeHtml(item.name)}</td><td class="right" style="color:var(--ok)">${formatCurrency(item.saved)} saved</td></tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderAccepted(data) {
+  const summary = data.summary_metrics || {};
+  const accepted = data.accepted_jobs || [];
+  const acceptedBudget = hasValue(summary.accepted_labor_budget_40_percent) ? safeNum(summary.accepted_labor_budget_40_percent) : sumBy(accepted, (job) => recordBudget(job));
+  const acceptedValue = hasValue(summary.accepted_total_value) ? safeNum(summary.accepted_total_value) : sumBy(accepted, (job) => job.value);
+  const averageValue = hasValue(summary.accepted_avg_job_value) ? safeNum(summary.accepted_avg_job_value) : (accepted.length ? Math.round(acceptedValue / accepted.length) : 0);
+
+  document.getElementById('tab-accepted').innerHTML = `
+    <div class="cards">
+      ${cardHtml('Accepted Estimates', String(hasValue(summary.accepted_estimates_count) ? safeNum(summary.accepted_estimates_count) : accepted.length))}
+      ${cardHtml('Total Value', formatCurrency(acceptedValue))}
+      ${cardHtml('Labor Budget (40%)', formatCurrency(acceptedBudget))}
+      ${cardHtml('Avg Job Value', formatCurrency(averageValue))}
+    </div>
+
+    <div class="panel">
+      <h2>Accepted Estimates - Ready for Construction Clock</h2>
+      <div class="scroll-table">
+        <table>
+          <thead><tr><th>#</th><th>Name</th><th>Address</th><th class="right">Value</th><th class="right">Labor (40%)</th><th>Phone</th></tr></thead>
+          <tbody>
+            ${accepted.map((job, index) => `
+              <tr>
+                <td>${index + 1}</td>
+                <td>${escapeHtml(job.name)}</td>
+                <td>${escapeHtml(job.address || '-')}</td>
+                <td class="right">${maybeCurrency(job.value)}</td>
+                <td class="right">${maybeCurrency(recordBudget(job))}</td>
+                <td class="mono">${escapeHtml(job.phone || '-')}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+          <tfoot><tr><td colspan="3"><strong>TOTAL</strong></td><td class="right"><strong>${formatCurrency(acceptedValue)}</strong></td><td class="right"><strong>${formatCurrency(acceptedBudget)}</strong></td><td></td></tr></tfoot>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+function renderCompleted(data) {
+  const summary = data.summary_metrics || {};
+  const meta = data.meta || {};
+  const rate = safeNum(meta.labor_rate_per_hour || 20);
+  const workCompleted = data.work_completed_jobs || [];
+  const paymentCollected = data.payment_collected_jobs || [];
+  const allJobs = [...workCompleted, ...paymentCollected];
+  const totalValue = hasValue(summary.completed_total_value) ? safeNum(summary.completed_total_value) : sumBy(allJobs, (job) => job.value);
+  const totalBudget = hasValue(summary.completed_labor_budget_40_percent) ? safeNum(summary.completed_labor_budget_40_percent) : sumBy(allJobs, (job) => recordBudget(job));
+
+  function renderRows(records) {
+    return records.map((job, index) => {
+      const budget = recordBudget(job);
+      const labor = recordLabor(job, rate);
+      const pct = recordPct(job, rate);
+      const status = recordStatus(job, rate);
+      return `
+        <tr class="${status.toUpperCase().includes('OVER') ? 'row-over' : ''}">
+          <td>${index + 1}</td>
+          <td>${status.toUpperCase().includes('OVER') ? `<strong>${escapeHtml(job.name)}</strong>` : escapeHtml(job.name)}</td>
+          <td>${escapeHtml(job.address || '-')}</td>
+          <td class="right">${maybeCurrency(job.value)}</td>
+          <td class="right">${maybeCurrency(budget)}</td>
+          <td class="right">${formatHours(job.hours)}</td>
+          <td class="right">${maybeCurrency(labor)}</td>
+          <td class="right" ${status.toUpperCase().includes('OVER') ? 'style="color:var(--danger);font-weight:800"' : ''}>${hasValue(pct) ? `${pct}%` : '-'}</td>
+          <td><span class="tag ${tagClass(status)}">${escapeHtml(status)}</span></td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  document.getElementById('tab-completed').innerHTML = `
+    <div class="cards">
+      ${cardHtml('Work Completed', String(hasValue(summary.work_completed_count) ? safeNum(summary.work_completed_count) : workCompleted.length))}
+      ${cardHtml('Payment Collected', String(hasValue(summary.payment_collected_count) ? safeNum(summary.payment_collected_count) : paymentCollected.length))}
+      ${cardHtml('Total Value', formatCurrency(totalValue))}
+      ${cardHtml('Labor Budget (40%)', formatCurrency(totalBudget))}
+    </div>
+
+    <div class="panel">
+      <h2>Work Completed</h2>
+      <table>
+        <thead><tr><th>#</th><th>Name</th><th>Address</th><th class="right">Value</th><th class="right">40% Budget</th><th class="right">CC Hours</th><th class="right">Actual Labor</th><th class="right">Labor %</th><th>Status</th></tr></thead>
+        <tbody>${renderRows(workCompleted)}</tbody>
+      </table>
+    </div>
+
+    <div class="panel">
+      <h2>Payment Collected</h2>
+      <div class="scroll-table">
+        <table>
+          <thead><tr><th>#</th><th>Name</th><th>Address</th><th class="right">Value</th><th class="right">40% Budget</th><th class="right">CC Hours</th><th class="right">Actual Labor</th><th class="right">Labor %</th><th>Status</th></tr></thead>
+          <tbody>${renderRows(paymentCollected)}</tbody>
+          <tfoot><tr><td colspan="3"><strong>TOTAL</strong></td><td class="right"><strong>${formatCurrency(sumBy(paymentCollected, (job) => job.value))}</strong></td><td class="right"><strong>${formatCurrency(sumBy(paymentCollected, (job) => recordBudget(job)))}</strong></td><td colspan="4"></td></tr></tfoot>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+function buildRootCausePoints(data) {
+  if (Array.isArray(data.root_cause_points) && data.root_cause_points.length) return data.root_cause_points;
+  if (Array.isArray(data.meta?.root_cause_points) && data.meta.root_cause_points.length) return data.meta.root_cause_points;
+
+  const overBudgetJobs = data.over_budget_jobs || [];
+  if (!overBudgetJobs.length) return ['No over-budget jobs in this snapshot.'];
+
+  const smallJobs = overBudgetJobs.filter((job) => safeNum(job.value) < 1300).length;
+  const maxOver = [...overBudgetJobs].sort((a, b) => safeNum(b.over_by) - safeNum(a.over_by))[0];
+
+  return [
+    `${overBudgetJobs.length} over-budget jobs need review in this snapshot.`,
+    `${smallJobs} over-budget jobs are under $1,300.`,
+    maxOver ? `${maxOver.name} is the largest overage at ${formatCurrency(maxOver.over_by)}.` : 'Review the highest-overage job first.',
+  ];
+}
+
+function renderAlerts(data) {
+  const summary = data.summary_metrics || {};
+  const overBudgetJobs = data.over_budget_jobs || [];
+  const watchList = data.watch_list_jobs || [];
+  const missingCc = data.missing_cc_jobs || [];
+  const rootCausePoints = buildRootCausePoints(data);
+  const overageTotal = hasValue(summary.alerts_total_overage) ? safeNum(summary.alerts_total_overage) : sumBy(overBudgetJobs, (job) => job.over_by);
+  const missingTotal = hasValue(data.budget_summary?.total_untracked_value) ? safeNum(data.budget_summary.total_untracked_value) : sumBy(missingCc, (job) => job.value);
+
+  document.getElementById('tab-alerts').innerHTML = `
+    <div class="cards">
+      ${cardHtml('Over 40% Budget', String(hasValue(summary.alerts_over_budget_count) ? safeNum(summary.alerts_over_budget_count) : overBudgetJobs.length), 'alert')}
+      ${cardHtml('Watch (35-40%)', String(hasValue(summary.alerts_watch_count) ? safeNum(summary.alerts_watch_count) : watchList.length))}
+      ${cardHtml('Total Overage', formatCurrency(overageTotal), 'alert')}
+      ${cardHtml('Missing CC Data', String(hasValue(summary.alerts_missing_cc_data_count) ? safeNum(summary.alerts_missing_cc_data_count) : missingCc.length))}
+    </div>
+
+    <div class="grid-2">
+      <div class="panel alert-panel">
+        <h2 style="color:var(--danger)">OVER 40% - Immediate Review</h2>
+        <table>
+          <thead><tr><th>Name</th><th class="right">Value</th><th class="right">Budget</th><th class="right">Actual</th><th class="right">%</th><th class="right">Over By</th></tr></thead>
+          <tbody>
+            ${overBudgetJobs.map((job) => `
+              <tr class="row-over">
+                <td><strong>${escapeHtml(job.name)}</strong><br><span class="small">${escapeHtml(job.address || '-')}</span></td>
+                <td class="right">${maybeCurrency(job.value)}</td>
+                <td class="right">${maybeCurrency(job.budget)}</td>
+                <td class="right" style="color:var(--danger)">${maybeCurrency(job.actual || job.labor)}</td>
+                <td class="right" style="color:var(--danger)"><strong>${hasValue(job.pct) ? `${Math.round(safeNum(job.pct))}%` : '-'}</strong></td>
+                <td class="right" style="color:var(--danger)"><strong>${formatCurrency(job.over_by)}</strong></td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+        <h3>Root Cause Pattern</h3>
+        <ul class="note-list">
+          ${rootCausePoints.map((point) => `<li>${escapeHtml(point)}</li>`).join('')}
+        </ul>
+      </div>
+
+      <div>
+        <div class="panel warn-panel">
+          <h2 style="color:var(--warn)">WATCH LIST (35-40%)</h2>
+          <table>
+            <thead><tr><th>Name</th><th class="right">Value</th><th class="right">Labor %</th><th class="right">Headroom</th></tr></thead>
+            <tbody>
+              ${watchList.map((job) => `
+                <tr>
+                  <td>${escapeHtml(job.name)}</td>
+                  <td class="right">${maybeCurrency(job.value)}</td>
+                  <td class="right" style="color:var(--warn)">${hasValue(job.pct) ? `${Math.round(safeNum(job.pct))}%` : '-'}</td>
+                  <td class="right">${maybeCurrency(job.headroom)}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="panel">
+          <h2>Missing Construction Clock Data</h2>
+          <p style="font-size:12px;color:var(--muted);margin:0 0 8px">These jobs have no matching CC project - labor costs unknown</p>
+          <table>
+            <thead><tr><th>Name</th><th class="right">Value</th></tr></thead>
+            <tbody>
+              ${missingCc.map((job) => `
+                <tr><td>${escapeHtml(job.name)}</td><td class="right">${maybeCurrency(job.value)}</td></tr>
+              `).join('')}
+            </tbody>
+            <tfoot><tr><td><strong>Total Untracked</strong></td><td class="right"><strong>${formatCurrency(missingTotal)}</strong></td></tr></tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderPage(data) {
+  const meta = data.meta || {};
+  document.getElementById('snapshotLabel').textContent = meta.snapshot_label || 'Manual weekly labor snapshot';
+  document.getElementById('subMeta').textContent = [
+    meta.imported_on ? `Imported ${meta.imported_on}` : '',
+    meta.period_label || '',
+    hasValue(meta.labor_rate_per_hour) ? `Labor rate: $${safeNum(meta.labor_rate_per_hour)}/hr` : '',
+  ].filter(Boolean).join(' | ');
+  document.getElementById('footerText').textContent = [
+    'Labor Analysis Dashboard',
+    meta.source_label || 'DeAngelos Land Services / Landtree.us',
+    hasValue(meta.labor_rate_per_hour) ? `Labor rate: $${safeNum(meta.labor_rate_per_hour)}/hr blended crew avg` : '',
+    meta.period_label ? `Data window: ${meta.period_label}` : '',
+  ].filter(Boolean).join(' | ');
+
+  renderOverview(data);
+  renderAccepted(data);
+  renderCompleted(data);
+  renderAlerts(data);
+}
+
+function showError(message) {
+  const errorHtml = `<div class="error-card">${escapeHtml(message)}</div>`;
+  ['overview', 'accepted', 'completed', 'alerts'].forEach((id) => {
+    document.getElementById('tab-' + id).innerHTML = errorHtml;
+  });
+}
+
+async function loadData() {
+  document.getElementById('lastUpdate').textContent = new Date().toLocaleString();
+  try {
+    const response = await fetch(DATA_URL + '?t=' + Date.now());
+    if (!response.ok) throw new Error(`Request failed (${response.status})`);
+    laborData = normalizeSnapshot(await response.json());
+    renderPage(laborData);
+    document.getElementById('lastUpdate').textContent = new Date().toLocaleString();
+  } catch (error) {
+    showError(`Unable to load labor snapshot: ${error.message}`);
+  }
+}
+
+loadData();
+</script>
+</body>
+</html>
